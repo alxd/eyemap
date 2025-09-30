@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EyeMap - AI-Powered Eye Health Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -12,363 +13,252 @@
         }
         
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-            line-height: 1.6;
-            color: #e0e0e0;
-            background: #0a0a0f;
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            line-height: 1.7;
+            color: #1a1a1a;
+            background: #f5f5f5;
             overflow-x: hidden;
         }
         
-        .bg-gradient {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3), transparent 50%),
-                        radial-gradient(circle at 80% 80%, rgba(255, 75, 145, 0.3), transparent 50%),
-                        radial-gradient(circle at 40% 20%, rgba(35, 213, 171, 0.2), transparent 50%);
-            z-index: -1;
-            animation: gradientShift 15s ease infinite;
-        }
-        
-        @keyframes gradientShift {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.8; }
-        }
-        
         .container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
-            position: relative;
+            padding: 40px 20px;
         }
         
         header {
             text-align: center;
             padding: 100px 20px 80px;
+            background: linear-gradient(135deg, #00e996 0%, #c3e49f 100%);
+            border-radius: 32px;
+            margin-bottom: 60px;
             position: relative;
-        }
-        
-        .logo-container {
-            display: inline-block;
-            position: relative;
-            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 233, 150, 0.25);
         }
         
         .logo {
             font-size: 72px;
-            font-weight: 900;
+            font-weight: 700;
             letter-spacing: -3px;
-            background: linear-gradient(135deg, #7877c6 0%, #ff4b91 50%, #23d5ab 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: glow 3s ease-in-out infinite;
-        }
-        
-        @keyframes glow {
-            0%, 100% { filter: brightness(1) drop-shadow(0 0 20px rgba(120, 119, 198, 0.5)); }
-            50% { filter: brightness(1.2) drop-shadow(0 0 30px rgba(255, 75, 145, 0.8)); }
+            color: #1a1a1a;
+            margin-bottom: 20px;
+            position: relative;
         }
         
         .tagline {
-            font-size: 28px;
-            font-weight: 300;
-            color: #b0b0b0;
-            margin-bottom: 50px;
-            letter-spacing: 1px;
+            font-size: 24px;
+            font-weight: 500;
+            color: #1a1a1a;
+            margin-bottom: 60px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+            opacity: 0.9;
         }
         
         .hero-stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
             max-width: 1000px;
             margin: 0 auto;
+            position: relative;
         }
         
         .stat {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: #ffffff;
             border-radius: 20px;
-            padding: 30px;
+            padding: 40px;
             text-align: center;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .stat::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transition: left 0.5s;
-        }
-        
-        .stat:hover::before {
-            left: 100%;
+            border: 3px solid #1a1a1a;
         }
         
         .stat:hover {
-            transform: translateY(-5px);
-            border-color: rgba(120, 119, 198, 0.5);
-            box-shadow: 0 10px 40px rgba(120, 119, 198, 0.3);
+            transform: translateY(-6px);
+            box-shadow: 0 12px 32px rgba(0, 233, 150, 0.2);
+            border-color: #00e996;
         }
         
         .stat-number {
-            font-size: 48px;
-            font-weight: 900;
+            font-size: 52px;
+            font-weight: 700;
             display: block;
-            background: linear-gradient(135deg, #7877c6, #ff4b91);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
+            color: #1a1a1a;
+            margin-bottom: 12px;
         }
         
         .stat-label {
             font-size: 14px;
-            color: #888;
+            color: #1a1a1a;
+            font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 0.5px;
+            opacity: 0.7;
         }
         
         .content {
-            background: rgba(255, 255, 255, 0.02);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 30px;
+            background: #ffffff;
+            border-radius: 32px;
             padding: 80px 60px;
-            margin: 60px 0;
-            position: relative;
-        }
-        
-        .content::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(120, 119, 198, 0.5), transparent);
+            margin: 48px 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
         }
         
         h2 {
             font-size: 48px;
-            font-weight: 900;
+            font-weight: 700;
             margin-bottom: 40px;
-            background: linear-gradient(135deg, #fff, #b0b0b0);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: -1px;
+            color: #1a1a1a;
+            letter-spacing: -1.5px;
         }
         
         h3 {
             font-size: 28px;
-            margin: 40px 0 20px;
-            color: #fff;
+            margin: 32px 0 20px;
+            color: #1a1a1a;
             font-weight: 700;
         }
         
         .problem-solution {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 40px;
+            gap: 32px;
             margin: 50px 0;
         }
         
         .box {
             padding: 40px;
             border-radius: 20px;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            position: relative;
-            overflow: hidden;
             transition: all 0.3s ease;
-        }
-        
-        .box::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 100%;
-            background: linear-gradient(180deg, #ff4b91, #7877c6);
+            border: 3px solid #1a1a1a;
         }
         
         .box:hover {
-            border-color: rgba(120, 119, 198, 0.3);
-            transform: translateX(5px);
+            transform: translateY(-6px);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.12);
         }
         
-        .problem::before {
-            background: linear-gradient(180deg, #ff4b91, #ff6b6b);
+        .problem {
+            background: #f6b5d3;
         }
         
-        .solution::before {
-            background: linear-gradient(180deg, #23d5ab, #7877c6);
+        .problem:hover {
+            box-shadow: 0 12px 32px rgba(246, 181, 211, 0.35);
+        }
+        
+        .solution {
+            background: #c3e49f;
+        }
+        
+        .solution:hover {
+            box-shadow: 0 12px 32px rgba(195, 228, 159, 0.35);
         }
         
         .metrics {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 24px;
             margin: 50px 0;
         }
         
         .metric-card {
             padding: 40px;
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: #fff269;
             border-radius: 20px;
             text-align: center;
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .metric-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: conic-gradient(from 0deg, transparent, rgba(120, 119, 198, 0.2), transparent);
-            animation: rotate 4s linear infinite;
-        }
-        
-        @keyframes rotate {
-            100% { transform: rotate(360deg); }
-        }
-        
-        .metric-card > * {
-            position: relative;
-            z-index: 1;
+            border: 3px solid #1a1a1a;
         }
         
         .metric-card:hover {
-            transform: translateY(-10px);
-            border-color: rgba(120, 119, 198, 0.5);
-            box-shadow: 0 20px 60px rgba(120, 119, 198, 0.4);
+            transform: translateY(-6px);
+            box-shadow: 0 12px 32px rgba(255, 242, 105, 0.4);
         }
         
         .metric-value {
-            font-size: 42px;
-            font-weight: 900;
+            font-size: 48px;
+            font-weight: 700;
             display: block;
-            margin-bottom: 10px;
-            background: linear-gradient(135deg, #7877c6, #ff4b91);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
+            color: #1a1a1a;
         }
         
         .team {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 40px;
+            gap: 32px;
             margin: 50px 0;
         }
         
         .team-member {
             padding: 40px;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: #f5f5f5;
             border-radius: 20px;
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .team-member::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, #7877c6, #ff4b91, #23d5ab);
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
-        }
-        
-        .team-member:hover::after {
-            transform: scaleX(1);
+            border: 3px solid #1a1a1a;
         }
         
         .team-member:hover {
-            border-color: rgba(120, 119, 198, 0.3);
-            transform: translateY(-5px);
+            transform: translateY(-6px);
+            box-shadow: 0 12px 32px rgba(0, 233, 150, 0.2);
+            background: #c3e49f;
         }
         
         .team-name {
-            font-size: 32px;
-            font-weight: 900;
-            margin: 20px 0 10px;
-            color: #fff;
+            font-size: 36px;
+            font-weight: 700;
+            margin: 16px 0 12px;
+            color: #1a1a1a;
         }
         
         .team-title {
-            color: #7877c6;
-            font-weight: 600;
-            margin-bottom: 15px;
+            color: #1a1a1a;
+            font-weight: 700;
+            margin-bottom: 16px;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 14px;
+            letter-spacing: 0.5px;
+            font-size: 13px;
+            opacity: 0.7;
         }
         
         .team-bio {
-            font-size: 15px;
-            color: #999;
+            font-size: 16px;
+            color: #1a1a1a;
             line-height: 1.8;
+            opacity: 0.85;
         }
         
         .cta {
             text-align: center;
             padding: 100px 40px;
-            background: rgba(255, 255, 255, 0.02);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 30px;
+            background: linear-gradient(135deg, #f6b5d3 0%, #fff269 100%);
+            color: #1a1a1a;
+            border-radius: 32px;
             margin: 60px 0;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .cta::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at center, rgba(120, 119, 198, 0.1), transparent 70%);
+            box-shadow: 0 8px 32px rgba(246, 181, 211, 0.3);
+            border: 3px solid #1a1a1a;
         }
         
         .cta h2 {
-            color: #fff;
+            color: #1a1a1a;
             margin-bottom: 20px;
-            position: relative;
+            font-weight: 700;
         }
         
         .cta-buttons {
             display: flex;
             justify-content: center;
-            gap: 30px;
+            gap: 24px;
             flex-wrap: wrap;
             margin-top: 50px;
         }
         
         .btn {
-            padding: 18px 50px;
-            font-size: 16px;
+            padding: 18px 48px;
+            font-size: 17px;
             border: none;
             border-radius: 50px;
             cursor: pointer;
@@ -376,94 +266,84 @@
             text-decoration: none;
             display: inline-block;
             transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            transform: translate(-50%, -50%);
-            transition: width 0.5s, height 0.5s;
-        }
-        
-        .btn:hover::before {
-            width: 300px;
-            height: 300px;
-        }
-        
-        .btn span {
-            position: relative;
-            z-index: 1;
+            letter-spacing: 0.25px;
+            font-family: 'Space Grotesk', sans-serif;
+            border: 3px solid #1a1a1a;
         }
         
         .btn-primary {
-            background: linear-gradient(135deg, #7877c6, #ff4b91);
-            color: white;
-            border: 2px solid transparent;
+            background: #00e996;
+            color: #1a1a1a;
         }
         
         .btn-primary:hover {
+            background: #c3e49f;
             transform: translateY(-3px);
-            box-shadow: 0 10px 40px rgba(120, 119, 198, 0.5);
+            box-shadow: 0 6px 24px rgba(195, 228, 159, 0.5);
         }
         
         .btn-secondary {
-            background: transparent;
-            color: white;
-            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: #ffffff;
+            color: #1a1a1a;
         }
         
         .btn-secondary:hover {
-            border-color: #7877c6;
-            box-shadow: 0 10px 40px rgba(120, 119, 198, 0.3);
+            background: #00e996;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 24px rgba(0, 233, 150, 0.4);
         }
         
         ul {
-            margin: 30px 0;
+            margin: 28px 0;
             padding-left: 0;
             list-style: none;
         }
         
         li {
-            margin: 20px 0;
-            padding-left: 30px;
+            margin: 18px 0;
+            padding-left: 32px;
             position: relative;
-            color: #b0b0b0;
+            color: #1a1a1a;
+            line-height: 1.8;
+            opacity: 0.9;
         }
         
         li::before {
             content: '▸';
             position: absolute;
-            left: 0;
-            color: #7877c6;
+            left: 8px;
+            color: #1a1a1a;
             font-weight: bold;
+            font-size: 20px;
         }
         
         .highlight {
-            background: linear-gradient(135deg, #7877c6, #ff4b91);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #1a1a1a;
             font-weight: 700;
+            background: #c3e49f;
+            padding: 4px 12px;
+            border-radius: 6px;
+            display: inline-block;
         }
         
         p {
-            color: #b0b0b0;
+            color: #1a1a1a;
             margin: 20px 0;
             line-height: 1.8;
+            opacity: 0.9;
         }
         
         strong {
-            color: #fff;
-            font-weight: 600;
+            color: #1a1a1a;
+            font-weight: 700;
+        }
+        
+        .ask-section {
+            background: #f5f5f5;
+            padding: 40px;
+            border-radius: 20px;
+            border: 3px solid #1a1a1a;
+            margin-top: 40px;
         }
         
         @media (max-width: 768px) {
@@ -472,11 +352,11 @@
             }
             
             .content {
-                padding: 40px 30px;
+                padding: 40px 28px;
             }
             
             .logo {
-                font-size: 48px;
+                font-size: 52px;
             }
             
             .tagline {
@@ -488,44 +368,20 @@
             }
             
             header {
-                padding: 60px 20px 40px;
+                padding: 70px 20px 50px;
             }
-        }
-        
-        .grid-pattern {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                linear-gradient(rgba(120, 119, 198, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(120, 119, 198, 0.05) 1px, transparent 1px);
-            background-size: 50px 50px;
-            z-index: -1;
-            animation: gridMove 20s linear infinite;
-        }
-        
-        @keyframes gridMove {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(50px, 50px); }
         }
     </style>
 </head>
 <body>
-    <div class="bg-gradient"></div>
-    <div class="grid-pattern"></div>
-    
     <div class="container">
         <header>
-            <div class="logo-container">
-                <div class="logo">EYEMAP</div>
-            </div>
+            <div class="logo">EyeMap</div>
             <div class="tagline">AI-powered eye health platform for early disease detection</div>
             <div class="hero-stats">
                 <div class="stat">
-                    <span class="stat-number">80%</span>
-                    <span class="stat-label">Strokes Preventable</span>
+                    <span class="stat-number">795K</span>
+                    <span class="stat-label">Annual Strokes in US</span>
                 </div>
                 <div class="stat">
                     <span class="stat-number">€131B</span>
@@ -544,7 +400,7 @@
             <div class="problem-solution">
                 <div class="box problem">
                     <h3>The Problem</h3>
-                    <p><strong>80% of strokes occur without warning signs</strong></p>
+                    <p><strong>Most strokes occur with minimal warning signs</strong></p>
                     <ul>
                         <li>15 million Romanians visit optical shops yearly with zero health screening</li>
                         <li>Optometrists sell glasses reactively when problems already exist</li>
@@ -557,7 +413,7 @@
                     <h3>Our Solution</h3>
                     <p><strong>Transform every eye exam into a comprehensive health assessment</strong></p>
                     <ul>
-                        <li>AI-powered screening detects stroke, diabetes, and cardiovascular disease through the eye</li>
+                        <li>AI-powered screening detects stroke risk, diabetes, and cardiovascular disease through the eye</li>
                         <li>Works with smartphone cameras and professional equipment</li>
                         <li>5-minute screening generates €49-79 per customer</li>
                         <li>Integrated health product platform for ongoing care</li>
@@ -592,12 +448,12 @@
                 <li><strong>Product Platform (50% of revenue):</strong> Eye health supplements, devices, and solutions at 25-60% margins</li>
                 <li><strong>Professional Referrals (20% of revenue):</strong> €50-150 commission per specialist referral</li>
             </ul>
-            <p style="margin-top: 30px;"><span class="highlight">Customer Lifetime Value: €1,250</span> | <span class="highlight">Customer Acquisition Cost: €12</span></p>
+            <p style="margin-top: 28px;"><span class="highlight">Customer Lifetime Value: €1,250</span> <span class="highlight">Customer Acquisition Cost: €12</span></p>
 
             <h2>Traction & Roadmap</h2>
-            <h3>Q4 2025 (Now)</h3>
+            <h3>Q4 2025 (Current)</h3>
             <ul>
-                <li>Prospecting main optical shops chains in Romania: Lensa and Videt</li>
+                <li>Prospecting main optical shop chains in Romania: Lensa and Videt</li>
                 <li>Raising €350K pre-seed for prototype development</li>
                 <li>Target: LOIs signed + working MVP by Q1 2026</li>
             </ul>
@@ -621,13 +477,13 @@
                     <span class="stat-label">100 locations, €1.2M revenue</span>
                 </div>
             </div>
-            <p style="margin-top: 30px;"><strong>Path to profitability:</strong> Q2 2026 | <strong>Net profit 2026:</strong> €711K</p>
+            <p style="margin-top: 28px;"><strong>Path to profitability:</strong> Q2 2026 | <strong>Net profit 2026:</strong> €711K</p>
 
             <h2>Why Now?</h2>
             <ul>
                 <li><strong>Technology:</strong> Smartphone cameras now medical-grade, AI accuracy 90%+</li>
                 <li><strong>Market behavior:</strong> Post-COVID shift to preventive, digital healthcare</li>
-                <li><strong>Partner need:</strong>  Optical shops in the quest for new revenue streams</li>
+                <li><strong>Partner need:</strong> Optical shops in the quest for new revenue streams</li>
                 <li><strong>Regulatory:</strong> Clear EU pathways for AI medical devices</li>
                 <li><strong>Competition:</strong> 18-month window before Big Tech enters</li>
             </ul>
@@ -647,23 +503,25 @@
             </div>
 
             <h2>The Ask</h2>
-            <p><strong>Pre-Seed Round: €350K</strong></p>
-            <ul>
-                <li>€250K from strategic optical chain partners (prospecting the main players: Lensa & Videt)</li>
-                <li>€100K from angel investors and network</li>
-                <li><strong>Use of funds:</strong> Prototype development, team hiring (3 engineers), pilot preparation</li>
-                <li><strong>Timeline:</strong> Close by December 2025</li>
-            </ul>
+            <div class="ask-section">
+                <p><strong style="font-size: 24px;">Pre-Seed Round: €350K</strong></p>
+                <ul>
+                    <li>€250K from strategic optical chain partners (prospecting the main players: Lensa & Videt)</li>
+                    <li>€100K from angel investors and network</li>
+                    <li><strong>Use of funds:</strong> Prototype development, team hiring (3 engineers), pilot preparation</li>
+                    <li><strong>Timeline:</strong> Close by December 2025</li>
+                </ul>
+            </div>
         </div>
 
         <div class="cta">
             <h2>Join Us in Transforming Healthcare</h2>
-            <p style="font-size: 20px; margin: 20px 0; color: #b0b0b0;">Every pair of glasses sold is a missed opportunity to save a life.<br>Let's change that together.</p>
+            <p style="font-size: 20px; margin: 20px 0; font-weight: 500;">Every pair of glasses sold is a missed opportunity to save a life.<br>Let's change that together.</p>
             <div class="cta-buttons">
-                <a href="mailto:tudor@eyemap.ai" class="btn btn-primary"><span>Contact Tudor (CEO)</span></a>
-                <a href="mailto:alex@eyemap.ai" class="btn btn-secondary"><span>Contact Alex (CTO)</span></a>
+                <a href="mailto:tudor@eyemap.ai" class="btn btn-primary">Contact Tudor (CEO)</a>
+                <a href="mailto:alex@eyemap.ai" class="btn btn-secondary">Contact Alex (CTO)</a>
             </div>
-            <p style="margin-top: 50px; font-size: 14px; color: #666; text-transform: uppercase; letter-spacing: 3px;">See health before symptoms</p>
+            <p style="margin-top: 50px; font-size: 13px; opacity: 0.7; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">See health before symptoms</p>
         </div>
     </div>
 </body>
