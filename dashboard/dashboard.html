@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eyemap.ai - Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --background: #0a0a0f;
+            --foreground: #e0e0e0;
+            --card: rgba(255, 255, 255, 0.03);
+            --card-foreground: #e0e0e0;
+            --primary: #7877c6;
+            --primary-foreground: #ffffff;
+            --secondary: rgba(255, 255, 255, 0.1);
+            --muted: rgba(255, 255, 255, 0.05);
+            --muted-foreground: #888;
+            --border: rgba(255, 255, 255, 0.1);
+            --input-background: rgba(255, 255, 255, 0.05);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: var(--background);
+            color: var(--foreground);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Mockup Notice */
+        .mockup-notice {
+            background: linear-gradient(135deg, #7877c6 0%, #ff4b91 50%, #23d5ab 100%);
+            color: white;
+            padding: 12px 16px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        /* Header */
+        header {
+            border-bottom: 1px solid var(--border);
+            background: var(--card);
+            backdrop-filter: blur(20px);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #7877c6 0%, #ff4b91 50%, #23d5ab 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #7877c6 0%, #ff4b91 50%, #23d5ab 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo-subtitle {
+            font-size: 14px;
+            color: var(--muted-foreground);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--foreground);
+        }
+
+        .btn:hover {
+            background: var(--secondary);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--primary-foreground);
+            border-color: var(--primary);
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px 16px;
+        }
+
+        /* Card */
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            backdrop-filter: blur(20px);
+        }
+
+        .card-header {
+            margin-bottom: 16px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-content {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Patient Info */
+        .patient-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+        }
+
+        .patient-field {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .patient-label {
+            font-size: 12px;
+            color: var(--muted-foreground);
+        }
+
+        .patient-value {
+            font-size: 16px;
+            color: var(--foreground);
+        }
+
+        /* Image Viewer */
+        .image-viewer {
+            position: relative;
+        }
+
+        .image-container {
+            position: relative;
+            aspect-ratio: 1;
+            background: var(--muted);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid var(--border);
+            margin-bottom: 16px;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: var(--muted-foreground);
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .image-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .image-actions .btn {
+            flex: 1;
+        }
+
+        .image-info {
+            font-size: 12px;
+            color: var(--muted-foreground);
+            margin-top: 12px;
+        }
+
+        .image-info p {
+            margin: 4px 0;
+        }
+
+        /* Risk Matrix */
+        .risk-item {
+            padding: 16px;
+            border-radius: 8px;
+            border: 2px solid;
+            margin-bottom: 12px;
+            transition: all 0.2s;
+        }
+
+        .risk-item.low {
+            background: rgba(34, 197, 94, 0.1);
+            border-color: rgba(34, 197, 94, 0.3);
+        }
+
+        .risk-item.moderate {
+            background: rgba(234, 179, 8, 0.1);
+            border-color: rgba(234, 179, 8, 0.3);
+        }
+
+        .risk-item.high {
+            background: rgba(249, 115, 22, 0.1);
+            border-color: rgba(249, 115, 22, 0.3);
+        }
+
+        .risk-item.very-high {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        .risk-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .risk-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .risk-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .risk-details {
+            flex: 1;
+        }
+
+        .risk-name {
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .risk-description {
+            font-size: 14px;
+            color: var(--muted-foreground);
+            margin-top: 4px;
+        }
+
+        .risk-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-align: right;
+        }
+
+        .risk-label {
+            font-weight: 500;
+        }
+
+        .risk-label.low { color: #22c55e; }
+        .risk-label.moderate { color: #eab308; }
+        .risk-label.high { color: #f97316; }
+        .risk-label.very-high { color: #ef4444; }
+
+        .risk-confidence {
+            font-size: 12px;
+            color: var(--muted-foreground);
+        }
+
+        .risk-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .risk-dot.low { background: #22c55e; }
+        .risk-dot.moderate { background: #eab308; }
+        .risk-dot.high { background: #f97316; }
+        .risk-dot.very-high { background: #ef4444; }
+
+        .risk-legend {
+            margin-top: 24px;
+            padding: 16px;
+            background: var(--muted);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            font-size: 14px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Recommendations */
+        .recommendation {
+            padding: 16px;
+            border-radius: 8px;
+            border: 2px solid;
+            margin-bottom: 16px;
+        }
+
+        .recommendation.urgent {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        .recommendation.high {
+            background: rgba(249, 115, 22, 0.1);
+            border-color: rgba(249, 115, 22, 0.3);
+        }
+
+        .recommendation.normal {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        .recommendation-header {
+            display: flex;
+            align-items: start;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .recommendation-title {
+            font-weight: 500;
+            flex: 1;
+        }
+
+        .recommendation-badge {
+            font-size: 11px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .recommendation.urgent .recommendation-badge {
+            background: #ef4444;
+            color: white;
+        }
+
+        .recommendation.high .recommendation-badge {
+            background: #f97316;
+            color: white;
+        }
+
+        .recommendation.normal .recommendation-badge {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .recommendation-description {
+            font-size: 14px;
+            color: var(--muted-foreground);
+            margin-bottom: 8px;
+        }
+
+        .recommendation-action {
+            font-size: 14px;
+            display: flex;
+            align-items: start;
+            gap: 8px;
+            padding-top: 8px;
+        }
+
+        .alert {
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--card);
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .alert-icon {
+            width: 16px;
+            height: 16px;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        .alert-content {
+            flex: 1;
+        }
+
+        .alert-title {
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .alert-description {
+            font-size: 14px;
+            color: var(--muted-foreground);
+        }
+
+        /* Loading State */
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
+            gap: 16px;
+        }
+
+        .spinner {
+            width: 64px;
+            height: 64px;
+            border: 4px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Grid Layout */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Hidden file input */
+        .file-input {
+            display: none;
+        }
+
+        /* Icons (simple SVG replacements) */
+        .icon {
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Mockup Notice -->
+    <div class="mockup-notice">
+        ⚠️ This is a mockup and work in progress - Not for clinical use
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="logo-text">eyemap.ai</div>
+                    <div class="logo-subtitle">Preventive Retinal Pathology Screening</div>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="btn">View History</button>
+                <button class="btn">Export Report</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Patient Information -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                    Patient Information
+                </div>
+            </div>
+            <div class="card-content">
+                <div class="patient-grid">
+                    <div class="patient-field">
+                        <div class="patient-label">Patient Name</div>
+                        <div class="patient-value">Sarah Johnson</div>
+                    </div>
+                    <div class="patient-field">
+                        <div class="patient-label">Patient ID</div>
+                        <div class="patient-value">PT-2024-0847</div>
+                    </div>
+                    <div class="patient-field">
+                        <div class="patient-label">Date of Birth</div>
+                        <div class="patient-value">03/15/1968</div>
+                    </div>
+                    <div class="patient-field">
+                        <div class="patient-label">Age</div>
+                        <div class="patient-value">56 years</div>
+                    </div>
+                    <div class="patient-field">
+                        <div class="patient-label">Last Visit</div>
+                        <div class="patient-value">Nov 12, 2024</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Grid -->
+        <div class="dashboard-grid">
+            <!-- Fundus Image Viewer -->
+            <div class="card image-viewer">
+                <div class="card-header">
+                    <div class="card-title">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                        Fundus Image
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="image-container" id="imageContainer">
+                        <img id="fundusImage" src="fundus_tud.jpg" alt="Fundus image" onerror="this.style.display='none'; document.getElementById('imagePlaceholder').style.display='flex';">
+                        <div class="image-placeholder" id="imagePlaceholder" style="display: none;">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" opacity="0.5">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                            <p>No image uploaded</p>
+                        </div>
+                    </div>
+
+                    <div class="image-actions">
+                        <label for="fileInput" class="btn" style="cursor: pointer;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 4px;">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="17 8 12 3 7 8"/>
+                                <line x1="12" y1="3" x2="12" y2="15"/>
+                            </svg>
+                            Upload New Image
+                        </label>
+                        <input type="file" id="fileInput" class="file-input" accept="image/*">
+                        <button class="btn btn-primary" id="analyzeBtn" onclick="analyzeImage()">
+                            Analyze Image
+                        </button>
+                    </div>
+
+                    <div class="image-info">
+                        <p>• Image captured: December 17, 2024</p>
+                        <p>• Device: Topcon TRC-50DX</p>
+                        <p>• Eye: Right (OD)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Risk Matrix -->
+            <div class="card" id="riskMatrixCard">
+                <div class="card-header">
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <div class="card-title">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                            </svg>
+                            AI Pathology Risk Assessment
+                        </div>
+                        <span style="font-size: 14px; color: var(--muted-foreground);" id="timestamp"></span>
+                    </div>
+                </div>
+                <div class="card-content" id="riskMatrixContent">
+                    <div class="loading" id="loadingState">
+                        <div class="spinner"></div>
+                        <div>
+                            <p style="font-size: 18px; margin-bottom: 4px;">Analyzing fundus image...</p>
+                            <p style="font-size: 14px; color: var(--muted-foreground);">AI models processing retinal features</p>
+                        </div>
+                    </div>
+                    <div id="riskResults" style="display: none;">
+                        <!-- Risk items will be inserted here -->
+                    </div>
+                    <div class="risk-legend" id="riskLegend" style="display: none;">
+                        <span>Legend:</span>
+                        <div class="legend-item">
+                            <div class="risk-dot low"></div>
+                            <span>Low Risk</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="risk-dot moderate"></div>
+                            <span>Moderate</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="risk-dot high"></div>
+                            <span>High Risk</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="risk-dot very-high"></div>
+                            <span>Very High</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recommendations Panel -->
+        <div class="card" id="recommendationsCard" style="display: none;">
+            <div class="card-header">
+                <div class="card-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <line x1="16" y1="13" x2="8" y2="13"/>
+                        <line x1="16" y1="17" x2="8" y2="17"/>
+                        <polyline points="10 9 9 9 8 9"/>
+                    </svg>
+                    Clinical Recommendations
+                </div>
+            </div>
+            <div class="card-content" id="recommendationsContent">
+                <!-- Recommendations will be inserted here -->
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Mock data
+        const mockResults = [
+            {
+                name: 'Age-Related Macular Degeneration (AMD)',
+                riskLevel: 'low',
+                confidence: 92,
+                details: 'No signs of drusen or pigmentary changes detected',
+            },
+            {
+                name: 'Diabetic Retinopathy',
+                riskLevel: 'moderate',
+                confidence: 78,
+                details: 'Mild microaneurysms detected in inferior temporal quadrant',
+            },
+            {
+                name: 'Glaucoma',
+                riskLevel: 'low',
+                confidence: 88,
+                details: 'Cup-to-disc ratio within normal limits (0.3)',
+            },
+            {
+                name: 'Hypertensive Angiopathy',
+                riskLevel: 'very-high',
+                confidence: 94,
+                details: 'Severe arteriovenous nicking and flame-shaped hemorrhages present',
+            },
+            {
+                name: 'Hypertensive Angiosclerosis',
+                riskLevel: 'high',
+                confidence: 85,
+                details: 'Copper wire arterioles observed with vessel wall thickening',
+            },
+            {
+                name: 'Hypertensive Retinopathy',
+                riskLevel: 'very-high',
+                confidence: 91,
+                details: 'Cotton-wool spots and retinal edema detected - Grade III findings',
+            },
+            {
+                name: 'Hypertensive Neuroretinopathy',
+                riskLevel: 'moderate',
+                confidence: 76,
+                details: 'Early optic disc swelling noted, requires monitoring',
+            },
+        ];
+
+        let showResults = false;
+        let analyzing = false;
+
+        // Image upload handler
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const file = e.target.files?.[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onloadend = function() {
+                    const img = document.getElementById('fundusImage');
+                    const placeholder = document.getElementById('imagePlaceholder');
+                    img.src = reader.result;
+                    img.style.display = 'block';
+                    placeholder.style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+                showResults = false;
+                analyzing = false;
+                hideResults();
+            }
+        });
+
+        // Analyze image function
+        function analyzeImage() {
+            if (analyzing) return;
+            
+            analyzing = true;
+            showResults = false;
+            
+            // Show loading state
+            document.getElementById('loadingState').style.display = 'flex';
+            document.getElementById('riskResults').style.display = 'none';
+            document.getElementById('riskLegend').style.display = 'none';
+            document.getElementById('recommendationsCard').style.display = 'none';
+            document.getElementById('analyzeBtn').disabled = true;
+            
+            // Simulate AI analysis
+            setTimeout(() => {
+                analyzing = false;
+                showResults = true;
+                displayResults();
+                document.getElementById('analyzeBtn').disabled = false;
+            }, 2000);
+        }
+
+        // Display results
+        function displayResults() {
+            // Hide loading, show results
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('riskResults').style.display = 'block';
+            document.getElementById('riskLegend').style.display = 'flex';
+            
+            // Set timestamp
+            const now = new Date();
+            document.getElementById('timestamp').textContent = 
+                `Analyzed: ${now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} ${now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}`;
+            
+            // Render risk matrix
+            const riskResults = document.getElementById('riskResults');
+            riskResults.innerHTML = '';
+            
+            mockResults.forEach(result => {
+                const riskItem = document.createElement('div');
+                riskItem.className = `risk-item ${result.riskLevel}`;
+                
+                const riskLabel = getRiskLabel(result.riskLevel);
+                const riskIcon = getRiskIcon(result.riskLevel);
+                
+                riskItem.innerHTML = `
+                    <div class="risk-content">
+                        <div class="risk-left">
+                            <div class="risk-icon" style="color: ${getRiskColor(result.riskLevel)}">
+                                ${riskIcon}
+                            </div>
+                            <div class="risk-details">
+                                <div class="risk-name">${result.name}</div>
+                                ${result.details ? `<div class="risk-description">${result.details}</div>` : ''}
+                            </div>
+                        </div>
+                        <div class="risk-right">
+                            <div>
+                                <div class="risk-label ${result.riskLevel}">${riskLabel}</div>
+                                <div class="risk-confidence">${result.confidence}% confidence</div>
+                            </div>
+                            <div class="risk-dot ${result.riskLevel}"></div>
+                        </div>
+                    </div>
+                `;
+                
+                riskResults.appendChild(riskItem);
+            });
+            
+            // Display recommendations
+            displayRecommendations();
+        }
+
+        function hideResults() {
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('riskResults').style.display = 'none';
+            document.getElementById('riskLegend').style.display = 'none';
+            document.getElementById('recommendationsCard').style.display = 'none';
+            document.getElementById('timestamp').textContent = '';
+        }
+
+        // Risk level helpers
+        function getRiskLabel(level) {
+            const labels = {
+                'low': 'Low Risk',
+                'moderate': 'Moderate',
+                'high': 'High Risk',
+                'very-high': 'Very High'
+            };
+            return labels[level] || level;
+        }
+
+        function getRiskColor(level) {
+            const colors = {
+                'low': '#22c55e',
+                'moderate': '#eab308',
+                'high': '#f97316',
+                'very-high': '#ef4444'
+            };
+            return colors[level] || '#888';
+        }
+
+        function getRiskIcon(level) {
+            if (level === 'low') {
+                return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>';
+            } else if (level === 'very-high') {
+                return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>';
+            } else {
+                return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>';
+            }
+        }
+
+        // Generate recommendations
+        function generateRecommendations(results) {
+            const recommendations = [];
+            
+            const veryHighRisk = results.filter(r => r.riskLevel === 'very-high');
+            const highRisk = results.filter(r => r.riskLevel === 'high');
+            const moderateRisk = results.filter(r => r.riskLevel === 'moderate');
+            
+            if (veryHighRisk.length > 0) {
+                veryHighRisk.forEach(result => {
+                    recommendations.push({
+                        priority: 'urgent',
+                        title: `Immediate attention required for ${result.name}`,
+                        description: `Very high risk detected with ${result.confidence}% confidence.`,
+                        action: 'Refer to specialist immediately. Schedule comprehensive examination within 24-48 hours.',
+                    });
+                });
+            }
+            
+            if (highRisk.length > 0) {
+                highRisk.forEach(result => {
+                    recommendations.push({
+                        priority: 'high',
+                        title: `Follow-up required for ${result.name}`,
+                        description: `High risk detected with ${result.confidence}% confidence.`,
+                        action: 'Schedule follow-up appointment within 1-2 weeks. Consider specialist referral.',
+                    });
+                });
+            }
+            
+            if (moderateRisk.length > 0) {
+                recommendations.push({
+                    priority: 'normal',
+                    title: 'Monitor conditions with moderate risk',
+                    description: `${moderateRisk.map(r => r.name).join(', ')} showing moderate risk levels.`,
+                    action: 'Schedule routine follow-up in 3-6 months. Continue regular monitoring.',
+                });
+            }
+            
+            if (veryHighRisk.length === 0 && highRisk.length === 0 && moderateRisk.length === 0) {
+                recommendations.push({
+                    priority: 'normal',
+                    title: 'All pathologies within normal range',
+                    description: 'No significant risk factors detected in current screening.',
+                    action: 'Continue annual routine screening. Maintain healthy lifestyle habits.',
+                });
+            }
+            
+            return recommendations;
+        }
+
+        // Display recommendations
+        function displayRecommendations() {
+            const recommendations = generateRecommendations(mockResults);
+            const recommendationsContent = document.getElementById('recommendationsContent');
+            const recommendationsCard = document.getElementById('recommendationsCard');
+            
+            recommendationsContent.innerHTML = '';
+            
+            recommendations.forEach(rec => {
+                const recDiv = document.createElement('div');
+                recDiv.className = `recommendation ${rec.priority}`;
+                
+                const icon = rec.priority === 'normal' 
+                    ? '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>'
+                    : '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>';
+                
+                recDiv.innerHTML = `
+                    <div class="recommendation-header">
+                        <div style="display: flex; align-items: start; gap: 12px; flex: 1;">
+                            <div style="color: ${rec.priority === 'urgent' ? '#ef4444' : rec.priority === 'high' ? '#f97316' : '#3b82f6'}; margin-top: 2px;">
+                                ${icon}
+                            </div>
+                            <div style="flex: 1;">
+                                <div class="recommendation-title">${rec.title}</div>
+                                <div class="recommendation-description">${rec.description}</div>
+                                <div class="recommendation-action">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-top: 2px; flex-shrink: 0;">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <polyline points="12 6 12 12 16 14"/>
+                                    </svg>
+                                    <span>${rec.action}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="recommendation-badge">${rec.priority.toUpperCase()}</span>
+                    </div>
+                `;
+                
+                recommendationsContent.appendChild(recDiv);
+            });
+            
+            // Add alert
+            const alert = document.createElement('div');
+            alert.className = 'alert';
+            alert.innerHTML = `
+                <svg class="alert-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+                <div class="alert-content">
+                    <div class="alert-title">Important Note</div>
+                    <div class="alert-description">
+                        This AI-powered analysis is intended to assist clinical decision-making and should not
+                        replace professional medical judgment. Always confirm findings with comprehensive
+                        clinical examination and additional diagnostic tests as needed.
+                    </div>
+                </div>
+            `;
+            recommendationsContent.appendChild(alert);
+            
+            recommendationsCard.style.display = 'block';
+        }
+
+        // Initialize - show results by default
+        window.addEventListener('DOMContentLoaded', function() {
+            // Try to load the default image
+            const img = document.getElementById('fundusImage');
+            img.onerror = function() {
+                this.style.display = 'none';
+                document.getElementById('imagePlaceholder').style.display = 'flex';
+            };
+            
+            // Show initial results
+            showResults = true;
+            displayResults();
+        });
+    </script>
+</body>
+</html>
+
