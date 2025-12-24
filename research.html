@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Center - eyemap.ai</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            line-height: 1.6;
+            color: #e0e0e0;
+            background: #0a0a0f;
+            overflow-x: hidden;
+        }
+        
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3), transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(255, 75, 145, 0.3), transparent 50%),
+                        radial-gradient(circle at 40% 20%, rgba(35, 213, 171, 0.2), transparent 50%);
+            z-index: -1;
+            animation: gradientShift 15s ease infinite;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        
+        .grid-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(120, 119, 198, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(120, 119, 198, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            animation: gridMove 20s linear infinite;
+        }
+        
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+        }
+        
+        header {
+            text-align: center;
+            padding: 60px 20px 40px;
+            position: relative;
+        }
+        
+        .logo {
+            font-size: 48px;
+            font-weight: 900;
+            letter-spacing: -2px;
+            background: linear-gradient(135deg, #7877c6 0%, #ff4b91 50%, #23d5ab 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+        }
+        
+        .nav-link {
+            color: #7877c6;
+            text-decoration: none;
+            font-size: 16px;
+            margin: 0 15px;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: #ff4b91;
+        }
+        
+        .content {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            padding: 80px 60px;
+            margin: 60px 0;
+            position: relative;
+        }
+        
+        .content::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(120, 119, 198, 0.5), transparent);
+        }
+        
+        h1 {
+            font-size: 56px;
+            font-weight: 900;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #fff, #b0b0b0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -2px;
+        }
+        
+        h2 {
+            font-size: 36px;
+            font-weight: 900;
+            margin: 50px 0 30px;
+            background: linear-gradient(135deg, #fff, #b0b0b0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+        }
+        
+        h3 {
+            font-size: 24px;
+            margin: 30px 0 15px;
+            color: #fff;
+            font-weight: 700;
+        }
+        
+        .models-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .model-card {
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .model-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, #7877c6, #ff4b91);
+        }
+        
+        .model-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(120, 119, 198, 0.5);
+            box-shadow: 0 10px 40px rgba(120, 119, 198, 0.3);
+        }
+        
+        .model-name {
+            font-size: 24px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+        
+        .model-description {
+            color: #b0b0b0;
+            line-height: 1.6;
+        }
+        
+        .stroke-focus {
+            background: rgba(255, 75, 145, 0.1);
+            border: 2px solid rgba(255, 75, 145, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px 0;
+            position: relative;
+        }
+        
+        .stroke-focus::before {
+            background: linear-gradient(180deg, #ff4b91, #ff6b6b);
+        }
+        
+        .dataset-highlight {
+            font-size: 32px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ff4b91, #7877c6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 20px 0;
+        }
+        
+        .partner-section {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 30px 0;
+        }
+        
+        .partner-name {
+            font-size: 28px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 15px;
+        }
+        
+        .partner-link {
+            color: #7877c6;
+            text-decoration: none;
+            border-bottom: 1px solid #7877c6;
+            transition: color 0.3s ease;
+        }
+        
+        .partner-link:hover {
+            color: #ff4b91;
+            border-bottom-color: #ff4b91;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            background: rgba(35, 213, 171, 0.2);
+            border: 1px solid rgba(35, 213, 171, 0.4);
+            border-radius: 20px;
+            color: #23d5ab;
+            font-size: 14px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        
+        .status-badge.discussion {
+            background: rgba(255, 75, 145, 0.2);
+            border-color: rgba(255, 75, 145, 0.4);
+            color: #ff4b91;
+        }
+        
+        p {
+            color: #b0b0b0;
+            margin: 20px 0;
+            line-height: 1.8;
+            font-size: 16px;
+        }
+        
+        strong {
+            color: #fff;
+            font-weight: 600;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-top: 40px;
+            color: #7877c6;
+            text-decoration: none;
+            font-size: 16px;
+            transition: color 0.3s ease;
+        }
+        
+        .back-link:hover {
+            color: #ff4b91;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                padding: 40px 30px;
+            }
+            
+            h1 {
+                font-size: 36px;
+            }
+            
+            h2 {
+                font-size: 28px;
+            }
+            
+            .models-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    <div class="grid-pattern"></div>
+    
+    <div class="container">
+        <header>
+            <div class="logo">eyemap.ai</div>
+            <div style="margin-top: 20px;">
+                <a href="index.htm" class="nav-link">← Home</a>
+                <a href="patent.html" class="nav-link">Patent</a>
+                <a href="clinical-trial.html" class="nav-link">Clinical Trial</a>
+            </div>
+        </header>
+
+        <div class="content">
+            <h1>Research</h1>
+            <p style="font-size: 18px; color: #b0b0b0; margin-bottom: 40px;">
+                Advancing AI-powered retinal pathology detection through cutting-edge research and clinical partnerships
+            </p>
+
+            <h2>Our Current Models</h2>
+            <p>We have developed and validated AI models for several critical retinal pathologies:</p>
+            
+            <div class="models-grid">
+                <div class="model-card">
+                    <div class="model-name">Age-Related Macular Degeneration (AMD)</div>
+                    <div class="model-description">
+                        <div style="margin-top: 15px;">
+                            <div style="font-weight: 600; color: #fff; margin-bottom: 10px;">Severity Levels</div>
+                            <div style="color: #b0b0b0; line-height: 1.8;">
+                                <div>Level 0: No Macular Degeneration</div>
+                                <div>Level 1: Mild Macular Degeneration</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="model-card">
+                    <div class="model-name">Diabetic Retinopathy</div>
+                    <div class="model-description">
+                        <div style="margin-top: 15px;">
+                            <div style="font-weight: 600; color: #fff; margin-bottom: 10px;">Severity Levels</div>
+                            <div style="color: #b0b0b0; line-height: 1.8;">
+                                <div>Level 0: No Diabetic Retinopathy</div>
+                                <div>Level 1: Mild Diabetic Retinopathy</div>
+                                <div>Level 2: Moderate Diabetic Retinopathy</div>
+                                <div>Level 3: Severe Diabetic Retinopathy</div>
+                                <div>Level 4: Proliferative Diabetic Retinopathy</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="model-card">
+                    <div class="model-name">Glaucoma</div>
+                    <div class="model-description">
+                        <div style="margin-top: 15px;">
+                            <div style="font-weight: 600; color: #fff; margin-bottom: 10px;">Classification</div>
+                            <div style="color: #b0b0b0; line-height: 1.8; margin-bottom: 15px;">
+                                <div>Non-Glaucoma</div>
+                                <div>Glaucoma</div>
+                            </div>
+                            <div style="color: #ff4b91; font-size: 14px; font-style: italic; padding-top: 10px; border-top: 1px solid rgba(255, 75, 145, 0.3);">
+                                ⚠️ This model requires further improvement and validation
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stroke-focus">
+                <h2 style="margin-top: 0;">Stroke Detection: Our Primary Focus</h2>
+                <p>
+                    We have a <strong>particular focus on stroke detection</strong> through retinal imaging. 
+                    The retina provides a unique window into the cardiovascular system, allowing us to detect 
+                    signs of stroke risk before clinical symptoms appear.
+                </p>
+                <div class="dataset-highlight">
+                    68,000 Fundus Images Dataset
+                </div>
+                <p>
+                    We have access to a comprehensive dataset of <strong>68,000 fundus images</strong> specifically 
+                    curated for stroke risk assessment. This extensive dataset enables us to train highly accurate 
+                    models that can identify retinal signs associated with stroke, including:
+                </p>
+ 
+                <p>
+                    This research has the potential to transform preventive healthcare by enabling early stroke 
+                    risk assessment during routine eye examinations.
+                </p>
+            </div>
+
+            <h2>Clinical Partnerships</h2>
+            
+            <div class="partner-section">
+                <div class="partner-name">
+                    Retina Clinic, Bucharest
+                    <span class="status-badge">Active Partner</span>
+                </div>
+                <p>
+                    We are proud to partner with <strong>Retina Clinic in Bucharest</strong>, working closely with 
+                    <a href="https://scholar.google.com/citations?user=7XFvk9MAAAAJ&hl=en&oi=sra" target="_blank" class="partner-link">
+                        Dr. Florian Balta
+                    </a>, a top ophthalmologist and leading researcher in retinal diseases.
+                </p>
+                <p>
+                    Dr. Balta's expertise in retinal pathology and his extensive research background make this 
+                    partnership invaluable for validating our AI models and advancing our understanding of retinal 
+                    biomarkers for systemic diseases.
+                </p>
+            </div>
+
+            <div class="partner-section">
+                <div class="partner-name">
+                    Spitalul Universitar de Urgență București
+                    <span class="status-badge discussion">In Discussion</span>
+                </div>
+                    <p>
+                        We are currently in discussions with <strong>Spitalul Universitar de Urgență București</strong> 
+                        (Bucharest University Emergency Hospital) to establish a research collaboration. This partnership 
+                        would provide access to a diverse patient population and enable large-scale validation of our 
+                        stroke detection models in a clinical emergency setting.
+                    </p>
+                </div>
+
+                <div class="partner-section">
+                    <div class="partner-name">
+                        Visioofta
+                        <span class="status-badge discussion">In Discussion</span>
+                    </div>
+                    <p>
+                        We are in discussions with <strong>Visioofta</strong> to expand our research network and 
+                        clinical validation capabilities.
+                    </p>
+                </div>
+
+            <h2>Research Impact</h2>
+            <p>
+                Our research aims to bridge the gap between routine eye care and comprehensive health screening. 
+                By leveraging the retina as a window to systemic health, we can detect life-threatening conditions 
+                like stroke before they manifest clinically, potentially saving thousands of lives annually.
+            </p>
+            <p>
+                Through our partnerships with leading clinical institutions and access to extensive datasets, 
+                we are advancing the frontier of AI-powered preventive medicine.
+            </p>
+
+            <a href="index.htm" class="back-link">← Back to Home</a>
+        </div>
+    </div>
+</body>
+</html>
+

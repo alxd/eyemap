@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patent Strategy - eyemap.ai</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            line-height: 1.6;
+            color: #e0e0e0;
+            background: #0a0a0f;
+            overflow-x: hidden;
+        }
+        
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3), transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(255, 75, 145, 0.3), transparent 50%),
+                        radial-gradient(circle at 40% 20%, rgba(35, 213, 171, 0.2), transparent 50%);
+            z-index: -1;
+            animation: gradientShift 15s ease infinite;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        
+        .grid-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(120, 119, 198, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(120, 119, 198, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            animation: gridMove 20s linear infinite;
+        }
+        
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+        }
+        
+        header {
+            text-align: center;
+            padding: 60px 20px 40px;
+            position: relative;
+        }
+        
+        .logo {
+            font-size: 48px;
+            font-weight: 900;
+            letter-spacing: -2px;
+            background: linear-gradient(135deg, #7877c6 0%, #ff4b91 50%, #23d5ab 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+        }
+        
+        .nav-link {
+            color: #7877c6;
+            text-decoration: none;
+            font-size: 16px;
+            margin: 0 15px;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: #ff4b91;
+        }
+        
+        .content {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            padding: 80px 60px;
+            margin: 60px 0;
+            position: relative;
+        }
+        
+        .content::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(120, 119, 198, 0.5), transparent);
+        }
+        
+        h1 {
+            font-size: 56px;
+            font-weight: 900;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #fff, #b0b0b0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -2px;
+        }
+        
+        h2 {
+            font-size: 36px;
+            font-weight: 900;
+            margin: 50px 0 30px;
+            background: linear-gradient(135deg, #fff, #b0b0b0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+        }
+        
+        h3 {
+            font-size: 24px;
+            margin: 30px 0 15px;
+            color: #fff;
+            font-weight: 700;
+        }
+        
+        .info-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+            position: relative;
+        }
+        
+        .info-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, #7877c6, #ff4b91);
+        }
+        
+        .nda-notice {
+            background: rgba(255, 75, 145, 0.1);
+            border: 2px solid rgba(255, 75, 145, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        
+        .nda-notice strong {
+            color: #ff4b91;
+            font-size: 18px;
+        }
+        
+        .patent-reference {
+            background: rgba(35, 213, 171, 0.1);
+            border: 1px solid rgba(35, 213, 171, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+        
+        .patent-link {
+            color: #23d5ab;
+            text-decoration: none;
+            border-bottom: 1px solid #23d5ab;
+            transition: color 0.3s ease;
+        }
+        
+        .patent-link:hover {
+            color: #ff4b91;
+            border-bottom-color: #ff4b91;
+        }
+        
+        .citation {
+            background: rgba(255, 255, 255, 0.02);
+            border-left: 3px solid #7877c6;
+            padding: 20px;
+            margin: 20px 0;
+            font-style: italic;
+            color: #b0b0b0;
+        }
+        
+        p {
+            color: #b0b0b0;
+            margin: 20px 0;
+            line-height: 1.8;
+            font-size: 16px;
+        }
+        
+        strong {
+            color: #fff;
+            font-weight: 600;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-top: 40px;
+            color: #7877c6;
+            text-decoration: none;
+            font-size: 16px;
+            transition: color 0.3s ease;
+        }
+        
+        .back-link:hover {
+            color: #ff4b91;
+        }
+        
+        ul {
+            margin: 20px 0;
+            padding-left: 30px;
+            color: #b0b0b0;
+        }
+        
+        li {
+            margin: 10px 0;
+            line-height: 1.8;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                padding: 40px 30px;
+            }
+            
+            h1 {
+                font-size: 36px;
+            }
+            
+            h2 {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    <div class="grid-pattern"></div>
+    
+    <div class="container">
+        <header>
+            <div class="logo">eyemap.ai</div>
+            <div>
+                <a href="index.htm" class="nav-link">← Home</a>
+                <a href="research.html" class="nav-link">Research</a>
+                <a href="clinical-trial.html" class="nav-link">Clinical Trial</a>
+            </div>
+        </header>
+
+        <div class="content">
+            <h1>Patent Strategy</h1>
+            <p style="font-size: 18px; color: #b0b0b0; margin-bottom: 40px;">
+                Protecting our innovative approach to stroke detection through retinal imaging
+            </p>
+
+            <div class="nda-notice">
+                <strong>⚠️ Detailed patent strategy available under NDA</strong>
+            </div>
+
+            <h2>Historical Foundation</h2>
+            <p>
+                Our patent strategy builds upon foundational research that first established the connection between 
+                retinal imaging and cardiovascular health. The scientific basis for our approach dates back over 
+                20 years to pioneering work in the field.
+            </p>
+
+            <div class="patent-reference">
+                <h3 style="margin-top: 0;">Original Research Foundation (1999)</h3>
+                <p>
+                    The first scientific association between fundus imaging and cardiovascular risk was established in 1999 
+                    by L. D. Hubbard et al. in their landmark study:
+                </p>
+                <div class="citation">
+                    "Methods for evaluation of retinal microvascular abnormalities associated with hypertension/sclerosis 
+                    in the Atherosclerosis Risk in Communities Study", <strong>Ophthalmology</strong>, Vol. 106, 2269-2280, 1999
+                </div>
+                <p>
+                    This foundational research demonstrated that retinal microvascular changes visible in fundus images 
+                    could serve as indicators of systemic cardiovascular conditions, including stroke risk.
+                </p>
+            </div>
+
+            <h2>Expired Patent Reference</h2>
+            <div class="info-box">
+                <h3 style="margin-top: 0;">Stroke Fundus Patent (EP14025012)</h3>
+                <p>
+                    A key patent in this field, <a href="https://patentscope.wipo.int/search/en/detail.jsf?docId=EP14025012&_cid=P11-MJFO7P-19509-1" target="_blank" class="patent-link">EP14025012</a>, 
+                    which covered stroke detection through fundus imaging, has <strong style="color: #ff4b91;">expired 3 years ago</strong>.
+                </p>
+                <p>
+                    This patent, which was <strong>over 20 years old</strong>, represented an early attempt to commercialize 
+                    the connection between retinal imaging and stroke risk assessment. Its expiration opens new opportunities 
+                    for innovation in this space.
+                </p>
+                <p style="margin-top: 20px;">
+                    <strong>Key Points:</strong>
+                </p>
+                <ul>
+                    <li>The patent was based on the 1999 research by Hubbard et al. that first associated fundus imaging with cardiovascular risk</li>
+                    <li>It expired approximately 3 years ago, creating a window for new approaches</li>
+                    <li>The patent was over 20 years old, reflecting the long-standing scientific foundation of this field</li>
+                    <li>Our strategy leverages modern AI and machine learning technologies that were not available when the original patent was filed</li>
+                </ul>
+            </div>
+
+            <h2>Our Innovation</h2>
+            <p>
+                While building upon the scientific foundation established in 1999, eyemap.ai brings significant innovations:
+            </p>
+            <ul>
+                <li><strong>AI-Powered Analysis:</strong> Advanced machine learning models that can detect subtle patterns 
+                    invisible to the human eye</li>
+                <li><strong>Multi-Pathology Detection:</strong> Simultaneous screening for stroke, diabetes, cardiovascular 
+                    disease, and other conditions</li>
+                <li><strong>Accessibility:</strong> Works with smartphone cameras, making screening available in optical shops 
+                    rather than requiring specialized medical facilities</li>
+                <li><strong>Real-Time Processing:</strong> Instant results during routine eye examinations</li>
+                <li><strong>Large-Scale Dataset:</strong> Access to 68,000 fundus images specifically curated for stroke risk assessment</li>
+            </ul>
+
+            <h2>Patent Strategy</h2>
+            <p>
+                Our comprehensive patent strategy (details shared under NDA) focuses on protecting:
+            </p>
+            <ul>
+                <li>Novel AI algorithms and model architectures for multi-pathology detection</li>
+                <li>Integration methods for combining retinal imaging with clinical data</li>
+                <li>Real-time processing and analysis systems</li>
+                <li>Mobile and accessible screening platforms</li>
+                <li>Data processing and validation methodologies</li>
+            </ul>
+
+            <p style="margin-top: 30px;">
+                For detailed information about our patent strategy and filing timeline, please contact us under NDA.
+            </p>
+
+            <a href="index.htm" class="back-link">← Back to Home</a>
+        </div>
+    </div>
+</body>
+</html>
+

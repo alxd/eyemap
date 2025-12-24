@@ -72,6 +72,18 @@
             50% { filter: brightness(1.2) drop-shadow(0 0 30px rgba(255, 75, 145, 0.8)); }
         }
         
+        .nav-link {
+            color: #7877c6;
+            text-decoration: none;
+            font-size: 16px;
+            margin: 0 15px;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: #ff4b91;
+        }
+        
         .tagline {
             font-size: 28px;
             font-weight: 300;
@@ -1022,7 +1034,12 @@
             <div class="logo-container">
                 <div class="logo">EYEMAP</div>
             </div>
-            <div class="tagline">AI-powered eye health platform for early disease detection</div>
+            <div style="margin-top: 0px;">
+                <a href="research.html" class="nav-link">Research</a>
+                <a href="patent.html" class="nav-link">Patent</a>
+                <a href="clinical-trial.html" class="nav-link">Clinical Trial</a>
+            </div>
+            <div style="margin-top: 40px;" class="tagline">AI-powered eye health platform for early disease detection</div>
             <div class="hero-stats">
                 <div class="stat">
                     <span class="stat-number">795K</span>
@@ -1033,8 +1050,8 @@
                     <span class="stat-label">Market Opportunity</span>
                 </div>
                 <div class="stat">
-                    <span class="stat-number">15M</span>
-                    <span class="stat-label">Annual Optical Visits</span>
+                    <span class="stat-number">171M</span>
+                    <span class="stat-label">Annual Optical Visits (USA)</span>
                 </div>
             </div>
         </header>
@@ -1047,7 +1064,7 @@
                     <h3>The Problem</h3>
                     <p><strong>80% of strokes occur without warning signs</strong></p>
                     <ul>
-                        <li>15 million Romanians visit optical shops yearly with zero health screening</li>
+                        <li>5 million Romanians visit optical shops yearly with zero health screening</li>
                         <li>Optometrists sell glasses reactively when problems already exist</li>
                         <li>Traditional screening is expensive, invasive, and infrequent</li>
                         <li>Optical shops miss €450M+ in potential health screening revenue</li>
@@ -1139,29 +1156,77 @@
                     <div class="team-name">Tudor</div>
                     <div class="team-title">CEO & Co-founder</div>
                     <div class="team-bio">PhD, Expert in scaling businesses. Previously scaled Tudor Tailor (fashion tech) and Teilor Diamonds. Proven track record in consumer-facing technology and premium market positioning.</div>
+                    <div style="margin-top: 15px;">
+                        <a href="https://www.linkedin.com/in/tudor-popescu-08ab606/" target="_blank" style="color: #7877c6; text-decoration: none; font-size: 14px; border-bottom: 1px solid #7877c6; transition: color 0.3s ease;" onmouseover="this.style.color='#ff4b91'; this.style.borderBottomColor='#ff4b91';" onmouseout="this.style.color='#7877c6'; this.style.borderBottomColor='#7877c6';">
+                            LinkedIn →
+                        </a>
+                    </div>
                 </div>
                 <div class="team-member">
                     <div class="team-name">Alex</div>
                     <div class="team-title">CTO & Co-founder</div>
                     <div class="team-bio">PhD, Postdoc in AI for Healthcare. Specialized in clinical wearables, computer vision and assistive technologies. Research background in AI applications.</div>
+                    <div style="margin-top: 15px;">
+                        <a href="https://www.linkedin.com/in/alexandru-dancu/" target="_blank" style="color: #7877c6; text-decoration: none; font-size: 14px; border-bottom: 1px solid #7877c6; transition: color 0.3s ease;" onmouseover="this.style.color='#ff4b91'; this.style.borderBottomColor='#ff4b91';" onmouseout="this.style.color='#7877c6'; this.style.borderBottomColor='#7877c6';">
+                            LinkedIn →
+                        </a>
+                    </div>
                 </div>
             </div>
 
             <h2>The Ask</h2>
-            <p><strong>Pre-Seed Round: €350K</strong></p>
-            <ul>
-                <li>€250K from strategic optical chain partners (prospecting the main players: Lensa & Videt)</li>
-                <li>€100K from angel investors and network</li>
-                <li><strong>Use of funds:</strong> Prototype development, team hiring (3 engineers), pilot preparation</li>
-                <li><strong>Timeline:</strong> Close by December 2025</li>
-            </ul>
+            
+            <div style="
+                background: rgba(255, 255, 255, 0.03);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 20px;
+                padding: 40px;
+                margin: 30px 0;
+            ">
+                <h3 style="color: #fff; margin-top: 0; margin-bottom: 20px;">Pre-Seed Round: €350K</h3>
+                <ul>
+                    <li>€250K from strategic optical chain partners (prospecting the main players: Lensa & Videt)</li>
+                    <li>€100K from angel investors and network</li>
+                    <li><strong>Use of funds:</strong> Prototype development, team hiring (3 engineers), pilot preparation</li>
+                    <li><strong>Timeline:</strong> Close by December 2025</li>
+                </ul>
+            </div>
+
+            <div style="
+                background: rgba(120, 119, 198, 0.1);
+                border: 2px solid rgba(120, 119, 198, 0.3);
+                border-radius: 20px;
+                padding: 40px;
+                margin: 30px 0;
+                position: relative;
+            ">
+                <div style="
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 4px;
+                    height: 100%;
+                    background: linear-gradient(180deg, #7877c6, #ff4b91);
+                "></div>
+                <h3 style="color: #fff; margin-top: 0; margin-bottom: 20px;">Post-Pilot Expansion: €1M</h3>
+                <p style="margin-bottom: 15px;">
+                    Following successful pilot validation, we will raise <strong style="color: #ff4b91;">€1 million</strong> to scale operations across Romania.
+                </p>
+                <p style="margin-bottom: 15px;">
+                    <strong>Objective:</strong> Equip <strong style="color: #23d5ab;">70% of optometry shops in Romania</strong> with our AI-powered screening platform.
+                </p>
+                <p style="margin-bottom: 0;">
+                    This expansion round will enable nationwide deployment, establishing eyemap.ai as the standard for preventive health screening in the Romanian optical market.
+                </p>
+            </div>
         </div>
 
         <!-- Dashboard Preview Section -->
         <div class="content" style="margin-top: 60px;">
             <h2>Interactive Dashboard Preview</h2>
             <p style="margin-bottom: 30px; color: #b0b0b0;">
-                Experience our AI-powered screening platform. Upload a fundus image and see real-time pathology detection in action.
+                This is a design mockup of our system. The functional platform will be available in January 2026. 
+                Experience a preview of our AI-powered screening platform and see how fundus image analysis will work.
             </p>
             
             <div class="dashboard-preview" style="

@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinical Trial - eyemap.ai</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            line-height: 1.6;
+            color: #e0e0e0;
+            background: #0a0a0f;
+            overflow-x: hidden;
+        }
+        
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3), transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(255, 75, 145, 0.3), transparent 50%),
+                        radial-gradient(circle at 40% 20%, rgba(35, 213, 171, 0.2), transparent 50%);
+            z-index: -1;
+            animation: gradientShift 15s ease infinite;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        
+        .grid-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(120, 119, 198, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(120, 119, 198, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            animation: gridMove 20s linear infinite;
+        }
+        
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+        }
+        
+        header {
+            text-align: center;
+            padding: 60px 20px 40px;
+            position: relative;
+        }
+        
+        .logo {
+            font-size: 48px;
+            font-weight: 900;
+            letter-spacing: -2px;
+            background: linear-gradient(135deg, #7877c6 0%, #ff4b91 50%, #23d5ab 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+        }
+        
+        .nav-link {
+            color: #7877c6;
+            text-decoration: none;
+            font-size: 16px;
+            margin: 0 15px;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: #ff4b91;
+        }
+        
+        .content {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            padding: 80px 60px;
+            margin: 60px 0;
+            position: relative;
+        }
+        
+        .content::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(120, 119, 198, 0.5), transparent);
+        }
+        
+        h1 {
+            font-size: 56px;
+            font-weight: 900;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #fff, #b0b0b0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -2px;
+        }
+        
+        h2 {
+            font-size: 36px;
+            font-weight: 900;
+            margin: 50px 0 30px;
+            background: linear-gradient(135deg, #fff, #b0b0b0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+        }
+        
+        h3 {
+            font-size: 24px;
+            margin: 30px 0 15px;
+            color: #fff;
+            font-weight: 700;
+        }
+        
+        .trial-section {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 30px 0;
+            position: relative;
+        }
+        
+        .trial-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, #7877c6, #ff4b91);
+        }
+        
+        .partner-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .partner-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+        
+        .partner-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(120, 119, 198, 0.3);
+        }
+        
+        .partner-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            background: rgba(35, 213, 171, 0.2);
+            border: 1px solid rgba(35, 213, 171, 0.4);
+            border-radius: 15px;
+            color: #23d5ab;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        
+        .status-badge.discussion {
+            background: rgba(255, 75, 145, 0.2);
+            border-color: rgba(255, 75, 145, 0.4);
+            color: #ff4b91;
+        }
+        
+        .objectives-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .objective-card {
+            background: rgba(120, 119, 198, 0.1);
+            border: 1px solid rgba(120, 119, 198, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        .objective-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+        
+        .objective-description {
+            color: #b0b0b0;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        p {
+            color: #b0b0b0;
+            margin: 20px 0;
+            line-height: 1.8;
+            font-size: 16px;
+        }
+        
+        strong {
+            color: #fff;
+            font-weight: 600;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-top: 40px;
+            color: #7877c6;
+            text-decoration: none;
+            font-size: 16px;
+            transition: color 0.3s ease;
+        }
+        
+        .back-link:hover {
+            color: #ff4b91;
+        }
+        
+        ul {
+            margin: 20px 0;
+            padding-left: 30px;
+            color: #b0b0b0;
+        }
+        
+        li {
+            margin: 10px 0;
+            line-height: 1.8;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                padding: 40px 30px;
+            }
+            
+            h1 {
+                font-size: 36px;
+            }
+            
+            h2 {
+                font-size: 28px;
+            }
+            
+            .partner-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    <div class="grid-pattern"></div>
+    
+    <div class="container">
+        <header>
+            <div class="logo">eyemap.ai</div>
+            <div>
+                <a href="index.htm" class="nav-link">← Home</a>
+                <a href="research.html" class="nav-link">Research</a>
+                <a href="patent.html" class="nav-link">Patent</a>
+            </div>
+        </header>
+
+        <div class="content">
+            <h1>Clinical Trial</h1>
+            <p style="font-size: 18px; color: #b0b0b0; margin-bottom: 40px;">
+                Validating AI models and expanding cardiovascular pathology datasets through strategic clinical partnerships
+            </p>
+
+            <h2>Overview</h2>
+            <p>
+                We are planning comprehensive clinical trials in collaboration with our partner clinics to validate 
+                our AI models and significantly expand our cardiovascular pathology datasets. These trials will provide 
+                the clinical evidence needed to bring our screening platform to market.
+            </p>
+
+            <h2>Trial Objectives</h2>
+            <div class="objectives-grid">
+                <div class="objective-card">
+                    <div class="objective-title">AI Model Validation</div>
+                    <div class="objective-description">
+                        Validate the accuracy and reliability of our AI models for AMD, Diabetic Retinopathy, Glaucoma, and Stroke detection
+                    </div>
+                </div>
+                
+                <div class="objective-card">
+                    <div class="objective-title">Dataset Expansion</div>
+                    <div class="objective-description">
+                        Expand our cardiovascular pathology datasets with diverse, clinically-validated fundus images
+                    </div>
+                </div>
+                
+                <div class="objective-card">
+                    <div class="objective-title">Clinical Integration</div>
+                    <div class="objective-description">
+                        Test real-world integration of our platform in clinical settings with actual patient workflows
+                    </div>
+                </div>
+                
+                <div class="objective-card">
+                    <div class="objective-title">Performance Metrics</div>
+                    <div class="objective-description">
+                        Establish sensitivity, specificity, and predictive value metrics for regulatory approval
+                    </div>
+                </div>
+            </div>
+
+            <h2>Partner Clinics</h2>
+            <p>
+                Our clinical trials will be conducted in collaboration with leading ophthalmology and emergency care facilities:
+            </p>
+
+            <div class="partner-list">
+                <div class="partner-card">
+                    <div class="partner-name">
+                        Retina Clinic, Bucharest
+                        <span class="status-badge">Active Partner</span>
+                    </div>
+                    <p style="font-size: 14px; margin-top: 10px;">
+                        Working with <strong>Dr. Florian Balta</strong>, a top ophthalmologist, to validate our retinal pathology detection models in a specialized clinical setting.
+                    </p>
+                </div>
+                
+                <div class="partner-card">
+                    <div class="partner-name">
+                        Spitalul Universitar de Urgență București
+                        <span class="status-badge discussion">In Discussion</span>
+                    </div>
+                    <p style="font-size: 14px; margin-top: 10px;">
+                        Bucharest University Emergency Hospital. Partnership would enable validation of stroke detection models in an emergency care context with diverse patient populations.
+                    </p>
+                </div>
+                
+                <div class="partner-card">
+                    <div class="partner-name">
+                        Visioofta
+                        <span class="status-badge discussion">In Discussion</span>
+                    </div>
+                    <p style="font-size: 14px; margin-top: 10px;">
+                        Partnership discussions ongoing to expand our clinical trial network and access additional patient populations for model validation.
+                    </p>
+                </div>
+            </div>
+
+            <div class="trial-section">
+                <h3 style="margin-top: 0;">Trial Scope</h3>
+                <p>
+                    The clinical trials will focus on:
+                </p>
+                <ul>
+                    <li><strong>Model Validation:</strong> Testing our AI models against gold-standard clinical diagnoses 
+                        to establish accuracy metrics</li>
+                    <li><strong>Cardiovascular Dataset Expansion:</strong> Collecting and annotating fundus images with 
+                        confirmed cardiovascular pathology diagnoses</li>
+                    <li><strong>Stroke Risk Assessment:</strong> Validating our stroke detection algorithms using our 
+                        68,000-image dataset and new clinical data</li>
+                    <li><strong>Multi-Pathology Screening:</strong> Testing simultaneous detection of multiple conditions 
+                        (AMD, Diabetic Retinopathy, Glaucoma, Stroke) in a single screening session</li>
+                    <li><strong>Real-World Performance:</strong> Evaluating model performance in actual clinical workflows 
+                        with varying image quality and patient demographics</li>
+                </ul>
+            </div>
+
+            <div class="trial-section">
+                <h3 style="margin-top: 0;">Expected Outcomes</h3>
+                <p>
+                    Upon completion of the clinical trials, we expect to:
+                </p>
+                <ul>
+                    <li>Establish clinical validation for regulatory approval (CE marking, FDA pathways)</li>
+                    <li>Expand our cardiovascular pathology dataset significantly</li>
+                    <li>Publish peer-reviewed research on AI-powered retinal screening for stroke detection</li>
+                    <li>Demonstrate real-world clinical utility and cost-effectiveness</li>
+                    <li>Build a strong evidence base for insurance reimbursement and clinical adoption</li>
+                </ul>
+            </div>
+
+            <h2>Timeline</h2>
+            <p>
+                Clinical trials are planned to begin following successful pilot validation and will run concurrently 
+                with our platform development. The trials will be conducted in phases, starting with model validation 
+                and progressing to larger-scale multi-center studies.
+            </p>
+
+            <p style="margin-top: 30px;">
+                For more information about our clinical trial protocols and participation opportunities, please contact us.
+            </p>
+
+            <a href="index.htm" class="back-link">← Back to Home</a>
+        </div>
+    </div>
+</body>
+</html>
+
