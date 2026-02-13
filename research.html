@@ -352,13 +352,36 @@
                     <div class="model-name">Glaucoma</div>
                     <div class="model-description">
                         <div style="margin-top: 15px;">
-                            <div style="font-weight: 600; color: #fff; margin-bottom: 10px;">Classification</div>
-                            <div style="color: #b0b0b0; line-height: 1.8; margin-bottom: 15px;">
-                                <div>Non-Glaucoma</div>
-                                <div>Glaucoma</div>
-                            </div>
-                            <div style="color: #ff4b91; font-size: 14px; font-style: italic; padding-top: 10px; border-top: 1px solid rgba(255, 75, 145, 0.3);">
-                                ⚠️ This model requires further improvement and validation
+                            <div style="margin-top: 15px;">
+                                <div style="font-weight: 600; color: #fff; margin-bottom: 10px;">Cup-to-Disc Ratio (CDR) estimation</div>
+                                <div style="overflow-x: auto;">
+                                    <table style="width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 5px;">
+                                        <thead>
+                                            <tr style="background: rgba(120, 119, 198, 0.2);">
+                                                <th style="padding: 4px 6px; text-align: left; border: 1px solid rgba(255, 255, 255, 0.1); color: #fff; font-size: 11px;">CDR</th>
+                                                <th style="padding: 4px 6px; text-align: left; border: 1px solid rgba(255, 255, 255, 0.1); color: #fff; font-size: 11px;">Interpretation</th>
+                                                <th style="padding: 4px 6px; text-align: left; border: 1px solid rgba(255, 255, 255, 0.1); color: #fff; font-size: 11px;">Clinical Significance</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr style="background: rgba(255, 255, 255, 0.02);">
+                                                <td style="padding: 4px 6px; border: 1px solid rgba(255, 255, 255, 0.1); color: #b0b0b0; line-height: 1.4;">0.3 – 0.5</td>
+                                                <td style="padding: 4px 6px; border: 1px solid rgba(255, 255, 255, 0.1); color: #b0b0b0; line-height: 1.4;">Medium / normal</td>
+                                                <td style="padding: 4px 6px; border: 1px solid rgba(255, 255, 255, 0.1); color: #b0b0b0; line-height: 1.4;">Majority of population</td>
+                                            </tr>
+                                            <tr style="background: rgba(255, 255, 255, 0.02);">
+                                                <td style="padding: 4px 6px; border: 1px solid rgba(255, 255, 255, 0.1); color: #b0b0b0; line-height: 1.4;">0.5 – 0.6</td>
+                                                <td style="padding: 4px 6px; border: 1px solid rgba(255, 255, 255, 0.1); color: #b0b0b0; line-height: 1.4;">Large but often physiological</td>
+                                                <td style="padding: 4px 6px; border: 1px solid rgba(255, 255, 255, 0.1); color: #b0b0b0; line-height: 1.4;">Requires context (disc size!)</td>
+                                            </tr>
+                                            <tr style="background: rgba(255, 75, 145, 0.1);">
+                                                <td style="padding: 4px 6px; border: 1px solid rgba(255, 255, 255, 0.1); color: #b0b0b0; line-height: 1.4;">> 0.6</td>
+                                                <td style="padding: 4px 6px; border: 1px solid rgba(255, 255, 255, 0.1); color: #b0b0b0; line-height: 1.4;">Suspicious</td>
+                                                <td style="padding: 4px 6px; border: 1px solid rgba(255, 255, 255, 0.1); color: #b0b0b0; line-height: 1.4;">Possible early glaucomatous change</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -422,13 +445,22 @@
 
                 <div class="partner-section">
                     <div class="partner-name">
-                        Visioofta
-                        <span class="status-badge discussion">In Discussion</span>
+                        The following clinics in progress:
                     </div>
-                    <p>
-                        We are in discussions with <strong>Visioofta</strong> to expand our research network and 
-                        clinical validation capabilities.
-                    </p>
+                    <ul style="list-style: none; padding-left: 0; margin: 20px 0;">
+                        <li style="margin: 15px 0; padding-left: 30px; position: relative; color: #b0b0b0;">
+                            <span style="position: absolute; left: 0; color: #7877c6; font-weight: bold;">▸</span>
+                            <strong style="color: #fff;">Vitreum</strong>
+                        </li>
+                        <li style="margin: 15px 0; padding-left: 30px; position: relative; color: #b0b0b0;">
+                            <span style="position: absolute; left: 0; color: #7877c6; font-weight: bold;">▸</span>
+                            <strong style="color: #fff;">Optaprof</strong>
+                        </li>
+                        <li style="margin: 15px 0; padding-left: 30px; position: relative; color: #b0b0b0;">
+                            <span style="position: absolute; left: 0; color: #7877c6; font-weight: bold;">▸</span>
+                            <strong style="color: #fff;">Arcadia</strong>
+                        </li>
+                    </ul>
                 </div>
 
             <h2>Research Impact</h2>
