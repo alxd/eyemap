@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Research — EyeMap.ai Labs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#f7f5f0;--ink:#1a1814;--mid:#6b6560;--accent:#1a4a6b;--accent2:#c8913a;--rule:#d8d2c8;--card-bg:#ffffff;--serif:'EB Garamond',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif;--mono:'Space Mono',monospace; }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6;}
+  nav{position:sticky;top:0;z-index:100;background:rgba(247,245,240,0.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:64px;}
+  .nav-brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--ink);}
+  .nav-logo{width:36px;height:36px;border-radius:8px;background:var(--accent);display:flex;align-items:center;justify-content:center;}
+  .nav-logo svg{width:20px;height:20px;}
+  .nav-wordmark{font-family:var(--serif);font-size:1.2rem;font-weight:600;}
+  .nav-wordmark span{color:var(--accent2);}
+  .nav-links{display:flex;gap:0.25rem;align-items:center;}
+  .nav-links a{font-family:var(--sans);font-size:0.85rem;font-weight:500;color:var(--mid);text-decoration:none;padding:0.4rem 0.8rem;border-radius:6px;transition:color 0.2s,background 0.2s;}
+  .nav-links a:hover{color:var(--ink);background:var(--rule);}
+  .nav-links a.active{color:var(--accent);font-weight:600;}
+  .nav-links a.btn-pitch{background:var(--accent);color:#fff;margin-left:0.5rem;}
+
+  .page-header{max-width:1100px;margin:0 auto;padding:5rem 2rem 3rem;}
+  .eyebrow{font-family:var(--mono);font-size:0.72rem;color:var(--accent2);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:1rem;}
+  h1{font-family:var(--serif);font-size:clamp(2rem,4vw,3rem);font-weight:500;line-height:1.15;margin-bottom:1rem;}
+  .lead{font-size:1.05rem;color:var(--mid);max-width:600px;line-height:1.75;}
+
+  hr.rule{border:none;border-top:1px solid var(--rule);margin:0 2rem;}
+  section{padding:4rem 2rem;}
+  .inner{max-width:1100px;margin:0 auto;}
+  .section-label{font-family:var(--mono);font-size:0.7rem;color:var(--accent2);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:0.8rem;}
+  .section-title{font-family:var(--serif);font-size:1.7rem;font-weight:500;margin-bottom:1.2rem;}
+
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;}
+  .prose{font-size:0.95rem;color:var(--mid);line-height:1.8;}
+  .prose p{margin-bottom:1rem;}
+  .prose h3{font-family:var(--serif);font-size:1.15rem;color:var(--ink);margin:1.5rem 0 0.5rem;}
+
+  .info-card{background:var(--card-bg);border:1px solid var(--rule);border-radius:14px;padding:2rem;}
+  .info-card h4{font-family:var(--serif);font-size:1.1rem;margin-bottom:0.75rem;}
+  .info-card ul{padding-left:1.2rem;font-size:0.88rem;color:var(--mid);line-height:1.8;}
+  .info-card .tag{display:inline-block;font-family:var(--mono);font-size:0.68rem;color:var(--accent);background:#eef2f7;padding:0.25rem 0.7rem;border-radius:20px;margin-bottom:0.8rem;}
+
+  .model-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.25rem;}
+  .model-card{background:var(--card-bg);border:1px solid var(--rule);border-radius:14px;padding:1.75rem;text-decoration:none;color:var(--ink);display:block;transition:box-shadow 0.2s,transform 0.2s;}
+  .model-card:hover{box-shadow:0 6px 24px rgba(0,0,0,0.07);transform:translateY(-2px);}
+  .model-card .ico{font-size:1.8rem;margin-bottom:1rem;}
+  .model-card h3{font-family:var(--serif);font-size:1.1rem;margin-bottom:0.4rem;}
+  .model-card p{font-size:0.84rem;color:var(--mid);line-height:1.6;}
+  .model-card .link{margin-top:1rem;font-size:0.82rem;color:var(--accent);font-weight:500;}
+
+  footer{border-top:1px solid var(--rule);padding:2.5rem 2rem;background:var(--bg);}
+  .footer-inner{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;}
+  .footer-copy{font-size:0.78rem;color:var(--mid);}
+  .footer-links{display:flex;gap:1.5rem;}
+  .footer-links a{font-size:0.82rem;color:var(--mid);text-decoration:none;}
+  .footer-links a:hover{color:var(--ink);}
+
+  @media(max-width:768px){.two-col{grid-template-columns:1fr;} nav{padding:0 1rem;} .nav-links a:not(.btn-pitch){display:none;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-brand" href="index.htm">
+    <div class="nav-logo"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M2 12C4.5 7 8 4 12 4s7.5 3 10 8c-2.5 5-6 8-10 8S4.5 17 2 12z"/></svg></div>
+    <span class="nav-wordmark">EyeMap<span>.ai</span> Labs</span>
+  </a>
+  <div class="nav-links">
+    <a href="research.htm" class="active">Research</a>
+    <a href="models/index.htm">AI Models</a>
+    <a href="assistive.htm">Assistive Tech</a>
+    <a href="participants/index.htm">Participants</a>
+    <a href="pitch/index.htm" class="btn-pitch">Pitch Deck →</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <p class="eyebrow">General Research Information</p>
+  <h1>Computational Ophthalmology Research</h1>
+  <p class="lead">EyeMap.ai Labs develops and validates AI systems for population-scale retinal disease screening, with a focus on clinical deployability and real-world impact.</p>
+</div>
+
+<hr class="rule">
+
+<section>
+  <div class="inner">
+    <p class="section-label">Mission & Approach</p>
+    <div class="two-col">
+      <div class="prose">
+        <p>The retinal fundus photograph is one of medicine's most information-dense, least exploited investigations. In under five minutes, a non-invasive snapshot of the retina can reveal not only ocular disease but systemic conditions — including hypertension, diabetes, and early cardiovascular risk — years before clinical symptoms emerge.</p>
+        <p>EyeMap.ai Labs was founded to close the gap between what retinal imaging can show and what current clinical workflows actually capture. We train, validate, and deploy deep learning models that operate on standard fundus images, making population-level screening feasible at point-of-care settings including optometry practices.</p>
+        <h3>Research Principles</h3>
+        <p>Our work is guided by three commitments: clinical validity (models are benchmarked against expert ophthalmologist grading), reproducibility (we document training data, architectures, and evaluation protocols), and equity (we test model performance across demographic subgroups to detect and mitigate bias).</p>
+        <h3>Oculomics</h3>
+        <p><strong>OCULOMICS</strong> is the study of the eye as an indicator of overall health, coined in 2020 by Prof. Denniston. Our programme extends this framework by using retinal imaging biomarkers to investigate cardiometabolic and neurovascular risk patterns that may be detectable before overt clinical disease.</p>
+        <h3>Regulatory Philosophy</h3>
+        <p>All models are developed with the EU AI Act and MDR regulatory pathway in mind. We do not present AI outputs as diagnostic conclusions — they are screening flags that direct clinician attention. Human oversight is central to every deployment design.</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:1.25rem;">
+        <div class="info-card">
+          <div class="tag">UK Biobank Application</div>
+          <h4>Population Validation Study</h4>
+          <ul>
+            <li>Accessing retinal imaging from UK Biobank cohort</li>
+            <li>Validating AMD, DR, and glaucoma models at scale</li>
+            <li>Longitudinal biomarker analysis</li>
+            <li>Subgroup performance assessment</li>
+          </ul>
+        </div>
+        <div class="info-card">
+          <div class="tag">Active Models</div>
+          <h4>Diagnostic AI Systems</h4>
+          <ul>
+            <li>Age-Related Macular Degeneration (5-class)</li>
+            <li>Diabetic Retinopathy (5-class, ETDRS-aligned)</li>
+            <li>Glaucoma via Cup-to-Disc Ratio estimation</li>
+          </ul>
+        </div>
+        <div class="info-card">
+          <div class="tag">Ethics & Governance</div>
+          <h4>Oversight Framework</h4>
+          <ul>
+            <li>GDPR-compliant data processing</li>
+            <li>Institutional ethics approval (pending)</li>
+            <li>UK Biobank governance compliance</li>
+            <li>Open-science data return commitment</li>
+            <li>Participant rights documentation</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section>
+  <div class="inner">
+    <p class="section-label">AI Models</p>
+    <h2 class="section-title">Diagnostic model overview</h2>
+    <div class="model-cards">
+      <a class="model-card" href="models/amd.htm">
+        <div class="ico">👁️</div>
+        <h3>Age-Related Macular Degeneration</h3>
+        <p>Binary and 2-class severity grading. Detects drusen, pigmentary abnormalities, geographic atrophy, and neovascularisation.</p>
+        <div class="link">Model details →</div>
+      </a>
+      <a class="model-card" href="models/dr.htm">
+        <div class="ico">🩸</div>
+        <h3>Diabetic Retinopathy</h3>
+        <p>5-level ETDRS-aligned severity classification from No DR through Proliferative DR. Integrates with primary care diabetes management pathways.</p>
+        <div class="link">Model details →</div>
+      </a>
+      <a class="model-card" href="models/glaucoma.htm">
+        <div class="ico">🔵</div>
+        <h3>Glaucoma — CDR Estimation</h3>
+        <p>Automated cup-to-disc ratio measurement with clinical significance thresholds. Flags cases for glaucoma specialist review.</p>
+        <div class="link">Model details →</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-copy">© 2025 EyeMap.ai Labs. Not for clinical use without regulatory clearance.</div>
+    <div class="footer-links">
+      <a href="index.htm">Home</a>
+      <a href="participants/index.htm">Participants</a>
+      <span>Contact: alex [at] eyemap [dot] ai</span>
+    </div

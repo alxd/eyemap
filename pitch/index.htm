@@ -1,0 +1,1505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EyeMap - AI-Powered Eye Health Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            line-height: 1.6;
+            color: #e0e0e0;
+            background: #0a0a0f;
+            overflow-x: hidden;
+        }
+        
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3), transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(255, 75, 145, 0.3), transparent 50%),
+                        radial-gradient(circle at 40% 20%, rgba(35, 213, 171, 0.2), transparent 50%);
+            z-index: -1;
+            animation: gradientShift 15s ease infinite;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+        }
+        
+        header {
+            text-align: center;
+            padding: 100px 20px 80px;
+            position: relative;
+        }
+        
+        .logo-container {
+            display: inline-block;
+            position: relative;
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            font-size: 72px;
+            font-weight: 900;
+            letter-spacing: -3px;
+            background: linear-gradient(135deg, #7877c6 0%, #ff4b91 50%, #23d5ab 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: glow 3s ease-in-out infinite;
+        }
+        
+        @keyframes glow {
+            0%, 100% { filter: brightness(1) drop-shadow(0 0 20px rgba(120, 119, 198, 0.5)); }
+            50% { filter: brightness(1.2) drop-shadow(0 0 30px rgba(255, 75, 145, 0.8)); }
+        }
+        
+        .nav-link {
+            color: #7877c6;
+            text-decoration: none;
+            font-size: 16px;
+            margin: 0 15px;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: #ff4b91;
+        }
+        
+        .tagline {
+            font-size: 28px;
+            font-weight: 300;
+            color: #b0b0b0;
+            margin-bottom: 50px;
+            letter-spacing: 1px;
+        }
+        
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .stat {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+        
+        .stat:hover::before {
+            left: 100%;
+        }
+        
+        .stat:hover {
+            transform: translateY(-5px);
+            border-color: rgba(120, 119, 198, 0.5);
+            box-shadow: 0 10px 40px rgba(120, 119, 198, 0.3);
+        }
+        
+        .stat-number {
+            font-size: 48px;
+            font-weight: 900;
+            display: block;
+            background: linear-gradient(135deg, #7877c6, #ff4b91);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .content {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            padding: 80px 60px;
+            margin: 60px 0;
+            position: relative;
+        }
+        
+        .content::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(120, 119, 198, 0.5), transparent);
+        }
+        
+        h2 {
+            font-size: 48px;
+            font-weight: 900;
+            margin-bottom: 40px;
+            background: linear-gradient(135deg, #fff, #b0b0b0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+        }
+        
+        h3 {
+            font-size: 28px;
+            margin: 40px 0 20px;
+            color: #fff;
+            font-weight: 700;
+        }
+        
+        .problem-solution {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin: 50px 0;
+        }
+        
+        .box {
+            padding: 40px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, #ff4b91, #7877c6);
+        }
+        
+        .box:hover {
+            border-color: rgba(120, 119, 198, 0.3);
+            transform: translateX(5px);
+        }
+        
+        .problem::before {
+            background: linear-gradient(180deg, #ff4b91, #ff6b6b);
+        }
+        
+        .solution::before {
+            background: linear-gradient(180deg, #23d5ab, #7877c6);
+        }
+        
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
+        
+        .metric-card {
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(120, 119, 198, 0.2), transparent);
+            animation: rotate 4s linear infinite;
+        }
+        
+        @keyframes rotate {
+            100% { transform: rotate(360deg); }
+        }
+        
+        .metric-card > * {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(120, 119, 198, 0.5);
+            box-shadow: 0 20px 60px rgba(120, 119, 198, 0.4);
+        }
+        
+        .metric-value {
+            font-size: 42px;
+            font-weight: 900;
+            display: block;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #7877c6, #ff4b91);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .team {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 40px;
+            margin: 50px 0;
+        }
+        
+        .team-member {
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .team-member::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #7877c6, #ff4b91, #23d5ab);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .team-member:hover::after {
+            transform: scaleX(1);
+        }
+        
+        .team-member:hover {
+            border-color: rgba(120, 119, 198, 0.3);
+            transform: translateY(-5px);
+        }
+        
+        .team-name {
+            font-size: 32px;
+            font-weight: 900;
+            margin: 20px 0 10px;
+            color: #fff;
+        }
+        
+        .team-title {
+            color: #7877c6;
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 14px;
+        }
+        
+        .team-bio {
+            font-size: 15px;
+            color: #999;
+            line-height: 1.8;
+        }
+        
+        .cta {
+            text-align: center;
+            padding: 100px 40px;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            margin: 60px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, rgba(120, 119, 198, 0.1), transparent 70%);
+        }
+        
+        .cta h2 {
+            color: #fff;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-top: 50px;
+        }
+        
+        .btn {
+            padding: 18px 50px;
+            font-size: 16px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.5s, height 0.5s;
+        }
+        
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .btn span {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #7877c6, #ff4b91);
+            color: white;
+            border: 2px solid transparent;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 40px rgba(120, 119, 198, 0.5);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .btn-secondary:hover {
+            border-color: #7877c6;
+            box-shadow: 0 10px 40px rgba(120, 119, 198, 0.3);
+        }
+        
+        ul {
+            margin: 30px 0;
+            padding-left: 0;
+            list-style: none;
+        }
+        
+        li {
+            margin: 20px 0;
+            padding-left: 30px;
+            position: relative;
+            color: #b0b0b0;
+        }
+        
+        li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: #7877c6;
+            font-weight: bold;
+        }
+        
+        .highlight {
+            background: linear-gradient(135deg, #7877c6, #ff4b91);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+        
+        p {
+            color: #b0b0b0;
+            margin: 20px 0;
+            line-height: 1.8;
+        }
+        
+        strong {
+            color: #fff;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 768px) {
+            .problem-solution {
+                grid-template-columns: 1fr;
+            }
+            
+            .content {
+                padding: 40px 30px;
+            }
+            
+            .logo {
+                font-size: 48px;
+            }
+            
+            .tagline {
+                font-size: 20px;
+            }
+            
+            h2 {
+                font-size: 36px;
+            }
+            
+            header {
+                padding: 60px 20px 40px;
+            }
+        }
+        
+        .grid-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(120, 119, 198, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(120, 119, 198, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            animation: gridMove 20s linear infinite;
+        }
+        
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* Style Switcher Controls */
+        .style-switcher {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px 0;
+            text-align: center;
+        }
+
+        .style-switcher h3 {
+            color: #fff;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+
+        .switcher-controls {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .control-group label {
+            color: #b0b0b0;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .theme-btn, .font-btn, .mode-btn {
+            padding: 12px 24px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: transparent;
+            color: #b0b0b0;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .theme-btn:hover, .font-btn:hover, .mode-btn:hover {
+            border-color: #7877c6;
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .theme-btn.active, .font-btn.active {
+            background: linear-gradient(135deg, #7877c6, #ff4b91);
+            border-color: transparent;
+            color: white;
+        }
+
+        .mode-btn {
+            background: linear-gradient(135deg, #ff4b91, #23d5ab);
+            border-color: transparent;
+            color: white;
+        }
+
+        .mode-btn:hover {
+            background: linear-gradient(135deg, #ff6b6b, #35e6c1);
+        }
+
+        /* Font Size Variations */
+        .font-small {
+            font-size: 14px;
+        }
+
+        .font-small .logo {
+            font-size: 48px;
+        }
+
+        .font-small h2 {
+            font-size: 36px;
+        }
+
+        .font-small h3 {
+            font-size: 22px;
+        }
+
+        .font-small .stat-number {
+            font-size: 36px;
+        }
+
+        .font-small .metric-value {
+            font-size: 32px;
+        }
+
+        .font-medium {
+            font-size: 16px;
+        }
+
+        .font-large {
+            font-size: 18px;
+        }
+
+        .font-large .logo {
+            font-size: 84px;
+        }
+
+        .font-large h2 {
+            font-size: 56px;
+        }
+
+        .font-large h3 {
+            font-size: 32px;
+        }
+
+        .font-large .stat-number {
+            font-size: 56px;
+        }
+
+        .font-large .metric-value {
+            font-size: 48px;
+        }
+
+        /* Green Theme Styles */
+        .green-theme {
+            background: #f5f5f5;
+            color: #1a1a1a;
+        }
+
+        .green-theme .bg-gradient {
+            background: linear-gradient(135deg, #00e996 0%, #c3e49f 100%);
+        }
+
+        .green-theme .grid-pattern {
+            background-image: 
+                linear-gradient(rgba(0, 233, 150, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 233, 150, 0.05) 1px, transparent 1px);
+        }
+
+        .green-theme header {
+            background: linear-gradient(135deg, #00e996 0%, #c3e49f 100%);
+            border-radius: 32px;
+            margin-bottom: 60px;
+            box-shadow: 0 8px 32px rgba(0, 233, 150, 0.25);
+        }
+
+        .green-theme .logo {
+            color: #1a1a1a;
+            background: none;
+            -webkit-text-fill-color: #1a1a1a;
+        }
+
+        .green-theme .tagline {
+            color: #1a1a1a;
+        }
+
+        .green-theme .stat {
+            background: #ffffff;
+            border: 3px solid #1a1a1a;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        }
+
+        .green-theme .stat:hover {
+            border-color: #00e996;
+            box-shadow: 0 12px 32px rgba(0, 233, 150, 0.2);
+        }
+
+        .green-theme .stat-number {
+            color: #1a1a1a;
+            background: none;
+            -webkit-text-fill-color: #1a1a1a;
+        }
+
+        .green-theme .stat-label {
+            color: #1a1a1a;
+            opacity: 0.7;
+        }
+
+        .green-theme .content {
+            background: #ffffff;
+            border: none;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        }
+
+        .green-theme h2 {
+            color: #1a1a1a;
+            background: none;
+            -webkit-text-fill-color: #1a1a1a;
+        }
+
+        .green-theme h3 {
+            color: #1a1a1a;
+        }
+
+        .green-theme .box {
+            border: 3px solid #1a1a1a;
+        }
+
+        .green-theme .problem {
+            background: #f6b5d3;
+        }
+
+        .green-theme .solution {
+            background: #c3e49f;
+        }
+
+        .green-theme .metric-card {
+            background: #fff269;
+            border: 3px solid #1a1a1a;
+        }
+
+        .green-theme .metric-value {
+            color: #1a1a1a;
+            background: none;
+            -webkit-text-fill-color: #1a1a1a;
+        }
+
+        .green-theme .team-member {
+            background: #f5f5f5;
+            border: 3px solid #1a1a1a;
+        }
+
+        .green-theme .team-member:hover {
+            background: #c3e49f;
+        }
+
+        .green-theme .team-name {
+            color: #1a1a1a;
+        }
+
+        .green-theme .team-title {
+            color: #1a1a1a;
+        }
+
+        .green-theme .team-bio {
+            color: #1a1a1a;
+            opacity: 0.85;
+        }
+
+        .green-theme .cta {
+            background: linear-gradient(135deg, #f6b5d3 0%, #fff269 100%);
+            color: #1a1a1a;
+            border: 3px solid #1a1a1a;
+            box-shadow: 0 8px 32px rgba(246, 181, 211, 0.3);
+        }
+
+        .green-theme .cta h2 {
+            color: #1a1a1a;
+        }
+
+        .green-theme .btn-primary {
+            background: #00e996;
+            color: #1a1a1a;
+            border: 3px solid #1a1a1a;
+        }
+
+        .green-theme .btn-secondary {
+            background: #ffffff;
+            color: #1a1a1a;
+            border: 3px solid #1a1a1a;
+        }
+
+        .green-theme p {
+            color: #1a1a1a;
+            opacity: 0.9;
+        }
+
+        .green-theme strong {
+            color: #1a1a1a;
+        }
+
+        .green-theme li {
+            color: #1a1a1a;
+            opacity: 0.9;
+        }
+
+        .green-theme li::before {
+            color: #1a1a1a;
+        }
+
+        .green-theme .highlight {
+            background: #c3e49f;
+            color: #1a1a1a;
+            padding: 4px 12px;
+            border-radius: 6px;
+        }
+
+        .green-theme .style-switcher {
+            background: #ffffff;
+            border: 3px solid #1a1a1a;
+        }
+
+        .green-theme .style-switcher h3 {
+            color: #1a1a1a;
+        }
+
+        .green-theme .control-group label {
+            color: #1a1a1a;
+            opacity: 0.7;
+        }
+
+        .green-theme .theme-btn, .green-theme .font-btn, .green-theme .mode-btn {
+            border-color: #1a1a1a;
+            color: #1a1a1a;
+        }
+
+        .green-theme .theme-btn:hover, .green-theme .font-btn:hover, .green-theme .mode-btn:hover {
+            border-color: #00e996;
+            color: #1a1a1a;
+        }
+
+        /* Dark Theme Styles - More subtle approach */
+        .dark-theme {
+            background: #1a1a1a !important;
+            color: #e0e0e0 !important;
+        }
+
+        .dark-theme .bg-gradient {
+            background: radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.2), transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(255, 75, 145, 0.2), transparent 50%),
+                        radial-gradient(circle at 40% 20%, rgba(35, 213, 171, 0.15), transparent 50%) !important;
+        }
+
+        .dark-theme .grid-pattern {
+            background-image: 
+                linear-gradient(rgba(120, 119, 198, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(120, 119, 198, 0.03) 1px, transparent 1px) !important;
+        }
+
+        .dark-theme .logo {
+            background: linear-gradient(135deg, #7877c6 0%, #ff4b91 50%, #23d5ab 100%) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            background-clip: text !important;
+        }
+
+        .dark-theme .tagline {
+            color: #b0b0b0 !important;
+        }
+
+        .dark-theme .stat {
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        }
+
+        .dark-theme .stat:hover {
+            border-color: rgba(120, 119, 198, 0.5) !important;
+            box-shadow: 0 10px 40px rgba(120, 119, 198, 0.3) !important;
+        }
+
+        .dark-theme .stat-number {
+            background: linear-gradient(135deg, #7877c6, #ff4b91) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            background-clip: text !important;
+        }
+
+        .dark-theme .stat-label {
+            color: #888 !important;
+        }
+
+        .dark-theme .content {
+            background: rgba(255, 255, 255, 0.03) !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        }
+
+        .dark-theme h2 {
+            background: linear-gradient(135deg, #fff, #b0b0b0) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            background-clip: text !important;
+        }
+
+        .dark-theme h3 {
+            color: #fff !important;
+        }
+
+        .dark-theme .box {
+            background: rgba(255, 255, 255, 0.03) !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        }
+
+        .dark-theme .box:hover {
+            border-color: rgba(120, 119, 198, 0.3) !important;
+        }
+
+        .dark-theme .metric-card {
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        }
+
+        .dark-theme .metric-card:hover {
+            border-color: rgba(120, 119, 198, 0.5) !important;
+            box-shadow: 0 20px 60px rgba(120, 119, 198, 0.4) !important;
+        }
+
+        .dark-theme .metric-value {
+            background: linear-gradient(135deg, #7877c6, #ff4b91) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            background-clip: text !important;
+        }
+
+        .dark-theme .team-member {
+            background: rgba(255, 255, 255, 0.03) !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        }
+
+        .dark-theme .team-member:hover {
+            border-color: rgba(120, 119, 198, 0.3) !important;
+        }
+
+        .dark-theme .team-name {
+            color: #fff !important;
+        }
+
+        .dark-theme .team-title {
+            color: #7877c6 !important;
+        }
+
+        .dark-theme .team-bio {
+            color: #999 !important;
+        }
+
+        .dark-theme .cta {
+            background: rgba(255, 255, 255, 0.03) !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        }
+
+        .dark-theme .cta h2 {
+            color: #fff !important;
+        }
+
+        .dark-theme .btn-primary {
+            background: linear-gradient(135deg, #7877c6, #ff4b91) !important;
+            color: white !important;
+            border: 2px solid transparent !important;
+        }
+
+        .dark-theme .btn-secondary {
+            background: transparent !important;
+            color: white !important;
+            border: 2px solid rgba(255, 255, 255, 0.3) !important;
+        }
+
+        .dark-theme p {
+            color: #b0b0b0 !important;
+        }
+
+        .dark-theme strong {
+            color: #fff !important;
+        }
+
+        .dark-theme li {
+            color: #b0b0b0 !important;
+        }
+
+        .dark-theme li::before {
+            color: #7877c6 !important;
+        }
+
+        .dark-theme .highlight {
+            background: linear-gradient(135deg, #7877c6, #ff4b91) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            background-clip: text !important;
+        }
+
+        .dark-theme .style-switcher {
+            background: rgba(255, 255, 255, 0.03) !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        }
+
+        .dark-theme .style-switcher h3 {
+            color: #fff !important;
+        }
+
+        .dark-theme .control-group label {
+            color: #b0b0b0 !important;
+        }
+
+        .dark-theme .theme-btn, .dark-theme .font-btn, .dark-theme .mode-btn {
+            border-color: rgba(255, 255, 255, 0.3) !important;
+            color: #b0b0b0 !important;
+        }
+
+        .dark-theme .theme-btn:hover, .dark-theme .font-btn:hover, .dark-theme .mode-btn:hover {
+            border-color: #7877c6 !important;
+            color: #fff !important;
+        }
+
+        @media (max-width: 768px) {
+            .switcher-controls {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    <div class="grid-pattern"></div>
+    
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <div class="logo">EYEMAP</div>
+            </div>
+            <div style="margin-top: 0px;">
+                <a href="../research.htm" class="nav-link">Research</a>
+                <a href="../models/index.htm" class="nav-link">AI Models</a>
+                <a href="../participants/index.htm" class="nav-link">Participants</a>
+            </div>
+            <div style="margin-top: 40px;" class="tagline">AI-powered eye health platform for early disease detection</div>
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-number">795K</span>
+                    <span class="stat-label">Annual Strokes in US</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">€131B</span>
+                    <span class="stat-label">Market Opportunity</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">171M</span>
+                    <span class="stat-label">Annual Optical Visits (USA)</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="content">
+            <h2>The Opportunity</h2>
+            
+            <div class="problem-solution">
+                <div class="box problem">
+                    <h3>The Problem</h3>
+                    <p><strong>80% of strokes occur without warning signs</strong></p>
+                    <ul>
+                        <li>5 million Romanians visit optical shops yearly with zero health screening</li>
+                        <li>Optometrists sell glasses reactively when problems already exist</li>
+                        <li>Traditional screening is expensive, invasive, and infrequent</li>
+                        <li>Optical shops miss €450M+ in potential health screening revenue</li>
+                    </ul>
+                </div>
+                
+                <div class="box solution">
+                    <h3>Our Solution</h3>
+                    <p><strong>Transform every eye exam into a comprehensive health assessment</strong></p>
+                    <ul>
+                        <li>AI-powered screening detects stroke, diabetes, and cardiovascular disease through the eye</li>
+                        <li>Works with smartphone cameras and professional equipment</li>
+                        <li>5-minute screening generates €49-79 per customer</li>
+                        <li>Integrated health product platform for ongoing care</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h2>Market Opportunity</h2>
+            <div class="metrics">
+                <div class="metric-card">
+                    <span class="metric-value">€131B+</span>
+                    <span class="stat-label">Total Market</span>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-value">€8.2B</span>
+                    <span class="stat-label">Serviceable Market</span>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-value">€890M</span>
+                    <span class="stat-label">5-Year Target</span>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-value">86%</span>
+                    <span class="stat-label">Gross Margin</span>
+                </div>
+            </div>
+
+            <h2>Business Model</h2>
+            <p>Three high-margin revenue streams from the same customer:</p>
+            <ul>
+                <li><strong>Health Screening (30% of revenue):</strong> €49-79 per scan, we take 30% commission (€15-24)</li>
+                <li><strong>Product Platform (50% of revenue):</strong> Eye health supplements, devices, and solutions at 25-60% margins</li>
+                <li><strong>Professional Referrals (20% of revenue):</strong> €50-150 commission per specialist referral</li>
+            </ul>
+            <p style="margin-top: 30px;"><span class="highlight">Customer Lifetime Value: €1,250</span> | <span class="highlight">Customer Acquisition Cost: €12</span></p>
+
+            <h2>Traction & Roadmap</h2>
+            
+            <h3>2026 Milestones</h3>
+            <div class="metrics">
+                <div class="metric-card">
+                    <span class="metric-value">Q2</span>
+                    <span class="stat-label">10 locations, 1K screenings</span>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-value">Q3</span>
+                    <span class="stat-label">25 locations, 3K screenings</span>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-value">Q4</span>
+                    <span class="stat-label">50 locations, 8K screenings</span>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-value">Q1 2027</span>
+                    <span class="stat-label">100 locations, €1.2M revenue</span>
+                </div>
+            </div>
+            
+
+            <h2>Why Now?</h2>
+            <ul>
+                <li><strong>Technology:</strong> Fundus imaging, AI accuracy 90%+</li>
+                <li><strong>Market behavior:</strong> Post-COVID shift to preventive, digital healthcare</li>
+                <li><strong>Partner need:</strong> Optical shops in the quest for new revenue streams</li>
+                <li><strong>Regulatory:</strong> Clear EU pathways for AI medical devices</li>
+                <li><strong>Competition:</strong> 18-month window before Big Tech enters</li>
+            </ul>
+
+            <h2>The Team</h2>
+            <div class="team">
+                <div class="team-member">
+                    <div class="team-name">Tudor</div>
+                    <div class="team-title">CEO & Co-founder</div>
+                    <div class="team-bio">PhD, Expert in scaling businesses. Previously scaled Tudor Tailor (fashion tech) and Teilor Diamonds. Proven track record in consumer-facing technology and premium market positioning.</div>
+                    <div style="margin-top: 15px;">
+                        <a href="https://www.linkedin.com/in/tudor-popescu-08ab606/" target="_blank" style="color: #7877c6; text-decoration: none; font-size: 14px; border-bottom: 1px solid #7877c6; transition: color 0.3s ease;" onmouseover="this.style.color='#ff4b91'; this.style.borderBottomColor='#ff4b91';" onmouseout="this.style.color='#7877c6'; this.style.borderBottomColor='#7877c6';">
+                            LinkedIn →
+                        </a>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="team-name">Alex</div>
+                    <div class="team-title">CTO & Co-founder</div>
+                    <div class="team-bio">PhD, Postdoc in AI for Healthcare. Specialized in clinical wearables, computer vision and assistive technologies. Research background in AI applications.</div>
+                    <div style="margin-top: 15px;">
+                        <a href="https://www.linkedin.com/in/alexandru-dancu/" target="_blank" style="color: #7877c6; text-decoration: none; font-size: 14px; border-bottom: 1px solid #7877c6; transition: color 0.3s ease;" onmouseover="this.style.color='#ff4b91'; this.style.borderBottomColor='#ff4b91';" onmouseout="this.style.color='#7877c6'; this.style.borderBottomColor='#7877c6';">
+                            LinkedIn →
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <h2>The Ask</h2>
+            
+            <div style="
+                background: rgba(255, 255, 255, 0.03);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 20px;
+                padding: 40px;
+                margin: 30px 0;
+            ">
+                <h3 style="color: #fff; margin-top: 0; margin-bottom: 20px;">Preseed: €1M</h3>
+                <ul>
+                    <li>Raise €1M from VCs and angels</li>
+                    <li>Optical chain partners (prospecting the main players: Lensa & Videt)</li>
+                    <li><strong>Use of funds:</strong> Prototype development, team hiring (3 engineers), pilot and clinical trial preparations</li>
+                    <li><strong>Timeline:</strong> Close by Q2</li>
+                </ul>
+            </div>
+
+            <div style="
+                background: rgba(120, 119, 198, 0.1);
+                border: 2px solid rgba(120, 119, 198, 0.3);
+                border-radius: 20px;
+                padding: 40px;
+                margin: 30px 0;
+                position: relative;
+            ">
+                <div style="
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 4px;
+                    height: 100%;
+                    background: linear-gradient(180deg, #7877c6, #ff4b91);
+                "></div>
+                <h3 style="color: #fff; margin-top: 0; margin-bottom: 20px;">Post-Pilot Expansion</h3>
+                <p style="margin-bottom: 15px;">
+                    Following successful pilot validation, we will  scale operations across Romania.
+                </p>
+                <p style="margin-bottom: 15px;">
+                    <strong>Objective:</strong> Equip <strong style="color: #23d5ab;">70% of optometry shops in Romania</strong> with our AI-powered screening platform.
+                </p>
+                <p style="margin-bottom: 0;">
+                    This expansion round will enable nationwide deployment, establishing eyemap.ai as the standard for preventive health screening in the Romanian optical market.
+                </p>
+            </div>
+        </div>
+
+        <!-- Dashboard Preview Section -->
+        <div class="content" style="margin-top: 60px;">
+            <h2>Interactive Dashboard Preview</h2>
+            <p style="margin-bottom: 30px; color: #b0b0b0;">
+                This is a design mockup of our system. The functional platform will be available in January 2026. 
+                Experience a preview of our AI-powered screening platform and see how fundus image analysis will work.
+            </p>
+            
+            <div class="dashboard-preview" style="
+                background: rgba(255, 255, 255, 0.02);
+                backdrop-filter: blur(20px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 20px;
+                padding: 40px;
+                margin: 30px 0;
+                position: relative;
+                overflow: hidden;
+            ">
+                <div style="
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    height: 2px;
+                    background: linear-gradient(90deg, #7877c6, #ff4b91, #23d5ab);
+                "></div>
+                
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <h3 style="color: #fff; margin-bottom: 15px;">Try the eyemap.ai Dashboard</h3>
+                    <p style="color: #b0b0b0; margin-bottom: 20px;">
+                        <strong style="color: #ff4b91;">⚠️ Note:</strong> This is a mockup and work in progress - Not for clinical use
+                    </p>
+                </div>
+                
+                <div style="
+                    background: rgba(255, 255, 255, 0.03);
+                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    border-radius: 15px;
+                    padding: 20px;
+                    margin-bottom: 30px;
+                    min-height: 400px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                ">
+                    <iframe 
+                        src="dashboard/dashboard.html" 
+                        style="
+                            width: 100%;
+                            height: 600px;
+                            border: none;
+                            border-radius: 10px;
+                            background: rgba(10, 10, 15, 0.5);
+                        "
+                        title="eyemap.ai Dashboard"
+                    ></iframe>
+                </div>
+                
+                <div style="text-align: center;">
+                    <a href="dashboard/dashboard.html" target="_blank" class="btn btn-primary" style="display: inline-block;">
+                        <span>Open Dashboard in New Tab</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- News Section -->
+        <div class="content" style="margin-top: 60px;">
+            <h2>Latest News</h2>
+            
+            <div class="news-item" style="
+                background: rgba(255, 255, 255, 0.02);
+                backdrop-filter: blur(20px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 20px;
+                padding: 40px;
+                margin: 30px 0;
+                position: relative;
+                overflow: hidden;
+            ">
+                <div style="
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    height: 2px;
+                    background: linear-gradient(90deg, #7877c6, #ff4b91, #23d5ab);
+                "></div>
+                
+                <div style="margin-bottom: 30px;">
+                    <h3 style="color: #fff; margin-bottom: 15px; font-size: 28px;">
+                        🏆 Won 3rd Prize at HealthON Hackathon
+                    </h3>
+                    <p style="color: #b0b0b0; margin-bottom: 20px; font-size: 16px;">
+                        We're thrilled to announce that eyemap.ai won <strong style="color: #ff4b91;">3rd place</strong> at the 
+                        <a href="https://healthonhackathon.ro/" target="_blank" style="color: #7877c6; text-decoration: none; border-bottom: 1px solid #7877c6;">
+                            HealthON Hackathon
+                        </a> on <strong>December 17th, 2025</strong>!
+                    </p>
+                    <p style="color: #b0b0b0; margin-bottom: 20px; font-size: 16px;">
+                        The hackathon brought together innovators, healthcare professionals, and technology experts to develop 
+                        solutions for Romania's healthcare system. Our AI-powered retinal screening platform impressed the jury, 
+                        including the Romanian Health Minister, <strong style="color: #fff;">Alexandru Rogobete</strong>.
+                    </p>
+                </div>
+
+                <div style="
+                    background: rgba(255, 255, 255, 0.03);
+                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    border-radius: 15px;
+                    padding: 30px;
+                    margin: 30px 0;
+                ">
+                    <h4 style="color: #fff; margin-bottom: 20px; font-size: 20px;">Watch the Minister Try Our System</h4>
+                    <p style="color: #b0b0b0; margin-bottom: 20px; font-size: 14px;">
+                        Romanian Health Minister <strong style="color: #fff;">Alexandru Rogobete</strong> spontaneously got up 
+                        from the jury seat to try our eyemap.ai system during the hackathon presentation.
+                    </p>
+
+                    <div style="
+                        display: flex;
+                        justify-content: center;
+                        margin: 20px 0;
+                    ">
+                        <div style="
+                            width: 100%;
+                            max-width: 540px;
+                            margin: 0 auto;
+                        ">
+                            <img 
+                                src="dashboard/ministru_1024.jfif.jpg" 
+                                alt="Romanian Health Minister trying eyemap.ai system"
+                                style="
+                                    width: 100%;
+                                    height: auto;
+                                    border-radius: 10px;
+                                    display: block;
+                                    margin-bottom: 15px;
+                                "
+                            />
+                            <a 
+                                href="https://youtu.be/qWO-MaHmE5k" 
+                                target="_blank" 
+                                class="btn btn-primary"
+                                style="
+                                    display: inline-block;
+                                    text-decoration: none;
+                                    padding: 12px 30px;
+                                    border-radius: 25px;
+                                    background: linear-gradient(135deg, #7877c6, #ff4b91);
+                                    color: white;
+                                    font-weight: 600;
+                                    transition: all 0.3s ease;
+                                    width: 100%;
+                                    text-align: center;
+                                "
+                                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 10px 30px rgba(120, 119, 198, 0.4)';"
+                                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';"
+                            >
+                                ▶️ Watch Video on YouTube
+                            </a>
+                        </div>
+                    </div>
+
+                    
+
+                <div style="
+                    background: rgba(255, 255, 255, 0.03);
+                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    border-radius: 15px;
+                    padding: 20px;
+                    margin-top: 20px;
+                    text-align: center;
+                ">
+                    <p style="color: #b0b0b0; margin-bottom: 15px; font-size: 14px;">
+                        Check out the Hackathon Instagram reel 
+                    </p>
+                    <a 
+                        href="https://www.instagram.com/reel/DSaBD5QlHRj/?igsh=ZjA3dWFvdTlsNTk2" 
+                        target="_blank" 
+                        class="btn btn-primary"
+                        style="
+                            display: inline-block;
+                            text-decoration: none;
+                            padding: 12px 30px;
+                            border-radius: 25px;
+                            background: linear-gradient(135deg, #7877c6, #ff4b91);
+                            color: white;
+                            font-weight: 600;
+                            transition: all 0.3s ease;
+                        "
+                        onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 10px 30px rgba(120, 119, 198, 0.4)';"
+                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';"
+                    >
+                        📱 View Instagram Reel
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="cta">
+            <h2>Join Us in Transforming Healthcare</h2>
+            <p style="font-size: 20px; margin: 20px 0; color: #b0b0b0;">Every pair of glasses sold is a missed opportunity to save a life.<br>Let's change that together.</p>
+            <div class="cta-buttons">
+                <a href="../participants/index.htm" class="btn btn-primary"><span>Contact PI: alex [at] eyemap [dot] ai</span></a>
+                <a href="../index.htm" class="btn btn-secondary"><span>Back to EyeMap.ai Site</span></a>
+            </div>
+            <p style="margin-top: 50px; font-size: 14px; color: #666; text-transform: uppercase; letter-spacing: 3px;">See health before symptoms</p>
+        </div>
+
+        <!-- Style Switcher Controls -->
+        <div class="style-switcher">
+            <h3>Customize Your Experience</h3>
+            <div class="switcher-controls">
+                <div class="control-group">
+                    <label>Theme Style:</label>
+                    <button onclick="switchTheme('default')" class="theme-btn active" id="default-theme">Default</button>
+                    <button onclick="switchTheme('green')" class="theme-btn" id="green-theme">Green Theme</button>
+                </div>
+                <div class="control-group">
+                    <label>Font Size:</label>
+                    <button onclick="setFontSize('small')" class="font-btn" id="small-font">Small</button>
+                    <button onclick="setFontSize('medium')" class="font-btn active" id="medium-font">Medium</button>
+                    <button onclick="setFontSize('large')" class="font-btn" id="large-font">Large</button>
+                </div>
+                <div class="control-group">
+                    <label>Color Mode:</label>
+                    <button onclick="toggleDarkMode()" class="mode-btn" id="dark-mode-btn">High Contrast</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme switching functionality
+        function switchTheme(theme) {
+            // Remove existing theme classes
+            document.body.classList.remove('green-theme', 'dark-theme');
+            
+            // Update active button
+            document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(theme + '-theme').classList.add('active');
+            
+            if (theme === 'green') {
+                document.body.classList.add('green-theme');
+            }
+        }
+
+        // Font size functionality
+        function setFontSize(size) {
+            document.body.classList.remove('font-small', 'font-medium', 'font-large');
+            document.body.classList.add('font-' + size);
+            
+            // Update active button
+            document.querySelectorAll('.font-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(size + '-font').classList.add('active');
+        }
+
+        // High contrast mode functionality
+        function toggleDarkMode() {
+            const isHighContrast = document.body.classList.toggle('dark-theme');
+            const btn = document.getElementById('dark-mode-btn');
+            btn.textContent = isHighContrast ? 'Normal Mode' : 'High Contrast';
+            
+            // Store preference
+            localStorage.setItem('highContrast', isHighContrast);
+        }
+
+        // Load saved preference
+        function loadThemePreference() {
+            const savedHighContrast = localStorage.getItem('highContrast');
+            if (savedHighContrast === 'true') {
+                document.body.classList.add('dark-theme');
+                document.getElementById('dark-mode-btn').textContent = 'Normal Mode';
+            }
+        }
+
+        // Initialize default settings
+        document.addEventListener('DOMContentLoaded', function() {
+            setFontSize('medium');
+            loadThemePreference();
+        });
+    </script>
+    
+    <!-- Instagram Embed Script -->
+    <script async src="//www.instagram.com/embed.js"></script>
+</body>
+</html>

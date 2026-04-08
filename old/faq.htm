@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Participant FAQ — EyeMap.ai Labs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#f7f5f0;--ink:#1a1814;--mid:#6b6560;--accent:#1a4a6b;--accent2:#c8913a;--rule:#d8d2c8;--card-bg:#ffffff;--serif:'EB Garamond',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif;--mono:'Space Mono',monospace;}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;}
+  nav{position:sticky;top:0;z-index:100;background:rgba(247,245,240,0.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:64px;}
+  .nav-brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--ink);}
+  .nav-logo{width:36px;height:36px;border-radius:8px;background:var(--accent);display:flex;align-items:center;justify-content:center;}
+  .nav-logo svg{width:20px;height:20px;}
+  .nav-wordmark{font-family:var(--serif);font-size:1.2rem;font-weight:600;}
+  .nav-wordmark span{color:var(--accent2);}
+  .nav-links{display:flex;gap:0.25rem;align-items:center;}
+  .nav-links a{font-size:0.85rem;font-weight:500;color:var(--mid);text-decoration:none;padding:0.4rem 0.8rem;border-radius:6px;transition:color 0.2s,background 0.2s;}
+  .nav-links a:hover{color:var(--ink);background:var(--rule);}
+  .nav-links a.btn-pitch{background:var(--accent);color:#fff;margin-left:0.5rem;}
+  .breadcrumb{max-width:860px;margin:0 auto;padding:2rem 2rem 0;font-size:0.82rem;color:var(--mid);}
+  .breadcrumb a{color:var(--mid);text-decoration:none;}
+  .breadcrumb span{margin:0 0.4rem;}
+  .doc-wrap{max-width:860px;margin:0 auto;padding:3rem 2rem 5rem;}
+  .doc-header{background:var(--accent2);color:#1a1814;border-radius:16px;padding:2.5rem;margin-bottom:3rem;}
+  .doc-header .label{font-family:var(--mono);font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;opacity:0.7;margin-bottom:0.5rem;}
+  .doc-header h1{font-family:var(--serif);font-size:2rem;font-weight:500;margin-bottom:0.5rem;}
+  .doc-header .meta{font-size:0.84rem;opacity:0.8;}
+  .faq-item{border:1px solid var(--rule);border-radius:12px;background:var(--card-bg);margin-bottom:0.75rem;overflow:hidden;}
+  .faq-q{padding:1.25rem 1.5rem;font-family:var(--serif);font-size:1.05rem;font-weight:500;color:var(--ink);cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:1rem;}
+  .faq-q:hover{background:#f7f5f0;}
+  .faq-q .arrow{font-size:0.8rem;color:var(--accent);transition:transform 0.2s;flex-shrink:0;}
+  .faq-a{padding:0 1.5rem 1.25rem;font-size:0.9rem;color:var(--mid);line-height:1.75;border-top:1px solid var(--rule);}
+  .faq-a a{color:var(--accent);text-decoration:none;}
+  .faq-a a:hover{text-decoration:underline;}
+  .faq-cat{font-family:var(--mono);font-size:0.7rem;color:var(--accent2);letter-spacing:0.12em;text-transform:uppercase;margin:2.5rem 0 1rem;}
+  footer{border-top:1px solid var(--rule);padding:2.5rem 2rem;background:var(--bg);}
+  .footer-inner{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;}
+  .footer-copy{font-size:0.78rem;color:var(--mid);}
+  .footer-links{display:flex;gap:1.5rem;}
+  .footer-links a{font-size:0.82rem;color:var(--mid);text-decoration:none;}
+  @media(max-width:768px){nav{padding:0 1rem;}.nav-links a:not(.btn-pitch){display:none;}}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-brand" href="../../index.htm">
+    <div class="nav-logo"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M2 12C4.5 7 8 4 12 4s7.5 3 10 8c-2.5 5-6 8-10 8S4.5 17 2 12z"/></svg></div>
+    <span class="nav-wordmark">EyeMap<span>.ai</span> Labs</span>
+  </a>
+  <div class="nav-links">
+    <a href="../../research.htm">Research</a>
+    <a href="../../models/index.htm">AI Models</a>
+    <a href="../../assistive.htm">Assistive Tech</a>
+    <a href="index.htm">Participants</a>
+    <a href="../../pitch/index.htm" class="btn-pitch">Pitch Deck →</a>
+  </div>
+</nav>
+<div class="breadcrumb"><a href="../../index.htm">EyeMap.ai Labs</a> › <a href="index.htm">Participants</a> › FAQ</div>
+<div class="doc-wrap">
+  <div class="doc-header">
+    <div class="label">Participant Documentation · 2025</div>
+    <h1>Frequently Asked Questions</h1>
+    <div class="meta">Answers to the questions we hear most often from study participants.</div>
+  </div>
+
+  <div class="faq-cat">Before the study</div>
+
+  <div class="faq-item">
+    <div class="faq-q">Who can take part in this study? <span class="arrow">↓</span></div>
+    <div class="faq-a">The study is open to adults aged 18 and over. Specific eligibility criteria may vary by study site and are described in your site's participant information sheet. If you are unsure whether you qualify, please contact the research team before your appointment.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">Do I need to have an eye condition to take part? <span class="arrow">↓</span></div>
+    <div class="faq-a">No. We welcome participants with and without known eye conditions. In fact, including people across the full spectrum of eye health is important for developing AI models that work reliably across diverse populations.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">Is there any payment or compensation for taking part? <span class="arrow">↓</span></div>
+    <div class="faq-a">Participants are not paid for taking part. However, you will receive a summary of your fundus image AI analysis result as described in the information sheet, which may have personal health value. Any reasonable travel expenses incurred specifically for the study appointment may be reimbursable — please ask the research team.</div>
+  </div>
+
+  <div class="faq-cat">During the study</div>
+
+  <div class="faq-item">
+    <div class="faq-q">Does the eye photography hurt or involve any risk? <span class="arrow">↓</span></div>
+    <div class="faq-a">No. Fundus photography is entirely non-invasive and painless. A brief flash of light will be used to illuminate the back of your eye. You may notice a temporary after-image lasting a few seconds, similar to any camera flash. There are no injections, eye drops, or physical contact with your eye.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">Will I be able to see my results? <span class="arrow">↓</span></div>
+    <div class="faq-a">Yes. You will receive a brief summary of the AI classification output for your image. This is provided for information only and is not a medical diagnosis. If the AI system flags anything that may warrant clinical attention, you will be advised to discuss this with your optometrist or GP. We will not interpret these results for you medically — that is the role of a qualified clinician.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">How long will my appointment take? <span class="arrow">↓</span></div>
+    <div class="faq-a">The full study appointment, including consent, imaging, and questionnaire, takes approximately 15–20 minutes. No follow-up visits are required for the basic study participation.</div>
+  </div>
+
+  <div class="faq-cat">Withdrawal & data</div>
+
+  <div class="faq-item">
+    <div class="faq-q">Can I change my mind and withdraw? <span class="arrow">↓</span></div>
+    <div class="faq-a">Yes, at any time and without providing a reason. Contact the principal investigator at <a href="mailto:alex@eyemap.ai">alex@eyemap.ai</a>. If your data has not yet been fully anonymised and merged into the research dataset, we will delete it. Once anonymised, it may not be possible to identify and remove your specific contribution — but at that point your identity is no longer associated with the data in any way.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">Will my data be used for anything other than this research? <span class="arrow">↓</span></div>
+    <div class="faq-a">No. Your anonymised data will only be used for the ophthalmic AI research purposes described in the Participant Information Sheet. It will not be sold to any commercial entity or used in ways not covered by your consent. Any new use of your data would require a new consent process.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">Who will see my data? <span class="arrow">↓</span></div>
+    <div class="faq-a">Only named members of the EyeMap.ai Labs research team will have access to identifiable information. Anonymised, coded data may be shared with academic collaborators under formal data sharing agreements and potentially with UK Biobank as part of our data return commitment. See the <a href="data-rights.htm">Data Rights document</a> for full details.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">Will I be identifiable in any publications? <span class="arrow">↓</span></div>
+    <div class="faq-a">No. All publications and presentations will use aggregated, anonymised data. No individual participant can be identified in any output from this research.</div>
+  </div>
+
+  <div class="faq-cat">Results & follow-up</div>
+
+  <div class="faq-item">
+    <div class="faq-q">When will the study results be available? <span class="arrow">↓</span></div>
+    <div class="faq-a">Research timelines vary. If you would like to receive a plain-English summary of the published results, please indicate this on your consent form and provide an email address. We will contact you when results are available — typically within 12–24 months of study completion.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">What if the AI system finds something that might be wrong with my eyes? <span class="arrow">↓</span></div>
+    <div class="faq-a">If the AI system produces a result that warrants clinical attention, the research team will advise you to speak with your optometrist or GP as soon as is appropriate. We will not provide a clinical interpretation of the finding — that is the role of a qualified eye care professional. If you have concerns about your eye health at any time, you should contact your optometrist directly.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">Who do I contact if I have a complaint? <span class="arrow">↓</span></div>
+    <div class="faq-a">In the first instance, please contact the principal investigator: <a href="mailto:alex@eyemap.ai">alex@eyemap.ai</a>. If you prefer to raise a concern independently of the research team, please contact the ethics committee listed in the study-specific appendix to your information sheet. You also have the right to contact the Information Commissioner's Office (ICO) regarding data protection concerns at <a href="https://ico.org.uk" target="_blank">ico.org.uk</a>.</div>
+  </div>
+</div>
+<footer>
+  <div class="footer-inner">
+    <div class="footer-copy">© 2025 EyeMap.ai Labs. Participant FAQ v1.0.</div>
+    <div class="footer-links"><a href="index.htm">Participant Hub</a><a href="information-sheet.htm">Info Sheet</a><a href="data-rights.htm">Data Rights</a></div>
+  </div>
+</footer>
+</body>
+</html>

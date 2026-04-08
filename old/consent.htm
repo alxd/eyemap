@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Informed Consent — EyeMap.ai Labs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#f7f5f0;--ink:#1a1814;--mid:#6b6560;--accent:#1a4a6b;--accent2:#c8913a;--rule:#d8d2c8;--card-bg:#ffffff;--serif:'EB Garamond',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif;--mono:'Space Mono',monospace;}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;}
+  nav{position:sticky;top:0;z-index:100;background:rgba(247,245,240,0.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:64px;}
+  .nav-brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--ink);}
+  .nav-logo{width:36px;height:36px;border-radius:8px;background:var(--accent);display:flex;align-items:center;justify-content:center;}
+  .nav-logo svg{width:20px;height:20px;}
+  .nav-wordmark{font-family:var(--serif);font-size:1.2rem;font-weight:600;}
+  .nav-wordmark span{color:var(--accent2);}
+  .nav-links{display:flex;gap:0.25rem;align-items:center;}
+  .nav-links a{font-size:0.85rem;font-weight:500;color:var(--mid);text-decoration:none;padding:0.4rem 0.8rem;border-radius:6px;transition:color 0.2s,background 0.2s;}
+  .nav-links a:hover{color:var(--ink);background:var(--rule);}
+  .nav-links a.btn-pitch{background:var(--accent);color:#fff;margin-left:0.5rem;}
+  .breadcrumb{max-width:860px;margin:0 auto;padding:2rem 2rem 0;font-size:0.82rem;color:var(--mid);}
+  .breadcrumb a{color:var(--mid);text-decoration:none;}
+  .breadcrumb a:hover{color:var(--accent);}
+  .breadcrumb span{margin:0 0.4rem;}
+  .doc-wrap{max-width:860px;margin:0 auto;padding:3rem 2rem 5rem;}
+  .doc-header{background:var(--accent);color:#fff;border-radius:16px;padding:2.5rem;margin-bottom:3rem;}
+  .doc-header .label{font-family:var(--mono);font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;opacity:0.7;margin-bottom:0.5rem;}
+  .doc-header h1{font-family:var(--serif);font-size:2rem;font-weight:500;margin-bottom:0.5rem;}
+  .doc-header .meta{font-size:0.84rem;opacity:0.8;}
+  .section-heading{font-family:var(--serif);font-size:1.3rem;font-weight:500;color:var(--ink);margin:2.5rem 0 0.8rem;padding-top:1rem;border-top:1px solid var(--rule);}
+  .prose p{font-size:0.95rem;color:var(--mid);line-height:1.8;margin-bottom:0.9rem;}
+  .prose ul{padding-left:1.3rem;font-size:0.95rem;color:var(--mid);line-height:1.8;margin-bottom:0.9rem;}
+  .prose li{margin-bottom:0.3rem;}
+  .prose strong{color:var(--ink);}
+
+  /* CONSENT CHECKLIST */
+  .consent-item{display:grid;grid-template-columns:auto 1fr;gap:1rem;align-items:start;padding:1.25rem;border:1px solid var(--rule);border-radius:10px;margin-bottom:0.75rem;background:var(--card-bg);}
+  .consent-check{width:22px;height:22px;border:2px solid var(--accent);border-radius:5px;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;}
+  .consent-item:nth-child(odd) .consent-check{background:var(--accent);}
+  .consent-item:nth-child(odd) .consent-check::after{content:'✓';color:#fff;font-size:0.8rem;font-weight:700;}
+  .consent-text{font-size:0.9rem;color:var(--mid);line-height:1.65;}
+  .consent-text strong{color:var(--ink);}
+
+  .sig-block{background:var(--card-bg);border:1px solid var(--rule);border-radius:12px;padding:2rem;margin-top:2rem;}
+  .sig-block h4{font-family:var(--serif);font-size:1.05rem;margin-bottom:1rem;}
+  .sig-row{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1rem;}
+  .sig-field{border-bottom:1px solid var(--ink);padding-bottom:0.3rem;font-size:0.84rem;color:var(--mid);}
+  .sig-label{font-size:0.72rem;color:var(--mid);margin-top:0.3rem;font-family:var(--mono);}
+
+  .info-box{background:#eef6ff;border:1px solid #c5dcf5;border-radius:10px;padding:1.1rem 1.4rem;font-size:0.88rem;color:#1a3a5c;line-height:1.65;margin:1rem 0;}
+  footer{border-top:1px solid var(--rule);padding:2.5rem 2rem;background:var(--bg);}
+  .footer-inner{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;}
+  .footer-copy{font-size:0.78rem;color:var(--mid);}
+  .footer-links{display:flex;gap:1.5rem;}
+  .footer-links a{font-size:0.82rem;color:var(--mid);text-decoration:none;}
+  @media(max-width:768px){nav{padding:0 1rem;}.nav-links a:not(.btn-pitch){display:none;}.sig-row{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-brand" href="../../index.htm">
+    <div class="nav-logo"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M2 12C4.5 7 8 4 12 4s7.5 3 10 8c-2.5 5-6 8-10 8S4.5 17 2 12z"/></svg></div>
+    <span class="nav-wordmark">EyeMap<span>.ai</span> Labs</span>
+  </a>
+  <div class="nav-links">
+    <a href="../../research.htm">Research</a>
+    <a href="../../models/index.htm">AI Models</a>
+    <a href="../../assistive.htm">Assistive Tech</a>
+    <a href="index.htm">Participants</a>
+    <a href="../../pitch/index.htm" class="btn-pitch">Pitch Deck →</a>
+  </div>
+</nav>
+<div class="breadcrumb"><a href="../../index.htm">EyeMap.ai Labs</a><span>›</span><a href="index.htm">Participants</a><span>›</span>Consent Form</div>
+<div class="doc-wrap">
+  <div class="doc-header">
+    <div class="label">Participant Documentation · Version 1.0 · 2025</div>
+    <h1>Informed Consent Form</h1>
+    <div class="meta">EyeMap.ai Retinal AI Validation Study &nbsp;|&nbsp; Please read each statement carefully before signing.</div>
+  </div>
+  <div class="prose">
+    <p>Before you decide to take part in this study, we would like to make sure you have read and understood the <a href="information-sheet.htm" style="color:var(--accent)">Participant Information Sheet</a>. Please ask the research team if you have any questions.</p>
+    <p>By completing this consent form (in the presence of a member of the research team), you confirm that you understand the nature of the study and agree to take part on the basis described.</p>
+    <div class="info-box">You may take this form home and return it at your study appointment. You do not have to decide today.</div>
+
+    <h2 class="section-heading">Consent statements</h2>
+    <p style="font-size:0.84rem;color:var(--mid);margin-bottom:1.25rem;">Please confirm each of the following statements applies to you. Checked items indicate agreement.</p>
+
+    <div class="consent-item">
+      <div class="consent-check"></div>
+      <div class="consent-text"><strong>Information sheet:</strong> I confirm that I have read and understood the Participant Information Sheet (Version 1.0, 2025) for the EyeMap.ai Retinal AI Validation Study. I have had the opportunity to consider the information and ask questions, which have been answered satisfactorily.</div>
+    </div>
+    <div class="consent-item">
+      <div class="consent-check"></div>
+      <div class="consent-text"><strong>Voluntary participation:</strong> I understand that my participation is voluntary and that I am free to withdraw at any time without giving any reason, and without my medical care or legal rights being affected.</div>
+    </div>
+    <div class="consent-item">
+      <div class="consent-check"></div>
+      <div class="consent-text"><strong>Data use:</strong> I understand that my anonymised fundus images and questionnaire responses will be used for ophthalmic AI research, including model training, validation, and potential data return to UK Biobank.</div>
+    </div>
+    <div class="consent-item">
+      <div class="consent-check"></div>
+      <div class="consent-text"><strong>Confidentiality:</strong> I understand that my data will be treated in strict confidence and that no information that could identify me will appear in publications or presentations arising from this study.</div>
+    </div>
+    <div class="consent-item">
+      <div class="consent-check"></div>
+      <div class="consent-text"><strong>Data retention:</strong> I understand that anonymised data may be retained for up to 10 years following the end of the study, and that once fully anonymised, it may not be possible to withdraw my specific data contribution.</div>
+    </div>
+    <div class="consent-item">
+      <div class="consent-check"></div>
+      <div class="consent-text"><strong>Not a medical diagnosis:</strong> I understand that any AI output from analysis of my retinal image is for research purposes and does not constitute a medical diagnosis. I will discuss any findings with my optometrist or GP.</div>
+    </div>
+    <div class="consent-item">
+      <div class="consent-check"></div>
+      <div class="consent-text"><strong>Agreement to participate:</strong> I agree to take part in the EyeMap.ai Retinal AI Validation Study as described in the Participant Information Sheet.</div>
+    </div>
+
+    <div class="sig-block">
+      <h4>Participant declaration</h4>
+      <div class="sig-row">
+        <div>
+          <div class="sig-field">&nbsp;</div>
+          <div class="sig-label">FULL NAME (print)</div>
+        </div>
+        <div>
+          <div class="sig-field">&nbsp;</div>
+          <div class="sig-label">DATE</div>
+        </div>
+      </div>
+      <div class="sig-row">
+        <div>
+          <div class="sig-field">&nbsp;</div>
+          <div class="sig-label">SIGNATURE</div>
+        </div>
+        <div>
+          <div class="sig-field">&nbsp;</div>
+          <div class="sig-label">PARTICIPANT ID (researcher to complete)</div>
+        </div>
+      </div>
+      <p style="margin-top:1.5rem;font-family:var(--serif);font-size:1.05rem;font-weight:500;margin-bottom:0.75rem;">Researcher declaration</p>
+      <div class="sig-row">
+        <div>
+          <div class="sig-field">&nbsp;</div>
+          <div class="sig-label">RESEARCHER NAME (print)</div>
+        </div>
+        <div>
+          <div class="sig-field">&nbsp;</div>
+          <div class="sig-label">DATE</div>
+        </div>
+      </div>
+      <div class="sig-row">
+        <div>
+          <div class="sig-field">&nbsp;</div>
+          <div class="sig-label">RESEARCHER SIGNATURE</div>
+        </div>
+        <div>
+          <div class="sig-field">&nbsp;</div>
+          <div class="sig-label">ROLE</div>
+        </div>
+      </div>
+      <p style="margin-top:1rem;font-size:0.8rem;color:var(--mid);">Once signed, one copy is retained by the participant and one by the research team. Do not leave this form with the participant until it has been counter-signed by the researcher.</p>
+    </div>
+  </div>
+</div>
+<footer>
+  <div class="footer-inner">
+    <div class="footer-copy">© 2025 EyeMap.ai Labs. Consent Form v1.0. Two copies to be signed: one retained by participant, one by researcher.</div>
+    <div class="footer-links"><a href="index.htm">Participant Hub</a><a href="information-sheet.htm">Info Sheet</a><a href="data-rights.htm">Data Rights</a></div>
+  </div>
+</footer>
+</body>
+</html>

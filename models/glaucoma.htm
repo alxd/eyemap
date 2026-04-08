@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Glaucoma CDR Model — EyeMap.ai Labs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#f7f5f0;--ink:#1a1814;--mid:#6b6560;--accent:#1a4a6b;--accent2:#c8913a;--rule:#d8d2c8;--card-bg:#ffffff;--serif:'EB Garamond',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif;--mono:'Space Mono',monospace;}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;}
+  nav{position:sticky;top:0;z-index:100;background:rgba(247,245,240,0.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:64px;}
+  .nav-brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--ink);}
+  .nav-logo{width:36px;height:36px;border-radius:8px;background:var(--accent);display:flex;align-items:center;justify-content:center;}
+  .nav-logo svg{width:20px;height:20px;}
+  .nav-wordmark{font-family:var(--serif);font-size:1.2rem;font-weight:600;}
+  .nav-wordmark span{color:var(--accent2);}
+  .nav-links{display:flex;gap:0.25rem;align-items:center;}
+  .nav-links a{font-size:0.85rem;font-weight:500;color:var(--mid);text-decoration:none;padding:0.4rem 0.8rem;border-radius:6px;transition:color 0.2s,background 0.2s;}
+  .nav-links a:hover{color:var(--ink);background:var(--rule);}
+  .nav-links a.btn-pitch{background:var(--accent);color:#fff;margin-left:0.5rem;}
+
+  .breadcrumb{max-width:1100px;margin:0 auto;padding:2rem 2rem 0;font-size:0.82rem;color:var(--mid);}
+  .breadcrumb a{color:var(--mid);text-decoration:none;}
+  .breadcrumb a:hover{color:var(--accent);}
+  .breadcrumb span{margin:0 0.4rem;}
+  .page-header{max-width:1100px;margin:0 auto;padding:2.5rem 2rem 3rem;display:grid;grid-template-columns:1fr auto;align-items:start;gap:2rem;}
+  .eyebrow{font-family:var(--mono);font-size:0.72rem;color:var(--accent2);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:0.8rem;}
+  h1{font-family:var(--serif);font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:500;line-height:1.15;margin-bottom:0.8rem;}
+  .lead{font-size:1rem;color:var(--mid);max-width:560px;line-height:1.75;}
+  .model-badge{background:#1a4a2a;color:#fff;border-radius:10px;padding:1rem 1.5rem;font-family:var(--mono);font-size:0.78rem;white-space:nowrap;}
+  .model-badge .num{font-size:1.8rem;display:block;margin-bottom:0.2rem;}
+  .nav-model{display:flex;gap:1rem;margin-top:0.5rem;}
+  .nav-model a{font-size:0.85rem;color:var(--accent);text-decoration:none;border:1px solid var(--rule);padding:0.5rem 1rem;border-radius:8px;transition:background 0.15s;}
+  .nav-model a:hover{background:var(--rule);}
+
+  hr.rule{border:none;border-top:1px solid var(--rule);margin:0 2rem;}
+  section{padding:3.5rem 2rem;}
+  .inner{max-width:1100px;margin:0 auto;}
+  .section-label{font-family:var(--mono);font-size:0.7rem;color:var(--accent2);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:0.8rem;}
+  .section-title{font-family:var(--serif);font-size:1.5rem;font-weight:500;margin-bottom:1.5rem;}
+
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;}
+  .prose{font-size:0.95rem;color:var(--mid);line-height:1.8;}
+  .prose p{margin-bottom:0.9rem;}
+  .prose h3{font-family:var(--serif);font-size:1.1rem;color:var(--ink);margin:1.4rem 0 0.5rem;}
+
+  /* CDR VISUAL */
+  .cdr-scale{background:var(--card-bg);border:1px solid var(--rule);border-radius:14px;padding:2rem;margin-bottom:1.25rem;}
+  .cdr-scale h3{font-family:var(--serif);font-size:1.1rem;margin-bottom:1.5rem;}
+  .cdr-bar-wrap{margin-bottom:1.5rem;}
+  .cdr-bar-label{display:flex;justify-content:space-between;font-family:var(--mono);font-size:0.68rem;color:var(--mid);margin-bottom:0.4rem;}
+  .cdr-bar{height:18px;border-radius:9px;background:linear-gradient(to right,#4caf50 0%,#4caf50 38%,#ff9800 38%,#ff9800 56%,#f44336 56%,#f44336 100%);position:relative;}
+  .cdr-tick{position:absolute;top:-6px;width:2px;height:30px;background:var(--ink);}
+  .cdr-tick-label{position:absolute;top:26px;font-family:var(--mono);font-size:0.62rem;transform:translateX(-50%);color:var(--ink);}
+  .cdr-rows{display:flex;flex-direction:column;gap:0.75rem;}
+  .cdr-row{display:grid;grid-template-columns:100px 140px 1fr;gap:1rem;align-items:center;font-size:0.85rem;}
+  .cdr-range{font-family:var(--mono);font-size:0.8rem;color:var(--ink);font-weight:700;}
+  .cdr-tag{padding:0.25rem 0.6rem;border-radius:20px;font-family:var(--mono);font-size:0.68rem;text-align:center;font-weight:600;}
+  .normal{background:#e8f5e9;color:#2e7d32;}
+  .caution{background:#fff3e0;color:#e65100;}
+  .suspect{background:#fce4ec;color:#b71c1c;}
+  .cdr-desc{color:var(--mid);font-size:0.83rem;}
+
+  .tech-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;}
+  .tech-card{background:var(--card-bg);border:1px solid var(--rule);border-radius:12px;padding:1.5rem;}
+  .tech-card .label{font-family:var(--mono);font-size:0.68rem;color:var(--accent2);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.4rem;}
+  .tech-card .value{font-family:var(--serif);font-size:1.15rem;color:var(--ink);}
+  .tech-card .sub{font-size:0.78rem;color:var(--mid);margin-top:0.2rem;}
+  .disclaimer{background:#fff9f0;border:1px solid #f0d9a8;border-radius:12px;padding:1.25rem 1.5rem;font-size:0.84rem;color:#7a5c1a;line-height:1.6;}
+  .disclaimer strong{display:block;margin-bottom:0.3rem;}
+
+  footer{border-top:1px solid var(--rule);padding:2.5rem 2rem;background:var(--bg);}
+  .footer-inner{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;}
+  .footer-copy{font-size:0.78rem;color:var(--mid);}
+  .footer-links{display:flex;gap:1.5rem;}
+  .footer-links a{font-size:0.82rem;color:var(--mid);text-decoration:none;}
+  @media(max-width:768px){.two-col{grid-template-columns:1fr;}.page-header{grid-template-columns:1fr;}nav{padding:0 1rem;}.nav-links a:not(.btn-pitch){display:none;}.cdr-row{grid-template-columns:80px 1fr;}.cdr-row .cdr-desc{display:none;}}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-brand" href="../index.htm">
+    <div class="nav-logo"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M2 12C4.5 7 8 4 12 4s7.5 3 10 8c-2.5 5-6 8-10 8S4.5 17 2 12z"/></svg></div>
+    <span class="nav-wordmark">EyeMap<span>.ai</span> Labs</span>
+  </a>
+  <div class="nav-links">
+    <a href="../research.htm">Research</a>
+    <a href="index.htm">AI Models</a>
+    <a href="../assistive.htm">Assistive Tech</a>
+    <a href="../participants/index.htm">Participants</a>
+    <a href="../pitch/index.htm" class="btn-pitch">Pitch Deck →</a>
+  </div>
+</nav>
+
+<div class="breadcrumb">
+  <a href="../index.htm">EyeMap.ai Labs</a><span>›</span>
+  <a href="index.htm">AI Models</a><span>›</span>
+  Glaucoma — CDR Estimation
+</div>
+
+<div class="page-header">
+  <div>
+    <p class="eyebrow">Model 03 · Structural Analysis</p>
+    <h1>Glaucoma Screening via Cup-to-Disc Ratio</h1>
+    <p class="lead">Automated measurement of the optic cup-to-disc ratio (CDR) from fundus photographs, providing continuous estimation with clinical threshold interpretation.</p>
+    <div class="nav-model">
+      <a href="dr.htm">← DR Model</a>
+      <a href="amd.htm">← AMD Model</a>
+    </div>
+  </div>
+  <div class="model-badge"><span class="num">CDR</span>Model 03</div>
+</div>
+
+<hr class="rule">
+
+<section>
+  <div class="inner">
+    <p class="section-label">Clinical Background</p>
+    <div class="two-col">
+      <div class="prose">
+        <p>Glaucoma is the leading cause of irreversible blindness worldwide, affecting an estimated 80 million people. Unlike AMD and DR, glaucoma typically affects peripheral vision first — meaning patients may be completely unaware of the disease until significant optic nerve damage has occurred.</p>
+        <p>The hallmark of glaucoma is progressive excavation of the optic nerve head (ONH). The cup-to-disc ratio (CDR) quantifies this excavation: it expresses the diameter of the central cup (the pale, depressed zone of the disc) as a fraction of the total optic disc diameter. An elevated CDR suggests loss of rim tissue — the neuroretinal rim containing the retinal ganglion cell axons.</p>
+        <h3>Why CDR is the primary screening metric</h3>
+        <p>CDR measurement is standard practice in all ophthalmic examinations and is the most widely used single-variable glaucoma screening indicator. It is rapid to obtain from fundus photographs and requires no additional imaging equipment. However, CDR must always be interpreted in the context of disc size (large physiological discs can have high CDR without disease) and intraocular pressure measurements.</p>
+        <h3>Limitations and clinical context</h3>
+        <p>CDR alone cannot diagnose glaucoma. A suspicious CDR should prompt formal visual field testing (perimetry), optical coherence tomography (OCT) of the RNFL, and clinical measurement of intraocular pressure. The EyeMap CDR model is a triage tool to identify individuals warranting this workup, not a replacement for it.</p>
+      </div>
+      <div>
+        <div class="cdr-scale">
+          <h3>CDR Interpretation Scale</h3>
+          <div class="cdr-bar-wrap">
+            <div class="cdr-bar-label"><span>0.3</span><span>0.5</span><span>0.6</span><span>0.8</span></div>
+            <div class="cdr-bar" style="position:relative;">
+              <div class="cdr-tick" style="left:0%"></div>
+              <div class="cdr-tick" style="left:40%"></div>
+              <div class="cdr-tick" style="left:60%"></div>
+            </div>
+          </div>
+          <div class="cdr-rows">
+            <div class="cdr-row">
+              <span class="cdr-range">0.3 – 0.5</span>
+              <span class="cdr-tag normal">Normal</span>
+              <span class="cdr-desc">Majority of population. Routine recall unless other risk factors present.</span>
+            </div>
+            <div class="cdr-row">
+              <span class="cdr-range">0.5 – 0.6</span>
+              <span class="cdr-tag caution">Context-dependent</span>
+              <span class="cdr-desc">Large but often physiological. Disc size critical. Recommend IOP measurement and repeat in 12 months.</span>
+            </div>
+            <div class="cdr-row">
+              <span class="cdr-range">&gt; 0.6</span>
+              <span class="cdr-tag suspect">Suspicious</span>
+              <span class="cdr-desc">Possible early glaucomatous change. Refer for full glaucoma workup including perimetry, OCT, IOP.</span>
+            </div>
+          </div>
+        </div>
+        <div class="disclaimer">
+          <strong>⚠ Context-Sensitive Interpretation</strong>
+          CDR interpretation requires knowledge of disc size. Macrodiscs (large physiological discs) may have a CDR of 0.7+ without any glaucomatous damage. The model output must be reviewed alongside clinical context by an optometrist or ophthalmologist.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section>
+  <div class="inner">
+    <p class="section-label">Technical Specification</p>
+    <h2 class="section-title">Model architecture & validation</h2>
+    <div class="tech-grid">
+      <div class="tech-card"><div class="label">Input</div><div class="value">Disc-centred fundus image</div><div class="sub">15°–45° field, optic disc centred</div></div>
+      <div class="tech-card"><div class="label">Output</div><div class="value">Continuous CDR estimate</div><div class="sub">0.0–1.0 + segmentation overlay</div></div>
+      <div class="tech-card"><div class="label">Architecture</div><div class="value">Segmentation + regression</div><div class="sub">U-Net disc/cup segmentation followed by ratio computation</div></div>
+      <div class="tech-card"><div class="label">Training data</div><div class="value">REFUGE / DRISHTI</div><div class="sub">Benchmark glaucoma segmentation datasets</div></div>
+      <div class="tech-card"><div class="label">CDR agreement</div><div class="value">±0.05 MAE</div><div class="sub">vs expert grader CDR measurement</div></div>
+      <div class="tech-card"><div class="label">Output overlay</div><div class="value">Disc/cup map</div><div class="sub">Colour segmentation mask for clinician review</div></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-copy">© 2025 EyeMap.ai Labs. CDR model — screening triage only; formal glaucoma diagnosis requires full clinical assessment.</div>
+    <div class="footer-links"><a href="index.htm">All Models</a><a href="amd.htm">AMD Model</a><a href="../index.htm">Home</a></div>
+  </div>
+</footer>
+</body>
+</html>

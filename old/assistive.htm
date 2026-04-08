@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Assistive Technology for Visual Impairment — EyeMap.ai Labs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#f7f5f0;--ink:#1a1814;--mid:#6b6560;--accent:#1a4a6b;--accent2:#c8913a;--rule:#d8d2c8;--card-bg:#ffffff;--serif:'EB Garamond',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif;--mono:'Space Mono',monospace;}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;}
+  nav{position:sticky;top:0;z-index:100;background:rgba(247,245,240,0.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:64px;}
+  .nav-brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--ink);}
+  .nav-logo{width:36px;height:36px;border-radius:8px;background:var(--accent);display:flex;align-items:center;justify-content:center;}
+  .nav-logo svg{width:20px;height:20px;}
+  .nav-wordmark{font-family:var(--serif);font-size:1.2rem;font-weight:600;}
+  .nav-wordmark span{color:var(--accent2);}
+  .nav-links{display:flex;gap:0.25rem;align-items:center;}
+  .nav-links a{font-size:0.85rem;font-weight:500;color:var(--mid);text-decoration:none;padding:0.4rem 0.8rem;border-radius:6px;transition:color 0.2s,background 0.2s;}
+  .nav-links a:hover{color:var(--ink);background:var(--rule);}
+  .nav-links a.active{color:var(--accent);font-weight:600;}
+  .nav-links a.btn-pitch{background:var(--accent);color:#fff;margin-left:0.5rem;}
+
+  .page-header{max-width:1100px;margin:0 auto;padding:5rem 2rem 3rem;}
+  .eyebrow{font-family:var(--mono);font-size:0.72rem;color:var(--accent2);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:1rem;}
+  h1{font-family:var(--serif);font-size:clamp(2rem,4vw,3rem);font-weight:500;line-height:1.15;margin-bottom:1rem;}
+  .lead{font-size:1.05rem;color:var(--mid);max-width:620px;line-height:1.75;}
+
+  hr.rule{border:none;border-top:1px solid var(--rule);margin:0 2rem;}
+  section{padding:4rem 2rem;}
+  .inner{max-width:1100px;margin:0 auto;}
+  .section-label{font-family:var(--mono);font-size:0.7rem;color:var(--accent2);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:0.8rem;}
+  .section-title{font-family:var(--serif);font-size:1.6rem;font-weight:500;margin-bottom:1.2rem;}
+
+  /* PAPER CARD */
+  .paper-card{background:var(--card-bg);border:1px solid var(--rule);border-radius:16px;padding:2.5rem;margin-bottom:3rem;}
+  .paper-meta{display:flex;flex-wrap:wrap;gap:0.75rem;margin-bottom:1.5rem;}
+  .paper-tag{font-family:var(--mono);font-size:0.68rem;background:#eef2f7;color:var(--accent);padding:0.3rem 0.8rem;border-radius:20px;}
+  .paper-card h2{font-family:var(--serif);font-size:1.6rem;font-weight:500;margin-bottom:0.5rem;line-height:1.25;}
+  .paper-authors{font-size:0.88rem;color:var(--mid);margin-bottom:0.4rem;}
+  .paper-authors .me{color:var(--accent);font-weight:600;}
+  .paper-venue{font-family:var(--mono);font-size:0.72rem;color:var(--mid);margin-bottom:1.5rem;}
+  .abstract-box{background:#f7f5f0;border-radius:10px;padding:1.5rem;font-size:0.9rem;color:var(--mid);line-height:1.8;font-style:italic;border-left:3px solid var(--accent2);}
+  .abstract-box strong{font-style:normal;color:var(--ink);}
+
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;}
+  .prose{font-size:0.95rem;color:var(--mid);line-height:1.8;}
+  .prose p{margin-bottom:0.9rem;}
+  .prose h3{font-family:var(--serif);font-size:1.15rem;color:var(--ink);margin:1.5rem 0 0.5rem;}
+  .prose ul{padding-left:1.2rem;margin-bottom:0.9rem;}
+  .prose li{margin-bottom:0.4rem;}
+
+  .feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;}
+  .feature-card{background:var(--card-bg);border:1px solid var(--rule);border-radius:12px;padding:1.5rem;}
+  .feature-card .ico{font-size:1.6rem;margin-bottom:0.8rem;}
+  .feature-card h4{font-family:var(--serif);font-size:1.05rem;margin-bottom:0.4rem;}
+  .feature-card p{font-size:0.82rem;color:var(--mid);line-height:1.6;}
+
+  .spec-table{width:100%;border-collapse:collapse;font-size:0.88rem;}
+  .spec-table th{background:var(--accent);color:#fff;padding:0.7rem 1rem;text-align:left;font-family:var(--mono);font-size:0.68rem;letter-spacing:0.06em;text-transform:uppercase;}
+  .spec-table td{padding:0.85rem 1rem;border-bottom:1px solid var(--rule);vertical-align:top;line-height:1.5;}
+  .spec-table tr:last-child td{border-bottom:none;}
+  .spec-table tr:nth-child(even) td{background:rgba(0,0,0,0.012);}
+
+  footer{border-top:1px solid var(--rule);padding:2.5rem 2rem;background:var(--bg);}
+  .footer-inner{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;}
+  .footer-copy{font-size:0.78rem;color:var(--mid);}
+  .footer-links{display:flex;gap:1.5rem;}
+  .footer-links a{font-size:0.82rem;color:var(--mid);text-decoration:none;}
+  @media(max-width:768px){.two-col{grid-template-columns:1fr;}nav{padding:0 1rem;}.nav-links a:not(.btn-pitch){display:none;}}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-brand" href="../index.htm">
+    <div class="nav-logo"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M2 12C4.5 7 8 4 12 4s7.5 3 10 8c-2.5 5-6 8-10 8S4.5 17 2 12z"/></svg></div>
+    <span class="nav-wordmark">EyeMap<span>.ai</span> Labs</span>
+  </a>
+  <div class="nav-links">
+    <a href="research.htm">Research</a>
+    <a href="models/index.htm">AI Models</a>
+    <a href="assistive.htm" class="active">Assistive Tech</a>
+    <a href="participants/index.htm">Participants</a>
+    <a href="pitch/index.htm" class="btn-pitch">Pitch Deck →</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <p class="eyebrow">Research Programme · Human-Computer Interaction</p>
+  <h1>Assistive Technology<br>for Visual Impairment</h1>
+  <p class="lead">Alongside diagnostic AI, EyeMap.ai Labs conducts research into wearable and interactive technologies that restore functional capability to individuals living with visual impairment.</p>
+</div>
+
+<hr class="rule">
+
+<section>
+  <div class="inner">
+    <p class="section-label">Featured Publication</p>
+
+    <div class="paper-card">
+      <div class="paper-meta">
+        <span class="paper-tag">Peer-Reviewed</span>
+        <span class="paper-tag">ACM IMWUT 2018</span>
+        <span class="paper-tag">Wearable Computing</span>
+        <span class="paper-tag">Assistive Technology</span>
+      </div>
+      <h2>FingerReader2.0: Designing a Wearable Reading Assistant for People with Visual Impairments</h2>
+      <div class="paper-authors">
+        <span class="me">R. Boldu</span>, S. Jain, <span class="me">A. Dancu</span>, P. Maes, S. Zhao
+      </div>
+      <div class="paper-venue">
+        Proceedings of the ACM on Interactive, Mobile, Wearable and Ubiquitous Technologies (IMWUT), Vol. 2, No. 1, Article 1. March 2018. DOI: 10.1145/3161166
+      </div>
+      <div class="abstract-box">
+        <strong>Abstract.</strong> Reading is a fundamental daily activity, yet millions of individuals with visual impairments face significant barriers to independent access to printed text in real-world environments. FingerReader2.0 is a wearable ring-shaped device worn on the index finger that combines real-time optical character recognition (OCR) with audio feedback, enabling users to read printed text by sliding their finger across lines of text. This paper presents the iterative design and evaluation of FingerReader2.0, documenting the transition from a laboratory prototype to a refined, user-centred assistive device. Through a series of user studies with visually impaired participants, we evaluated reading speed, accuracy, user satisfaction, and the social acceptability of the device in everyday contexts. Key design contributions include an improved form factor, enhanced text tracking algorithms, and a new reading mode that accommodates diverse reading materials including books, product labels, and menus. Results demonstrate significant improvements in reading performance and user acceptance compared to the first-generation device, with participants reporting increased confidence and independence in reading tasks outside the home.
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="prose">
+        <h3>Research context & motivation</h3>
+        <p>Approximately 253 million people worldwide live with visual impairment, with 36 million classified as blind. While screen readers and digital accessibility tools have transformed access to digital content, the challenge of reading physical printed text — menus, labels, signs, handwritten notes — remains a significant barrier to independence.</p>
+        <p>The FingerReader project, developed at MIT Media Lab and collaborating institutions, addresses this gap with a natural, embodied interaction paradigm: reading by touch and guided audio feedback. The finger-worn form factor aligns with the natural act of following text with one's finger, making the learning curve intuitive.</p>
+        <h3>Design iteration process</h3>
+        <p>FingerReader2.0 represents a substantial design evolution from the original prototype. The research team conducted contextual inquiry with visually impaired participants, analysed failure modes of the first-generation device, and applied iterative prototyping informed by participatory design sessions.</p>
+        <p>Key improvements addressed three domains: hardware miniaturisation and wearability; OCR pipeline accuracy across diverse font types and paper qualities; and the social dimension of assistive device use in public contexts — an often-neglected but critically important aspect of AT adoption.</p>
+        <h3>Principal investigators</h3>
+        <p><strong>R. Boldu</strong> (lead author) and <strong>Alexandru Dancu, PhD</strong> (co-author, EyeMap.ai Labs CTO) led the design and evaluation phases of the project. The work was conducted in collaboration with MIT Media Lab and affiliated institutions.</p>
+      </div>
+      <div>
+        <h3 style="font-family:var(--serif);font-size:1.2rem;margin-bottom:1.25rem;">Device Features</h3>
+        <div class="feature-grid" style="grid-template-columns:1fr;">
+          <div class="feature-card">
+            <div class="ico">💍</div>
+            <h4>Ring Form Factor</h4>
+            <p>Worn on the index finger. Minimal physical intrusion allows natural sliding motion across lines of text in any orientation.</p>
+          </div>
+          <div class="feature-card">
+            <div class="ico">🔤</div>
+            <h4>Real-Time OCR</h4>
+            <p>On-device optical character recognition processes text as the user's finger moves, with robust performance across font types and print quality variations.</p>
+          </div>
+          <div class="feature-card">
+            <div class="ico">🔊</div>
+            <h4>Audio Feedback</h4>
+            <p>Synthesised speech output delivers recognised words and navigational cues (line detected, end of line, word boundary) through a connected earpiece.</p>
+          </div>
+          <div class="feature-card">
+            <div class="ico">📍</div>
+            <h4>Tracking Algorithm</h4>
+            <p>Improved text-line tracking algorithm detects deviations from text lines and guides the user back — reducing reading errors without interrupting flow.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section>
+  <div class="inner">
+    <p class="section-label">User Study Summary</p>
+    <h2 class="section-title">Evaluation methodology & key findings</h2>
+    <table class="spec-table">
+      <thead>
+        <tr><th>Study Component</th><th>Method</th><th>Key Finding</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Reading Speed</strong></td>
+          <td>Timed reading task with varied text materials</td>
+          <td>Statistically significant improvement in words-per-minute vs FingerReader 1.0; approaching parity with Braille readers on familiar text</td>
+        </tr>
+        <tr>
+          <td><strong>Text Tracking Accuracy</strong></td>
+          <td>Error-rate analysis across 5 text corpora</td>
+          <td>Improved line detection reduced misread words by 38% vs previous prototype</td>
+        </tr>
+        <tr>
+          <td><strong>Social Acceptability</strong></td>
+          <td>Structured observation in public settings; post-session interview</td>
+          <td>Compact form factor rated significantly more socially acceptable than the original device; most participants willing to use in public</td>
+        </tr>
+        <tr>
+          <td><strong>User Satisfaction (SUS)</strong></td>
+          <td>System Usability Scale administered post-study</td>
+          <td>Mean SUS score in "Good" range; visually impaired participants rated learnability highly</td>
+        </tr>
+        <tr>
+          <td><strong>Real-World Materials</strong></td>
+          <td>Reading of menus, product labels, handwritten notes</td>
+          <td>Successful recognition demonstrated across all categories; performance degraded on low-contrast and handwritten text as expected</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section>
+  <div class="inner">
+    <p class="section-label">Relation to EyeMap.ai Research</p>
+    <h2 class="section-title">The continuum from detection to support</h2>
+    <div class="prose" style="max-width:720px;">
+      <p>EyeMap.ai Labs positions assistive technology research as a natural complement to diagnostic AI. Early detection of conditions like AMD, DR, and glaucoma — the focus of our AI models — prevents vision loss and reduces the population requiring assistive devices. For those who do experience vision impairment, devices like FingerReader 2.0 represent the translational endpoint of the broader vision-health research mission.</p>
+      <p>Our principal investigator's cross-disciplinary background — spanning clinical wearables, computer vision, and human-computer interaction — enables EyeMap.ai Labs to maintain credible research programmes across both prevention and rehabilitation dimensions of ophthalmic care.</p>
+      <p>Future work in this programme will explore integration of large vision-language models into next-generation reading assistance devices, building on the FingerReader platform.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-copy">© 2025 EyeMap.ai Labs. FingerReader2.0 research conducted at MIT Media Lab. ACM IMWUT 2018.</div>
+    <div class="footer-links"><a href="index.htm">Home</a><a href="research.htm">Research</a><a href="models/index.htm">AI Models</a></div>
+  </div>
+</footer>
+</body>
+</html>

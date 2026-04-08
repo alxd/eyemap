@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Participant Information Sheet — EyeMap.ai Labs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#f7f5f0;--ink:#1a1814;--mid:#6b6560;--accent:#1a4a6b;--accent2:#c8913a;--rule:#d8d2c8;--card-bg:#ffffff;--serif:'EB Garamond',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif;--mono:'Space Mono',monospace;}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;}
+  nav{position:sticky;top:0;z-index:100;background:rgba(247,245,240,0.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:64px;}
+  .nav-brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--ink);}
+  .nav-logo{width:36px;height:36px;border-radius:8px;background:var(--accent);display:flex;align-items:center;justify-content:center;}
+  .nav-logo svg{width:20px;height:20px;}
+  .nav-wordmark{font-family:var(--serif);font-size:1.2rem;font-weight:600;}
+  .nav-wordmark span{color:var(--accent2);}
+  .nav-links{display:flex;gap:0.25rem;align-items:center;}
+  .nav-links a{font-size:0.85rem;font-weight:500;color:var(--mid);text-decoration:none;padding:0.4rem 0.8rem;border-radius:6px;transition:color 0.2s,background 0.2s;}
+  .nav-links a:hover{color:var(--ink);background:var(--rule);}
+  .nav-links a.btn-pitch{background:var(--accent);color:#fff;margin-left:0.5rem;}
+
+  .breadcrumb{max-width:860px;margin:0 auto;padding:2rem 2rem 0;font-size:0.82rem;color:var(--mid);}
+  .breadcrumb a{color:var(--mid);text-decoration:none;}
+  .breadcrumb a:hover{color:var(--accent);}
+  .breadcrumb span{margin:0 0.4rem;}
+
+  .doc-wrap{max-width:860px;margin:0 auto;padding:3rem 2rem 5rem;}
+  .doc-header{background:var(--accent);color:#fff;border-radius:16px;padding:2.5rem;margin-bottom:3rem;}
+  .doc-header .label{font-family:var(--mono);font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;opacity:0.7;margin-bottom:0.5rem;}
+  .doc-header h1{font-family:var(--serif);font-size:2rem;font-weight:500;margin-bottom:0.5rem;}
+  .doc-header .meta{font-size:0.84rem;opacity:0.8;}
+
+  .doc-toc{background:var(--card-bg);border:1px solid var(--rule);border-radius:12px;padding:1.5rem;margin-bottom:2.5rem;}
+  .doc-toc h4{font-family:var(--sans);font-size:0.78rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--mid);margin-bottom:0.75rem;}
+  .doc-toc ol{padding-left:1.2rem;font-size:0.88rem;display:flex;flex-direction:column;gap:0.3rem;}
+  .doc-toc a{color:var(--accent);text-decoration:none;}
+  .doc-toc a:hover{text-decoration:underline;}
+
+  .section-heading{font-family:var(--serif);font-size:1.35rem;font-weight:500;color:var(--ink);margin:2.5rem 0 0.8rem;padding-top:1rem;border-top:1px solid var(--rule);}
+  .prose p{font-size:0.95rem;color:var(--mid);line-height:1.8;margin-bottom:0.9rem;}
+  .prose ul,ol{padding-left:1.3rem;font-size:0.95rem;color:var(--mid);line-height:1.8;margin-bottom:0.9rem;}
+  .prose li{margin-bottom:0.3rem;}
+  .prose strong{color:var(--ink);}
+  .info-box{background:#eef6ff;border:1px solid #c5dcf5;border-radius:10px;padding:1.1rem 1.4rem;font-size:0.88rem;color:#1a3a5c;line-height:1.65;margin:1rem 0;}
+  .warning-box{background:#fff9f0;border:1px solid #f0d9a8;border-radius:10px;padding:1.1rem 1.4rem;font-size:0.88rem;color:#7a5c1a;line-height:1.65;margin:1rem 0;}
+  .contact-block{background:var(--card-bg);border:1px solid var(--rule);border-radius:12px;padding:1.5rem;margin-top:2rem;}
+  .contact-block h4{font-family:var(--serif);font-size:1.05rem;margin-bottom:0.75rem;}
+  .contact-block p{font-size:0.88rem;color:var(--mid);line-height:1.65;}
+  .contact-block a{color:var(--accent);}
+
+  footer{border-top:1px solid var(--rule);padding:2.5rem 2rem;background:var(--bg);}
+  .footer-inner{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;}
+  .footer-copy{font-size:0.78rem;color:var(--mid);}
+  .footer-links{display:flex;gap:1.5rem;}
+  .footer-links a{font-size:0.82rem;color:var(--mid);text-decoration:none;}
+  @media(max-width:768px){nav{padding:0 1rem;}.nav-links a:not(.btn-pitch){display:none;}}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-brand" href="../../index.htm">
+    <div class="nav-logo"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M2 12C4.5 7 8 4 12 4s7.5 3 10 8c-2.5 5-6 8-10 8S4.5 17 2 12z"/></svg></div>
+    <span class="nav-wordmark">EyeMap<span>.ai</span> Labs</span>
+  </a>
+  <div class="nav-links">
+    <a href="../../research.htm">Research</a>
+    <a href="../../models/index.htm">AI Models</a>
+    <a href="../../assistive.htm">Assistive Tech</a>
+    <a href="index.htm">Participants</a>
+    <a href="../../pitch/index.htm" class="btn-pitch">Pitch Deck →</a>
+  </div>
+</nav>
+
+<div class="breadcrumb">
+  <a href="../../index.htm">EyeMap.ai Labs</a><span>›</span>
+  <a href="index.htm">Participants</a><span>›</span>
+  Information Sheet
+</div>
+
+<div class="doc-wrap">
+  <div class="doc-header">
+    <div class="label">Participant Documentation · Version 1.0 · 2025</div>
+    <h1>Participant Information Sheet</h1>
+    <div class="meta">EyeMap.ai Retinal AI Validation Study &nbsp;|&nbsp; Please read this document carefully before deciding whether to take part.</div>
+  </div>
+
+  <div class="doc-toc">
+    <h4>Contents</h4>
+    <ol>
+      <li><a href="#what">What is this study?</a></li>
+      <li><a href="#why">Why are we doing this research?</a></li>
+      <li><a href="#involve">What will participation involve?</a></li>
+      <li><a href="#risks">Possible risks and benefits</a></li>
+      <li><a href="#data">What happens to your data?</a></li>
+      <li><a href="#confidential">Confidentiality</a></li>
+      <li><a href="#withdraw">Withdrawing from the study</a></li>
+      <li><a href="#results">What happens with the results?</a></li>
+      <li><a href="#ethics">Ethical approval</a></li>
+      <li><a href="#contact">Contact and complaints</a></li>
+    </ol>
+  </div>
+
+  <div class="prose">
+
+    <div class="warning-box">
+      <strong>Important:</strong> Participation is entirely voluntary. Taking part — or choosing not to — will have no effect on your healthcare or any services you receive. Please take as much time as you need before deciding.
+    </div>
+
+    <h2 class="section-heading" id="what">1. What is this study?</h2>
+    <p>EyeMap.ai Labs is a computational ophthalmology research institute developing AI systems for early retinal disease detection. This study — the <strong>EyeMap Retinal AI Validation Study</strong> — aims to evaluate and improve AI models that analyse fundus photographs (photographs of the back of the eye) to detect conditions including age-related macular degeneration (AMD), diabetic retinopathy (DR), and glaucoma.</p>
+    <p>This study involves analysis of retinal images. It does not involve any new medical procedures. All imaging is performed using standard optometric equipment already in use at participating sites.</p>
+
+    <h2 class="section-heading" id="why">2. Why are we doing this research?</h2>
+    <p>Retinal diseases are a leading cause of preventable vision loss worldwide. Many individuals are not screened until symptoms are already apparent, at which point irreversible damage may have occurred. AI-based screening tools have the potential to dramatically increase the reach and frequency of retinal health assessment — particularly in non-specialist settings like optometry practices and pharmacies.</p>
+    <p>To develop safe, accurate, and fair AI screening tools, we need to validate our models across diverse populations. This study forms a core component of our application to access UK Biobank retinal imaging data, and will also generate directly usable validation data from our pilot imaging sites.</p>
+
+    <h2 class="section-heading" id="involve">3. What will participation involve?</h2>
+    <p>If you agree to take part, the following will happen:</p>
+    <ul>
+      <li><strong>Fundus photograph:</strong> A standard colour photograph of the back of your eye will be taken using a non-invasive fundus camera. This is the same type of image taken during a routine optometric examination. The process takes approximately 5 minutes and involves no injections, eye drops, or physical discomfort.</li>
+      <li><strong>Short questionnaire:</strong> We will ask you to complete a brief questionnaire (approximately 5–10 minutes) covering age, known eye conditions, and general health history. This information helps us contextualise AI model performance across different participant profiles.</li>
+      <li><strong>AI analysis:</strong> Your fundus image will be processed by EyeMap.ai's diagnostic models. You may receive a summary of the AI output — this is for information and research purposes only and does not constitute a medical diagnosis.</li>
+      <li><strong>Total time commitment:</strong> Approximately 15–20 minutes at a single visit. No follow-up visits are required for the basic study (though you may be invited to an optional follow-up study at 12 months).</li>
+    </ul>
+
+    <h2 class="section-heading" id="risks">4. Possible risks and benefits</h2>
+    <p><strong>Risks:</strong> The risks of participation are very low. Fundus photography is a routine, non-invasive procedure. The brief flash of light may cause momentary visual disturbance lasting a few seconds. There are no known risks from the imaging itself.</p>
+    <p><strong>Data risk:</strong> As with all health data research, there is a theoretical risk of re-identification, despite the robust anonymisation measures we apply. This risk is very small and is addressed in detail in the Data Rights document.</p>
+    <p><strong>Benefits to you:</strong> You will receive an information summary about your fundus image. If the AI system flags any finding that warrants clinical attention, you will be advised to discuss this with your optometrist or GP. This may result in earlier detection of an eye condition for some participants.</p>
+    <p><strong>Benefits to society:</strong> Your contribution will help develop AI tools that could one day enable earlier detection of blinding eye diseases across large populations.</p>
+
+    <h2 class="section-heading" id="data">5. What happens to your data?</h2>
+    <p>Your fundus images and questionnaire responses will be stored securely and used exclusively for the purposes described in this information sheet. Specifically:</p>
+    <ul>
+      <li>Data will be stored on encrypted servers with access restricted to named members of the research team.</li>
+      <li>Your images and questionnaire responses will be <strong>anonymised</strong> — your name and direct identifiers will be separated from the data using a coded system. The code key will be held separately and securely.</li>
+      <li>Anonymised, coded data may be shared with academic collaborators and, subject to governance approval, with UK Biobank as part of our data return commitment.</li>
+      <li>Your data will not be sold to commercial third parties or used for any purpose other than ophthalmic AI research.</li>
+      <li>Data will be retained for a maximum of 10 years following the end of the study, in line with standard research data governance requirements.</li>
+    </ul>
+    <div class="info-box">For full details of data handling and your legal rights under GDPR and UK GDPR, please see the <a href="data-rights.htm">Data Rights document</a>.</div>
+
+    <h2 class="section-heading" id="confidential">6. Confidentiality</h2>
+    <p>All information collected about you during the course of this research will be kept strictly confidential. Your data will be identified by a participant code only. Any publication of results will use anonymised, aggregated data — you will not be identifiable in any publication or presentation arising from this research.</p>
+    <p>Confidentiality would only need to be broken in the highly unlikely event that information emerged indicating a serious risk of harm to you or to another identifiable person. In such circumstances, we would discuss this with you wherever possible before taking any action.</p>
+
+    <h2 class="section-heading" id="withdraw">7. Withdrawing from the study</h2>
+    <p>Participation is entirely voluntary. You are free to withdraw at any time and without providing a reason. Withdrawal will have no effect on your care or on your relationship with any service or institution.</p>
+    <p>If you withdraw after your data has been collected but before it has been anonymised and incorporated into the anonymised dataset, we will delete your data upon request. Once your data has been fully anonymised and merged into the research dataset, it may not be possible to identify and remove your specific contribution — this is because the anonymisation process is irreversible by design, which protects your identity.</p>
+    <p>To withdraw, contact the principal investigator at <a href="mailto:alex@eyemap.ai" style="color:var(--accent)">alex@eyemap.ai</a> or use the contact details below.</p>
+
+    <h2 class="section-heading" id="results">8. What happens with the results?</h2>
+    <p>The results of this study will be used to validate and improve EyeMap.ai's diagnostic AI models. We aim to publish findings in peer-reviewed scientific journals and present results at academic conferences. All publications will use anonymised, aggregated data.</p>
+    <p>If you would like to be informed of the study's published results, please indicate this on your consent form and provide an email address for this purpose. We will send you a plain-English summary of key findings when they are available.</p>
+
+    <h2 class="section-heading" id="ethics">9. Ethical approval</h2>
+    <p>This study is being conducted in accordance with applicable research ethics standards. We are committed to meeting the requirements of the UK Policy Framework for Health and Social Care Research and, where applicable, the Declaration of Helsinki. Ethical oversight details are provided in the study-specific appendix to this information sheet.</p>
+
+    <h2 class="section-heading" id="contact">10. Contact and complaints</h2>
+    <div class="contact-block">
+      <h4>Principal Investigator</h4>
+      <p><strong>Alexandru Dancu, PhD</strong><br>
+      EyeMap.ai Labs, Ophthalmic AI Research<br>
+      Email: <a href="mailto:alex@eyemap.ai">alex@eyemap.ai</a></p>
+      <p style="margin-top:1rem;">If you have a concern or complaint about any aspect of this study that you do not wish to raise with the research team, please contact the relevant ethics committee identified in the study-specific appendix. Your right to complain will not be affected in any way by taking part in this research.</p>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-copy">© 2025 EyeMap.ai Labs. Participant Information Sheet v1.0. Not a medical document — for information purposes only.</div>
+    <div class="footer-links"><a href="index.htm">Participant Hub</a><a href="consent.htm">Consent Form</a><a href="data-rights.htm">Data Rights</a></div>
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AMD Model — EyeMap.ai Labs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#f7f5f0;--ink:#1a1814;--mid:#6b6560;--accent:#1a4a6b;--accent2:#c8913a;--rule:#d8d2c8;--card-bg:#ffffff;--serif:'EB Garamond',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif;--mono:'Space Mono',monospace;}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;}
+  nav{position:sticky;top:0;z-index:100;background:rgba(247,245,240,0.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:64px;}
+  .nav-brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--ink);}
+  .nav-logo{width:36px;height:36px;border-radius:8px;background:var(--accent);display:flex;align-items:center;justify-content:center;}
+  .nav-logo svg{width:20px;height:20px;}
+  .nav-wordmark{font-family:var(--serif);font-size:1.2rem;font-weight:600;}
+  .nav-wordmark span{color:var(--accent2);}
+  .nav-links{display:flex;gap:0.25rem;align-items:center;}
+  .nav-links a{font-size:0.85rem;font-weight:500;color:var(--mid);text-decoration:none;padding:0.4rem 0.8rem;border-radius:6px;transition:color 0.2s,background 0.2s;}
+  .nav-links a:hover{color:var(--ink);background:var(--rule);}
+  .nav-links a.btn-pitch{background:var(--accent);color:#fff;margin-left:0.5rem;}
+
+  .breadcrumb{max-width:1100px;margin:0 auto;padding:2rem 2rem 0;font-size:0.82rem;color:var(--mid);}
+  .breadcrumb a{color:var(--mid);text-decoration:none;}
+  .breadcrumb a:hover{color:var(--accent);}
+  .breadcrumb span{margin:0 0.4rem;}
+
+  .page-header{max-width:1100px;margin:0 auto;padding:2.5rem 2rem 3rem;display:grid;grid-template-columns:1fr auto;align-items:start;gap:2rem;}
+  .eyebrow{font-family:var(--mono);font-size:0.72rem;color:var(--accent2);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:0.8rem;}
+  h1{font-family:var(--serif);font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:500;line-height:1.15;margin-bottom:0.8rem;}
+  .lead{font-size:1rem;color:var(--mid);max-width:560px;line-height:1.75;}
+  .model-badge{background:var(--accent);color:#fff;border-radius:10px;padding:1rem 1.5rem;font-family:var(--mono);font-size:0.78rem;white-space:nowrap;}
+  .model-badge .num{font-size:1.8rem;display:block;margin-bottom:0.2rem;}
+
+  hr.rule{border:none;border-top:1px solid var(--rule);margin:0 2rem;}
+  section{padding:3.5rem 2rem;}
+  .inner{max-width:1100px;margin:0 auto;}
+  .section-label{font-family:var(--mono);font-size:0.7rem;color:var(--accent2);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:0.8rem;}
+  .section-title{font-family:var(--serif);font-size:1.5rem;font-weight:500;margin-bottom:1.5rem;}
+
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;}
+  .prose{font-size:0.95rem;color:var(--mid);line-height:1.8;}
+  .prose p{margin-bottom:0.9rem;}
+  .prose h3{font-family:var(--serif);font-size:1.1rem;color:var(--ink);margin:1.4rem 0 0.5rem;}
+
+  .severity-table{width:100%;border-collapse:collapse;font-size:0.88rem;}
+  .severity-table th{background:var(--accent);color:#fff;padding:0.8rem 1rem;text-align:left;font-family:var(--mono);font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase;}
+  .severity-table td{padding:0.9rem 1rem;border-bottom:1px solid var(--rule);vertical-align:top;line-height:1.55;}
+  .severity-table tr:last-child td{border-bottom:none;}
+  .severity-table tr:nth-child(even) td{background:rgba(0,0,0,0.015);}
+  .level-badge{display:inline-block;padding:0.2rem 0.6rem;border-radius:20px;font-family:var(--mono);font-size:0.68rem;font-weight:700;}
+  .level-0{background:#e8f5e9;color:#2e7d32;}
+  .level-1{background:#fff3e0;color:#e65100;}
+
+  .tech-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;}
+  .tech-card{background:var(--card-bg);border:1px solid var(--rule);border-radius:12px;padding:1.5rem;}
+  .tech-card .label{font-family:var(--mono);font-size:0.68rem;color:var(--accent2);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.4rem;}
+  .tech-card .value{font-family:var(--serif);font-size:1.15rem;color:var(--ink);}
+  .tech-card .sub{font-size:0.78rem;color:var(--mid);margin-top:0.2rem;}
+
+  .disclaimer{background:#fff9f0;border:1px solid #f0d9a8;border-radius:12px;padding:1.25rem 1.5rem;font-size:0.84rem;color:#7a5c1a;line-height:1.6;}
+  .disclaimer strong{display:block;margin-bottom:0.3rem;}
+
+  .nav-model{display:flex;gap:1rem;margin-top:0.5rem;}
+  .nav-model a{font-size:0.85rem;color:var(--accent);text-decoration:none;border:1px solid var(--rule);padding:0.5rem 1rem;border-radius:8px;transition:background 0.15s;}
+  .nav-model a:hover{background:var(--rule);}
+
+  footer{border-top:1px solid var(--rule);padding:2.5rem 2rem;background:var(--bg);}
+  .footer-inner{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;}
+  .footer-copy{font-size:0.78rem;color:var(--mid);}
+  .footer-links{display:flex;gap:1.5rem;}
+  .footer-links a{font-size:0.82rem;color:var(--mid);text-decoration:none;}
+  @media(max-width:768px){.two-col{grid-template-columns:1fr;}.page-header{grid-template-columns:1fr;}nav{padding:0 1rem;}.nav-links a:not(.btn-pitch){display:none;}}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-brand" href="../../index.htm">
+    <div class="nav-logo"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M2 12C4.5 7 8 4 12 4s7.5 3 10 8c-2.5 5-6 8-10 8S4.5 17 2 12z"/></svg></div>
+    <span class="nav-wordmark">EyeMap<span>.ai</span> Labs</span>
+  </a>
+  <div class="nav-links">
+    <a href="../../research.htm">Research</a>
+    <a href="index.htm">AI Models</a>
+    <a href="../../assistive.htm">Assistive Tech</a>
+    <a href="../../participants/index.htm">Participants</a>
+    <a href="../../pitch/index.htm" class="btn-pitch">Pitch Deck →</a>
+  </div>
+</nav>
+
+<div class="breadcrumb">
+  <a href="../../index.htm">EyeMap.ai Labs</a><span>›</span>
+  <a href="index.htm">AI Models</a><span>›</span>
+  Age-Related Macular Degeneration
+</div>
+
+<div class="page-header">
+  <div>
+    <p class="eyebrow">Model 01 · Retinal Imaging</p>
+    <h1>Age-Related Macular Degeneration Detection</h1>
+    <p class="lead">Automated AMD severity grading from colour fundus photographs, with classification aligned to established clinical grading systems.</p>
+    <div class="nav-model">
+      <a href="dr.htm">→ DR Model</a>
+      <a href="glaucoma.htm">→ Glaucoma Model</a>
+    </div>
+  </div>
+  <div class="model-badge"><span class="num">AMD</span>Model 01</div>
+</div>
+
+<hr class="rule">
+
+<section>
+  <div class="inner">
+    <p class="section-label">Clinical Background</p>
+    <div class="two-col">
+      <div class="prose">
+        <p>Age-related macular degeneration (AMD) is the leading cause of irreversible central vision loss in individuals over 50 in high-income countries. It affects approximately 196 million people worldwide, with this number projected to rise substantially as populations age.</p>
+        <p>The macula, located at the centre of the retina, is responsible for high-acuity central vision — essential for reading, face recognition, and fine motor tasks. AMD causes progressive degeneration of the photoreceptors and retinal pigment epithelium (RPE) in this region.</p>
+        <h3>Why early detection matters</h3>
+        <p>Early-stage AMD is asymptomatic or produces only subtle visual changes that patients may not notice or attribute to ageing. By the time significant symptoms emerge, irreversible structural damage has typically occurred. Early detection allows initiation of lifestyle interventions, nutritional supplementation (AREDS2 formula), and close monitoring that can meaningfully delay progression to advanced disease.</p>
+        <h3>The role of fundus imaging</h3>
+        <p>Colour fundus photography provides a direct view of the retinal surface. AMD hallmarks — drusen (yellow-white deposits beneath the RPE), pigmentary abnormalities, geographic atrophy, and choroidal neovascularisation — are directly visible and amenable to automated image analysis.</p>
+      </div>
+      <div>
+        <h2 class="section-title" style="font-size:1.2rem;margin-bottom:1rem;">Severity Classification</h2>
+        <table class="severity-table">
+          <thead>
+            <tr>
+              <th>Level</th>
+              <th>Classification</th>
+              <th>Key Features</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="level-badge level-0">0</span></td>
+              <td><strong>No Macular Degeneration</strong></td>
+              <td>Normal foveal reflex. Absent or minimal small drusen (&lt;63 µm). No RPE abnormalities. No neovascularisation.</td>
+            </tr>
+            <tr>
+              <td><span class="level-badge level-1">1</span></td>
+              <td><strong>Mild Macular Degeneration</strong></td>
+              <td>Medium drusen (63–124 µm) without RPE abnormality, or small drusen with pigmentary changes. No geographic atrophy in the central subfield. No late AMD features.</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="disclaimer" style="margin-top:1.25rem;">
+          <strong>⚠ Screening Tool — Not a Diagnostic Device</strong>
+          AMD severity grading is intended to flag cases for ophthalmologist review. It does not replace clinical examination with optical coherence tomography (OCT) or fluorescein angiography.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section>
+  <div class="inner">
+    <p class="section-label">Technical Specification</p>
+    <h2 class="section-title">Model architecture & validation</h2>
+    <div class="tech-grid">
+      <div class="tech-card">
+        <div class="label">Input</div>
+        <div class="value">Colour fundus photograph</div>
+        <div class="sub">Standard resolution, centred on macula</div>
+      </div>
+      <div class="tech-card">
+        <div class="label">Output</div>
+        <div class="value">2-class severity score</div>
+        <div class="sub">With per-class confidence probability</div>
+      </div>
+      <div class="tech-card">
+        <div class="label">Architecture</div>
+        <div class="value">CNN (deep residual)</div>
+        <div class="sub">Transfer learning from ImageNet pre-training</div>
+      </div>
+      <div class="tech-card">
+        <div class="label">Validation</div>
+        <div class="value">Expert grader agreement</div>
+        <div class="sub">Graded by certified ophthalmologists</div>
+      </div>
+      <div class="tech-card">
+        <div class="label">Accuracy</div>
+        <div class="value">90%+ (binary)</div>
+        <div class="sub">On held-out test set</div>
+      </div>
+      <div class="tech-card">
+        <div class="label">Inference time</div>
+        <div class="value">&lt; 3 seconds</div>
+        <div class="sub">Per image on standard GPU</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section>
+  <div class="inner">
+    <p class="section-label">Clinical Pathway</p>
+    <h2 class="section-title">How results are used</h2>
+    <div class="prose" style="max-width:720px;">
+      <p>The AMD model outputs a severity level and confidence score. In the EyeMap deployment workflow, results are presented as a screening report to the optometrist, not directly to the patient. The report includes an explicit statement that findings require clinical confirmation.</p>
+      <h3>Referral thresholds</h3>
+      <p>Any result at Level 1 (Mild AMD) or above, or a Level 0 result with confidence below a defined threshold, triggers a recommendation for ophthalmologist referral. The referral decision remains with the qualified optometrist or clinician reviewing the report.</p>
+      <h3>Longitudinal tracking</h3>
+      <p>In the UK Biobank validation study, we will examine AMD classification change over time to assess the model's utility in detecting early progression — a clinically meaningful capability that static grading alone cannot provide.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-copy">© 2025 EyeMap.ai Labs. AMD model — screening use only, not CE-marked for standalone clinical diagnosis.</div>
+    <div class="footer-links"><a href="index.htm">All Models</a><a href="dr.htm">DR Model →</a><a href="../../index.htm">Home</a></div>
+  </div>
+</footer>
+</body>
+</html>

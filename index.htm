@@ -1,1511 +1,507 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EyeMap - AI-Powered Eye Health Platform</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-            line-height: 1.6;
-            color: #e0e0e0;
-            background: #0a0a0f;
-            overflow-x: hidden;
-        }
-        
-        .bg-gradient {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3), transparent 50%),
-                        radial-gradient(circle at 80% 80%, rgba(255, 75, 145, 0.3), transparent 50%),
-                        radial-gradient(circle at 40% 20%, rgba(35, 213, 171, 0.2), transparent 50%);
-            z-index: -1;
-            animation: gradientShift 15s ease infinite;
-        }
-        
-        @keyframes gradientShift {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.8; }
-        }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
-            position: relative;
-        }
-        
-        header {
-            text-align: center;
-            padding: 100px 20px 80px;
-            position: relative;
-        }
-        
-        .logo-container {
-            display: inline-block;
-            position: relative;
-            margin-bottom: 30px;
-        }
-        
-        .logo {
-            font-size: 72px;
-            font-weight: 900;
-            letter-spacing: -3px;
-            background: linear-gradient(135deg, #7877c6 0%, #ff4b91 50%, #23d5ab 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: glow 3s ease-in-out infinite;
-        }
-        
-        @keyframes glow {
-            0%, 100% { filter: brightness(1) drop-shadow(0 0 20px rgba(120, 119, 198, 0.5)); }
-            50% { filter: brightness(1.2) drop-shadow(0 0 30px rgba(255, 75, 145, 0.8)); }
-        }
-        
-        .nav-link {
-            color: #7877c6;
-            text-decoration: none;
-            font-size: 16px;
-            margin: 0 15px;
-            transition: color 0.3s ease;
-        }
-        
-        .nav-link:hover {
-            color: #ff4b91;
-        }
-        
-        .tagline {
-            font-size: 28px;
-            font-weight: 300;
-            color: #b0b0b0;
-            margin-bottom: 50px;
-            letter-spacing: 1px;
-        }
-        
-        .hero-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-        
-        .stat {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 30px;
-            text-align: center;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .stat::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transition: left 0.5s;
-        }
-        
-        .stat:hover::before {
-            left: 100%;
-        }
-        
-        .stat:hover {
-            transform: translateY(-5px);
-            border-color: rgba(120, 119, 198, 0.5);
-            box-shadow: 0 10px 40px rgba(120, 119, 198, 0.3);
-        }
-        
-        .stat-number {
-            font-size: 48px;
-            font-weight: 900;
-            display: block;
-            background: linear-gradient(135deg, #7877c6, #ff4b91);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
-        }
-        
-        .stat-label {
-            font-size: 14px;
-            color: #888;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-        
-        .content {
-            background: rgba(255, 255, 255, 0.02);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 30px;
-            padding: 80px 60px;
-            margin: 60px 0;
-            position: relative;
-        }
-        
-        .content::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(120, 119, 198, 0.5), transparent);
-        }
-        
-        h2 {
-            font-size: 48px;
-            font-weight: 900;
-            margin-bottom: 40px;
-            background: linear-gradient(135deg, #fff, #b0b0b0);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: -1px;
-        }
-        
-        h3 {
-            font-size: 28px;
-            margin: 40px 0 20px;
-            color: #fff;
-            font-weight: 700;
-        }
-        
-        .problem-solution {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            margin: 50px 0;
-        }
-        
-        .box {
-            padding: 40px;
-            border-radius: 20px;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-        
-        .box::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 100%;
-            background: linear-gradient(180deg, #ff4b91, #7877c6);
-        }
-        
-        .box:hover {
-            border-color: rgba(120, 119, 198, 0.3);
-            transform: translateX(5px);
-        }
-        
-        .problem::before {
-            background: linear-gradient(180deg, #ff4b91, #ff6b6b);
-        }
-        
-        .solution::before {
-            background: linear-gradient(180deg, #23d5ab, #7877c6);
-        }
-        
-        .metrics {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-            margin: 50px 0;
-        }
-        
-        .metric-card {
-            padding: 40px;
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            text-align: center;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .metric-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: conic-gradient(from 0deg, transparent, rgba(120, 119, 198, 0.2), transparent);
-            animation: rotate 4s linear infinite;
-        }
-        
-        @keyframes rotate {
-            100% { transform: rotate(360deg); }
-        }
-        
-        .metric-card > * {
-            position: relative;
-            z-index: 1;
-        }
-        
-        .metric-card:hover {
-            transform: translateY(-10px);
-            border-color: rgba(120, 119, 198, 0.5);
-            box-shadow: 0 20px 60px rgba(120, 119, 198, 0.4);
-        }
-        
-        .metric-value {
-            font-size: 42px;
-            font-weight: 900;
-            display: block;
-            margin-bottom: 10px;
-            background: linear-gradient(135deg, #7877c6, #ff4b91);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        .team {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 40px;
-            margin: 50px 0;
-        }
-        
-        .team-member {
-            padding: 40px;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .team-member::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, #7877c6, #ff4b91, #23d5ab);
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
-        }
-        
-        .team-member:hover::after {
-            transform: scaleX(1);
-        }
-        
-        .team-member:hover {
-            border-color: rgba(120, 119, 198, 0.3);
-            transform: translateY(-5px);
-        }
-        
-        .team-name {
-            font-size: 32px;
-            font-weight: 900;
-            margin: 20px 0 10px;
-            color: #fff;
-        }
-        
-        .team-title {
-            color: #7877c6;
-            font-weight: 600;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 14px;
-        }
-        
-        .team-bio {
-            font-size: 15px;
-            color: #999;
-            line-height: 1.8;
-        }
-        
-        .cta {
-            text-align: center;
-            padding: 100px 40px;
-            background: rgba(255, 255, 255, 0.02);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 30px;
-            margin: 60px 0;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .cta::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at center, rgba(120, 119, 198, 0.1), transparent 70%);
-        }
-        
-        .cta h2 {
-            color: #fff;
-            margin-bottom: 20px;
-            position: relative;
-        }
-        
-        .cta-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            flex-wrap: wrap;
-            margin-top: 50px;
-        }
-        
-        .btn {
-            padding: 18px 50px;
-            font-size: 16px;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: 700;
-            text-decoration: none;
-            display: inline-block;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            transform: translate(-50%, -50%);
-            transition: width 0.5s, height 0.5s;
-        }
-        
-        .btn:hover::before {
-            width: 300px;
-            height: 300px;
-        }
-        
-        .btn span {
-            position: relative;
-            z-index: 1;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, #7877c6, #ff4b91);
-            color: white;
-            border: 2px solid transparent;
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 40px rgba(120, 119, 198, 0.5);
-        }
-        
-        .btn-secondary {
-            background: transparent;
-            color: white;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-        }
-        
-        .btn-secondary:hover {
-            border-color: #7877c6;
-            box-shadow: 0 10px 40px rgba(120, 119, 198, 0.3);
-        }
-        
-        ul {
-            margin: 30px 0;
-            padding-left: 0;
-            list-style: none;
-        }
-        
-        li {
-            margin: 20px 0;
-            padding-left: 30px;
-            position: relative;
-            color: #b0b0b0;
-        }
-        
-        li::before {
-            content: '▸';
-            position: absolute;
-            left: 0;
-            color: #7877c6;
-            font-weight: bold;
-        }
-        
-        .highlight {
-            background: linear-gradient(135deg, #7877c6, #ff4b91);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: 700;
-        }
-        
-        p {
-            color: #b0b0b0;
-            margin: 20px 0;
-            line-height: 1.8;
-        }
-        
-        strong {
-            color: #fff;
-            font-weight: 600;
-        }
-        
-        @media (max-width: 768px) {
-            .problem-solution {
-                grid-template-columns: 1fr;
-            }
-            
-            .content {
-                padding: 40px 30px;
-            }
-            
-            .logo {
-                font-size: 48px;
-            }
-            
-            .tagline {
-                font-size: 20px;
-            }
-            
-            h2 {
-                font-size: 36px;
-            }
-            
-            header {
-                padding: 60px 20px 40px;
-            }
-        }
-        
-        .grid-pattern {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                linear-gradient(rgba(120, 119, 198, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(120, 119, 198, 0.05) 1px, transparent 1px);
-            background-size: 50px 50px;
-            z-index: -1;
-            animation: gridMove 20s linear infinite;
-        }
-        
-        @keyframes gridMove {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(50px, 50px); }
-        }
-
-        /* Style Switcher Controls */
-        .style-switcher {
-            background: rgba(255, 255, 255, 0.02);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 40px;
-            margin: 40px 0;
-            text-align: center;
-        }
-
-        .style-switcher h3 {
-            color: #fff;
-            margin-bottom: 30px;
-            font-size: 24px;
-        }
-
-        .switcher-controls {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            flex-wrap: wrap;
-        }
-
-        .control-group {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .control-group label {
-            color: #b0b0b0;
-            font-weight: 600;
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .theme-btn, .font-btn, .mode-btn {
-            padding: 12px 24px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            background: transparent;
-            color: #b0b0b0;
-            border-radius: 25px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            font-size: 14px;
-        }
-
-        .theme-btn:hover, .font-btn:hover, .mode-btn:hover {
-            border-color: #7877c6;
-            color: #fff;
-            transform: translateY(-2px);
-        }
-
-        .theme-btn.active, .font-btn.active {
-            background: linear-gradient(135deg, #7877c6, #ff4b91);
-            border-color: transparent;
-            color: white;
-        }
-
-        .mode-btn {
-            background: linear-gradient(135deg, #ff4b91, #23d5ab);
-            border-color: transparent;
-            color: white;
-        }
-
-        .mode-btn:hover {
-            background: linear-gradient(135deg, #ff6b6b, #35e6c1);
-        }
-
-        /* Font Size Variations */
-        .font-small {
-            font-size: 14px;
-        }
-
-        .font-small .logo {
-            font-size: 48px;
-        }
-
-        .font-small h2 {
-            font-size: 36px;
-        }
-
-        .font-small h3 {
-            font-size: 22px;
-        }
-
-        .font-small .stat-number {
-            font-size: 36px;
-        }
-
-        .font-small .metric-value {
-            font-size: 32px;
-        }
-
-        .font-medium {
-            font-size: 16px;
-        }
-
-        .font-large {
-            font-size: 18px;
-        }
-
-        .font-large .logo {
-            font-size: 84px;
-        }
-
-        .font-large h2 {
-            font-size: 56px;
-        }
-
-        .font-large h3 {
-            font-size: 32px;
-        }
-
-        .font-large .stat-number {
-            font-size: 56px;
-        }
-
-        .font-large .metric-value {
-            font-size: 48px;
-        }
-
-        /* Green Theme Styles */
-        .green-theme {
-            background: #f5f5f5;
-            color: #1a1a1a;
-        }
-
-        .green-theme .bg-gradient {
-            background: linear-gradient(135deg, #00e996 0%, #c3e49f 100%);
-        }
-
-        .green-theme .grid-pattern {
-            background-image: 
-                linear-gradient(rgba(0, 233, 150, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 233, 150, 0.05) 1px, transparent 1px);
-        }
-
-        .green-theme header {
-            background: linear-gradient(135deg, #00e996 0%, #c3e49f 100%);
-            border-radius: 32px;
-            margin-bottom: 60px;
-            box-shadow: 0 8px 32px rgba(0, 233, 150, 0.25);
-        }
-
-        .green-theme .logo {
-            color: #1a1a1a;
-            background: none;
-            -webkit-text-fill-color: #1a1a1a;
-        }
-
-        .green-theme .tagline {
-            color: #1a1a1a;
-        }
-
-        .green-theme .stat {
-            background: #ffffff;
-            border: 3px solid #1a1a1a;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-        }
-
-        .green-theme .stat:hover {
-            border-color: #00e996;
-            box-shadow: 0 12px 32px rgba(0, 233, 150, 0.2);
-        }
-
-        .green-theme .stat-number {
-            color: #1a1a1a;
-            background: none;
-            -webkit-text-fill-color: #1a1a1a;
-        }
-
-        .green-theme .stat-label {
-            color: #1a1a1a;
-            opacity: 0.7;
-        }
-
-        .green-theme .content {
-            background: #ffffff;
-            border: none;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-        }
-
-        .green-theme h2 {
-            color: #1a1a1a;
-            background: none;
-            -webkit-text-fill-color: #1a1a1a;
-        }
-
-        .green-theme h3 {
-            color: #1a1a1a;
-        }
-
-        .green-theme .box {
-            border: 3px solid #1a1a1a;
-        }
-
-        .green-theme .problem {
-            background: #f6b5d3;
-        }
-
-        .green-theme .solution {
-            background: #c3e49f;
-        }
-
-        .green-theme .metric-card {
-            background: #fff269;
-            border: 3px solid #1a1a1a;
-        }
-
-        .green-theme .metric-value {
-            color: #1a1a1a;
-            background: none;
-            -webkit-text-fill-color: #1a1a1a;
-        }
-
-        .green-theme .team-member {
-            background: #f5f5f5;
-            border: 3px solid #1a1a1a;
-        }
-
-        .green-theme .team-member:hover {
-            background: #c3e49f;
-        }
-
-        .green-theme .team-name {
-            color: #1a1a1a;
-        }
-
-        .green-theme .team-title {
-            color: #1a1a1a;
-        }
-
-        .green-theme .team-bio {
-            color: #1a1a1a;
-            opacity: 0.85;
-        }
-
-        .green-theme .cta {
-            background: linear-gradient(135deg, #f6b5d3 0%, #fff269 100%);
-            color: #1a1a1a;
-            border: 3px solid #1a1a1a;
-            box-shadow: 0 8px 32px rgba(246, 181, 211, 0.3);
-        }
-
-        .green-theme .cta h2 {
-            color: #1a1a1a;
-        }
-
-        .green-theme .btn-primary {
-            background: #00e996;
-            color: #1a1a1a;
-            border: 3px solid #1a1a1a;
-        }
-
-        .green-theme .btn-secondary {
-            background: #ffffff;
-            color: #1a1a1a;
-            border: 3px solid #1a1a1a;
-        }
-
-        .green-theme p {
-            color: #1a1a1a;
-            opacity: 0.9;
-        }
-
-        .green-theme strong {
-            color: #1a1a1a;
-        }
-
-        .green-theme li {
-            color: #1a1a1a;
-            opacity: 0.9;
-        }
-
-        .green-theme li::before {
-            color: #1a1a1a;
-        }
-
-        .green-theme .highlight {
-            background: #c3e49f;
-            color: #1a1a1a;
-            padding: 4px 12px;
-            border-radius: 6px;
-        }
-
-        .green-theme .style-switcher {
-            background: #ffffff;
-            border: 3px solid #1a1a1a;
-        }
-
-        .green-theme .style-switcher h3 {
-            color: #1a1a1a;
-        }
-
-        .green-theme .control-group label {
-            color: #1a1a1a;
-            opacity: 0.7;
-        }
-
-        .green-theme .theme-btn, .green-theme .font-btn, .green-theme .mode-btn {
-            border-color: #1a1a1a;
-            color: #1a1a1a;
-        }
-
-        .green-theme .theme-btn:hover, .green-theme .font-btn:hover, .green-theme .mode-btn:hover {
-            border-color: #00e996;
-            color: #1a1a1a;
-        }
-
-        /* Dark Theme Styles - More subtle approach */
-        .dark-theme {
-            background: #1a1a1a !important;
-            color: #e0e0e0 !important;
-        }
-
-        .dark-theme .bg-gradient {
-            background: radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.2), transparent 50%),
-                        radial-gradient(circle at 80% 80%, rgba(255, 75, 145, 0.2), transparent 50%),
-                        radial-gradient(circle at 40% 20%, rgba(35, 213, 171, 0.15), transparent 50%) !important;
-        }
-
-        .dark-theme .grid-pattern {
-            background-image: 
-                linear-gradient(rgba(120, 119, 198, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(120, 119, 198, 0.03) 1px, transparent 1px) !important;
-        }
-
-        .dark-theme .logo {
-            background: linear-gradient(135deg, #7877c6 0%, #ff4b91 50%, #23d5ab 100%) !important;
-            -webkit-background-clip: text !important;
-            -webkit-text-fill-color: transparent !important;
-            background-clip: text !important;
-        }
-
-        .dark-theme .tagline {
-            color: #b0b0b0 !important;
-        }
-
-        .dark-theme .stat {
-            background: rgba(255, 255, 255, 0.05) !important;
-            border: 1px solid rgba(255, 255, 255, 0.15) !important;
-        }
-
-        .dark-theme .stat:hover {
-            border-color: rgba(120, 119, 198, 0.5) !important;
-            box-shadow: 0 10px 40px rgba(120, 119, 198, 0.3) !important;
-        }
-
-        .dark-theme .stat-number {
-            background: linear-gradient(135deg, #7877c6, #ff4b91) !important;
-            -webkit-background-clip: text !important;
-            -webkit-text-fill-color: transparent !important;
-            background-clip: text !important;
-        }
-
-        .dark-theme .stat-label {
-            color: #888 !important;
-        }
-
-        .dark-theme .content {
-            background: rgba(255, 255, 255, 0.03) !important;
-            border: 1px solid rgba(255, 255, 255, 0.15) !important;
-        }
-
-        .dark-theme h2 {
-            background: linear-gradient(135deg, #fff, #b0b0b0) !important;
-            -webkit-background-clip: text !important;
-            -webkit-text-fill-color: transparent !important;
-            background-clip: text !important;
-        }
-
-        .dark-theme h3 {
-            color: #fff !important;
-        }
-
-        .dark-theme .box {
-            background: rgba(255, 255, 255, 0.03) !important;
-            border: 1px solid rgba(255, 255, 255, 0.15) !important;
-        }
-
-        .dark-theme .box:hover {
-            border-color: rgba(120, 119, 198, 0.3) !important;
-        }
-
-        .dark-theme .metric-card {
-            background: rgba(255, 255, 255, 0.05) !important;
-            border: 1px solid rgba(255, 255, 255, 0.15) !important;
-        }
-
-        .dark-theme .metric-card:hover {
-            border-color: rgba(120, 119, 198, 0.5) !important;
-            box-shadow: 0 20px 60px rgba(120, 119, 198, 0.4) !important;
-        }
-
-        .dark-theme .metric-value {
-            background: linear-gradient(135deg, #7877c6, #ff4b91) !important;
-            -webkit-background-clip: text !important;
-            -webkit-text-fill-color: transparent !important;
-            background-clip: text !important;
-        }
-
-        .dark-theme .team-member {
-            background: rgba(255, 255, 255, 0.03) !important;
-            border: 1px solid rgba(255, 255, 255, 0.15) !important;
-        }
-
-        .dark-theme .team-member:hover {
-            border-color: rgba(120, 119, 198, 0.3) !important;
-        }
-
-        .dark-theme .team-name {
-            color: #fff !important;
-        }
-
-        .dark-theme .team-title {
-            color: #7877c6 !important;
-        }
-
-        .dark-theme .team-bio {
-            color: #999 !important;
-        }
-
-        .dark-theme .cta {
-            background: rgba(255, 255, 255, 0.03) !important;
-            border: 1px solid rgba(255, 255, 255, 0.15) !important;
-        }
-
-        .dark-theme .cta h2 {
-            color: #fff !important;
-        }
-
-        .dark-theme .btn-primary {
-            background: linear-gradient(135deg, #7877c6, #ff4b91) !important;
-            color: white !important;
-            border: 2px solid transparent !important;
-        }
-
-        .dark-theme .btn-secondary {
-            background: transparent !important;
-            color: white !important;
-            border: 2px solid rgba(255, 255, 255, 0.3) !important;
-        }
-
-        .dark-theme p {
-            color: #b0b0b0 !important;
-        }
-
-        .dark-theme strong {
-            color: #fff !important;
-        }
-
-        .dark-theme li {
-            color: #b0b0b0 !important;
-        }
-
-        .dark-theme li::before {
-            color: #7877c6 !important;
-        }
-
-        .dark-theme .highlight {
-            background: linear-gradient(135deg, #7877c6, #ff4b91) !important;
-            -webkit-background-clip: text !important;
-            -webkit-text-fill-color: transparent !important;
-            background-clip: text !important;
-        }
-
-        .dark-theme .style-switcher {
-            background: rgba(255, 255, 255, 0.03) !important;
-            border: 1px solid rgba(255, 255, 255, 0.15) !important;
-        }
-
-        .dark-theme .style-switcher h3 {
-            color: #fff !important;
-        }
-
-        .dark-theme .control-group label {
-            color: #b0b0b0 !important;
-        }
-
-        .dark-theme .theme-btn, .dark-theme .font-btn, .dark-theme .mode-btn {
-            border-color: rgba(255, 255, 255, 0.3) !important;
-            color: #b0b0b0 !important;
-        }
-
-        .dark-theme .theme-btn:hover, .dark-theme .font-btn:hover, .dark-theme .mode-btn:hover {
-            border-color: #7877c6 !important;
-            color: #fff !important;
-        }
-
-        @media (max-width: 768px) {
-            .switcher-controls {
-                flex-direction: column;
-                gap: 20px;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EyeMap.ai Research Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f5f0;
+    --ink: #1a1814;
+    --mid: #6b6560;
+    --accent: #1a4a6b;
+    --accent2: #c8913a;
+    --rule: #d8d2c8;
+    --card-bg: #ffffff;
+    --serif: 'EB Garamond', Georgia, serif;
+    --sans: 'DM Sans', system-ui, sans-serif;
+    --mono: 'Space Mono', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(247,245,240,0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--rule);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px;
+  }
+  .nav-brand {
+    display: flex; align-items: center; gap: 12px;
+    text-decoration: none; color: var(--ink);
+  }
+  .nav-logo {
+    width: 36px; height: 36px; border-radius: 8px;
+    background: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .nav-logo svg { width: 20px; height: 20px; }
+  .nav-wordmark { font-family: var(--serif); font-size: 1.2rem; font-weight: 600; letter-spacing: 0.01em; }
+  .nav-wordmark span { color: var(--accent2); }
+  .nav-links { display: flex; gap: 0.25rem; align-items: center; }
+  .nav-links a {
+    font-family: var(--sans); font-size: 0.85rem; font-weight: 500;
+    color: var(--mid); text-decoration: none;
+    padding: 0.4rem 0.8rem; border-radius: 6px;
+    transition: color 0.2s, background 0.2s;
+  }
+  .nav-links a:hover { color: var(--ink); background: var(--rule); }
+  .nav-links a.btn-pitch {
+    background: var(--accent); color: #fff; margin-left: 0.5rem;
+  }
+  .nav-links a.btn-pitch:hover { background: #153d59; }
+
+  /* HERO */
+  .hero {
+    max-width: 1100px; margin: 0 auto;
+    padding: 7rem 2rem 5rem;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
+  }
+  .hero-eyebrow {
+    font-family: var(--mono); font-size: 0.72rem; color: var(--accent2);
+    letter-spacing: 0.12em; text-transform: uppercase;
+    margin-bottom: 1.2rem;
+  }
+  .hero h1 {
+    font-family: var(--serif); font-size: clamp(2.4rem, 5vw, 3.6rem);
+    font-weight: 500; line-height: 1.15;
+    margin-bottom: 1.5rem; color: var(--ink);
+  }
+  .hero h1 em { font-style: italic; color: var(--accent); }
+  .hero p {
+    font-size: 1.05rem; color: var(--mid); line-height: 1.7;
+    max-width: 460px; margin-bottom: 2rem;
+  }
+  .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--accent); color: #fff;
+    padding: 0.75rem 1.6rem; border-radius: 8px;
+    font-family: var(--sans); font-size: 0.9rem; font-weight: 500;
+    text-decoration: none; transition: background 0.2s, transform 0.15s;
+    display: inline-block;
+  }
+  .btn-primary:hover { background: #153d59; transform: translateY(-1px); }
+  .btn-secondary {
+    border: 1.5px solid var(--rule); color: var(--ink);
+    padding: 0.75rem 1.6rem; border-radius: 8px;
+    font-family: var(--sans); font-size: 0.9rem; font-weight: 500;
+    text-decoration: none; transition: border-color 0.2s, background 0.2s;
+    display: inline-block;
+  }
+  .btn-secondary:hover { border-color: var(--accent); background: #f0f4f8; }
+
+  /* HERO VISUAL */
+  .hero-visual {
+    display: flex; flex-direction: column; gap: 1rem;
+    opacity: 0; animation: fadeUp 0.8s 0.3s forwards;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero-stat-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+  }
+  .stat-card {
+    background: var(--card-bg); border: 1px solid var(--rule);
+    border-radius: 12px; padding: 1.5rem;
+  }
+  .stat-card .num {
+    font-family: var(--serif); font-size: 2.2rem;
+    color: var(--accent); font-weight: 600;
+  }
+  .stat-card .label {
+    font-size: 0.82rem; color: var(--mid); margin-top: 0.2rem;
+  }
+  .affiliation-bar {
+    background: var(--card-bg); border: 1px solid var(--rule);
+    border-radius: 12px; padding: 1rem 1.5rem;
+    display: flex; align-items: center; gap: 0.8rem;
+    font-size: 0.82rem; color: var(--mid);
+  }
+  .aff-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent2); flex-shrink: 0; }
+
+  /* SECTION RULES */
+  section { padding: 5rem 2rem; }
+  .section-inner { max-width: 1100px; margin: 0 auto; }
+  .section-label {
+    font-family: var(--mono); font-size: 0.7rem; color: var(--accent2);
+    letter-spacing: 0.12em; text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+  .section-title {
+    font-family: var(--serif); font-size: clamp(1.8rem, 3.5vw, 2.4rem);
+    font-weight: 500; margin-bottom: 1rem; color: var(--ink);
+  }
+  .section-lead {
+    font-size: 1rem; color: var(--mid); max-width: 620px;
+    line-height: 1.75; margin-bottom: 3rem;
+  }
+  hr.rule { border: none; border-top: 1px solid var(--rule); margin: 0 2rem; }
+
+  /* SITE MAP / STRUCTURE */
+  .structure-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+  }
+  .structure-card {
+    background: var(--card-bg); border: 1px solid var(--rule);
+    border-radius: 14px; padding: 2rem;
+    text-decoration: none; color: var(--ink);
+    transition: box-shadow 0.2s, transform 0.2s;
+    display: block;
+  }
+  .structure-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.08); transform: translateY(-2px); }
+  .card-icon {
+    width: 44px; height: 44px; border-radius: 10px;
+    background: #eef2f7; display: flex; align-items: center; justify-content: center;
+    margin-bottom: 1rem; font-size: 1.4rem;
+  }
+  .structure-card h3 { font-family: var(--serif); font-size: 1.15rem; font-weight: 500; margin-bottom: 0.4rem; }
+  .structure-card p { font-size: 0.85rem; color: var(--mid); line-height: 1.6; }
+  .card-arrow { margin-top: 1rem; font-size: 0.8rem; color: var(--accent); font-weight: 500; }
+
+  /* RESEARCH AREAS */
+  .research-list { display: flex; flex-direction: column; gap: 1px; }
+  .research-item {
+    border: 1px solid var(--rule); border-radius: 12px;
+    background: var(--card-bg); overflow: hidden; margin-bottom: 0.75rem;
+  }
+  .research-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.4rem 2rem; cursor: pointer;
+    transition: background 0.15s;
+  }
+  .research-header:hover { background: #f7f5f0; }
+  .research-title { font-family: var(--serif); font-size: 1.15rem; font-weight: 500; }
+  .research-tag {
+    font-family: var(--mono); font-size: 0.68rem; color: var(--accent);
+    background: #eef2f7; padding: 0.25rem 0.7rem; border-radius: 20px;
+  }
+  .research-body {
+    padding: 0 2rem 1.5rem;
+    font-size: 0.9rem; color: var(--mid); line-height: 1.7;
+    border-top: 1px solid var(--rule);
+    display: flex; flex-direction: column; gap: 0.6rem;
+  }
+  .research-body a { color: var(--accent); text-decoration: none; font-weight: 500; }
+  .research-body a:hover { text-decoration: underline; }
+
+  /* TEAM */
+  .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+  .team-card {
+    background: var(--card-bg); border: 1px solid var(--rule);
+    border-radius: 14px; padding: 2rem;
+  }
+  .team-initials {
+    width: 52px; height: 52px; border-radius: 50%;
+    background: var(--accent); color: #fff;
+    font-family: var(--serif); font-size: 1.3rem;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 1rem;
+  }
+  .team-name { font-family: var(--serif); font-size: 1.15rem; font-weight: 500; }
+  .team-role { font-family: var(--mono); font-size: 0.72rem; color: var(--accent2); text-transform: uppercase; letter-spacing: 0.08em; margin: 0.3rem 0 0.8rem; }
+  .team-bio { font-size: 0.85rem; color: var(--mid); line-height: 1.65; }
+  .team-link { display: inline-block; margin-top: 1rem; font-size: 0.82rem; color: var(--accent); text-decoration: none; }
+
+  /* UKBB SECTION */
+  .ukbb-banner {
+    background: var(--accent); color: #fff;
+    border-radius: 16px; padding: 3rem;
+    display: grid; grid-template-columns: 1fr auto; gap: 2rem; align-items: center;
+  }
+  .ukbb-banner h3 { font-family: var(--serif); font-size: 1.6rem; font-weight: 500; margin-bottom: 0.75rem; }
+  .ukbb-banner p { font-size: 0.9rem; opacity: 0.85; max-width: 560px; line-height: 1.7; }
+  .ukbb-banner .btn-white {
+    background: #fff; color: var(--accent);
+    padding: 0.75rem 1.8rem; border-radius: 8px;
+    font-family: var(--sans); font-size: 0.9rem; font-weight: 600;
+    text-decoration: none; white-space: nowrap;
+    transition: background 0.2s;
+  }
+  .ukbb-banner .btn-white:hover { background: #f0f4f8; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--rule);
+    padding: 3rem 2rem;
+    background: var(--bg);
+  }
+  .footer-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 2rem;
+  }
+  .footer-brand p { font-size: 0.85rem; color: var(--mid); margin-top: 0.75rem; max-width: 260px; line-height: 1.65; }
+  footer h4 { font-family: var(--sans); font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.09em; color: var(--mid); margin-bottom: 0.8rem; }
+  footer ul { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; }
+  footer ul a { font-size: 0.85rem; color: var(--mid); text-decoration: none; }
+  footer ul a:hover { color: var(--ink); }
+  .footer-copy { max-width: 1100px; margin: 2rem auto 0; padding-top: 1.5rem; border-top: 1px solid var(--rule); font-size: 0.78rem; color: var(--mid); }
+
+  @media (max-width: 768px) {
+    .hero { grid-template-columns: 1fr; gap: 2.5rem; padding: 4rem 1.5rem 3rem; }
+    .hero-visual { order: -1; }
+    .footer-inner { grid-template-columns: 1fr 1fr; }
+    .ukbb-banner { grid-template-columns: 1fr; }
+    nav { padding: 0 1rem; }
+    .nav-links a:not(.btn-pitch) { display: none; }
+  }
+</style>
 </head>
 <body>
-    <div class="bg-gradient"></div>
-    <div class="grid-pattern"></div>
-    
-    <div class="container">
-        <header>
-            <div class="logo-container">
-                <div class="logo">EYEMAP</div>
-            </div>
-            <div style="margin-top: 0px;">
-                <a href="research.html" class="nav-link">Research</a>
-                <a href="patent.html" class="nav-link">Patent</a>
-                <a href="clinical-trial.html" class="nav-link">Clinical Trial</a>
-            </div>
-            <div style="margin-top: 40px;" class="tagline">AI-powered eye health platform for early disease detection</div>
-            <div class="hero-stats">
-                <div class="stat">
-                    <span class="stat-number">795K</span>
-                    <span class="stat-label">Annual Strokes in US</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-number">€131B</span>
-                    <span class="stat-label">Market Opportunity</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-number">171M</span>
-                    <span class="stat-label">Annual Optical Visits (USA)</span>
-                </div>
-            </div>
-        </header>
 
-        <div class="content">
-            <h2>The Opportunity</h2>
-            
-            <div class="problem-solution">
-                <div class="box problem">
-                    <h3>The Problem</h3>
-                    <p><strong>80% of strokes occur without warning signs</strong></p>
-                    <ul>
-                        <li>5 million Romanians visit optical shops yearly with zero health screening</li>
-                        <li>Optometrists sell glasses reactively when problems already exist</li>
-                        <li>Traditional screening is expensive, invasive, and infrequent</li>
-                        <li>Optical shops miss €450M+ in potential health screening revenue</li>
-                    </ul>
-                </div>
-                
-                <div class="box solution">
-                    <h3>Our Solution</h3>
-                    <p><strong>Transform every eye exam into a comprehensive health assessment</strong></p>
-                    <ul>
-                        <li>AI-powered screening detects stroke, diabetes, and cardiovascular disease through the eye</li>
-                        <li>Works with fundus images</li>
-                        <li>5-minute screening generates €49-79 per customer</li>
-                        <li>Integrated health product platform for ongoing care</li>
-                    </ul>
-                </div>
-            </div>
-
-            <h2>Market Opportunity</h2>
-            <div class="metrics">
-                <div class="metric-card">
-                    <span class="metric-value">€131B+</span>
-                    <span class="stat-label">Total Market</span>
-                </div>
-                <div class="metric-card">
-                    <span class="metric-value">€8.2B</span>
-                    <span class="stat-label">Serviceable Market</span>
-                </div>
-                <div class="metric-card">
-                    <span class="metric-value">€890M</span>
-                    <span class="stat-label">5-Year Target</span>
-                </div>
-                <div class="metric-card">
-                    <span class="metric-value">86%</span>
-                    <span class="stat-label">Gross Margin</span>
-                </div>
-            </div>
-
-            <h2>Business Model</h2>
-            <p>Three high-margin revenue streams from the same customer:</p>
-            <ul>
-                <li><strong>Health Screening (30% of revenue):</strong> €49-79 per scan, we take 30% commission (€15-24)</li>
-                <li><strong>Product Platform (50% of revenue):</strong> Eye health supplements, devices, and solutions at 25-60% margins</li>
-                <li><strong>Professional Referrals (20% of revenue):</strong> €50-150 commission per specialist referral</li>
-            </ul>
-            <p style="margin-top: 30px;"><span class="highlight">Customer Lifetime Value: €1,250</span> | <span class="highlight">Customer Acquisition Cost: €12</span></p>
-
-            <h2>Traction & Roadmap</h2>
-            <h3>Q4 2025 (Now)</h3>
-            <ul>
-                <li>Prospecting main optical shops chains in Romania: Lensa and Videt</li>
-                <li>Raising €350K pre-seed for prototype development</li>
-                <li>Target: LOIs signed + working MVP by Q1 2026</li>
-            </ul>
-            
-            <h3>2026 Milestones</h3>
-            <div class="metrics">
-                <div class="metric-card">
-                    <span class="metric-value">Q1</span>
-                    <span class="stat-label">10 locations, 1K screenings</span>
-                </div>
-                <div class="metric-card">
-                    <span class="metric-value">Q2</span>
-                    <span class="stat-label">25 locations, 3K screenings</span>
-                </div>
-                <div class="metric-card">
-                    <span class="metric-value">Q3</span>
-                    <span class="stat-label">50 locations, 8K screenings</span>
-                </div>
-                <div class="metric-card">
-                    <span class="metric-value">Q4</span>
-                    <span class="stat-label">100 locations, €1.2M revenue</span>
-                </div>
-            </div>
-            <p style="margin-top: 30px;"><strong>Path to profitability:</strong> Q2 2026 | <strong>Net profit 2026:</strong> €711K</p>
-
-            <h2>Why Now?</h2>
-            <ul>
-                <li><strong>Technology:</strong> Smartphone cameras now medical-grade, AI accuracy 90%+</li>
-                <li><strong>Market behavior:</strong> Post-COVID shift to preventive, digital healthcare</li>
-                <li><strong>Partner need:</strong> Optical shops in the quest for new revenue streams</li>
-                <li><strong>Regulatory:</strong> Clear EU pathways for AI medical devices</li>
-                <li><strong>Competition:</strong> 18-month window before Big Tech enters</li>
-            </ul>
-
-            <h2>The Team</h2>
-            <div class="team">
-                <div class="team-member">
-                    <div class="team-name">Tudor</div>
-                    <div class="team-title">CEO & Co-founder</div>
-                    <div class="team-bio">PhD, Expert in scaling businesses. Previously scaled Tudor Tailor (fashion tech) and Teilor Diamonds. Proven track record in consumer-facing technology and premium market positioning.</div>
-                    <div style="margin-top: 15px;">
-                        <a href="https://www.linkedin.com/in/tudor-popescu-08ab606/" target="_blank" style="color: #7877c6; text-decoration: none; font-size: 14px; border-bottom: 1px solid #7877c6; transition: color 0.3s ease;" onmouseover="this.style.color='#ff4b91'; this.style.borderBottomColor='#ff4b91';" onmouseout="this.style.color='#7877c6'; this.style.borderBottomColor='#7877c6';">
-                            LinkedIn →
-                        </a>
-                    </div>
-                </div>
-                <div class="team-member">
-                    <div class="team-name">Alex</div>
-                    <div class="team-title">CTO & Co-founder</div>
-                    <div class="team-bio">PhD, Postdoc in AI for Healthcare. Specialized in clinical wearables, computer vision and assistive technologies. Research background in AI applications.</div>
-                    <div style="margin-top: 15px;">
-                        <a href="https://www.linkedin.com/in/alexandru-dancu/" target="_blank" style="color: #7877c6; text-decoration: none; font-size: 14px; border-bottom: 1px solid #7877c6; transition: color 0.3s ease;" onmouseover="this.style.color='#ff4b91'; this.style.borderBottomColor='#ff4b91';" onmouseout="this.style.color='#7877c6'; this.style.borderBottomColor='#7877c6';">
-                            LinkedIn →
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <h2>The Ask</h2>
-            
-            <div style="
-                background: rgba(255, 255, 255, 0.03);
-                border: 1px solid rgba(255, 255, 255, 0.1);
-                border-radius: 20px;
-                padding: 40px;
-                margin: 30px 0;
-            ">
-                <h3 style="color: #fff; margin-top: 0; margin-bottom: 20px;">Pre-Seed Round: €350K</h3>
-                <ul>
-                    <li>€250K from strategic optical chain partners (prospecting the main players: Lensa & Videt)</li>
-                    <li>€100K from angel investors and network</li>
-                    <li><strong>Use of funds:</strong> Prototype development, team hiring (3 engineers), pilot preparation</li>
-                    <li><strong>Timeline:</strong> Close by December 2025</li>
-                </ul>
-            </div>
-
-            <div style="
-                background: rgba(120, 119, 198, 0.1);
-                border: 2px solid rgba(120, 119, 198, 0.3);
-                border-radius: 20px;
-                padding: 40px;
-                margin: 30px 0;
-                position: relative;
-            ">
-                <div style="
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 4px;
-                    height: 100%;
-                    background: linear-gradient(180deg, #7877c6, #ff4b91);
-                "></div>
-                <h3 style="color: #fff; margin-top: 0; margin-bottom: 20px;">Post-Pilot Expansion: €1M</h3>
-                <p style="margin-bottom: 15px;">
-                    Following successful pilot validation, we will raise <strong style="color: #ff4b91;">€1 million</strong> to scale operations across Romania.
-                </p>
-                <p style="margin-bottom: 15px;">
-                    <strong>Objective:</strong> Equip <strong style="color: #23d5ab;">70% of optometry shops in Romania</strong> with our AI-powered screening platform.
-                </p>
-                <p style="margin-bottom: 0;">
-                    This expansion round will enable nationwide deployment, establishing eyemap.ai as the standard for preventive health screening in the Romanian optical market.
-                </p>
-            </div>
-        </div>
-
-        <!-- Dashboard Preview Section -->
-        <div class="content" style="margin-top: 60px;">
-            <h2>Interactive Dashboard Preview</h2>
-            <p style="margin-bottom: 30px; color: #b0b0b0;">
-                This is a design mockup of our system. The functional platform will be available in January 2026. 
-                Experience a preview of our AI-powered screening platform and see how fundus image analysis will work.
-            </p>
-            
-            <div class="dashboard-preview" style="
-                background: rgba(255, 255, 255, 0.02);
-                backdrop-filter: blur(20px);
-                border: 1px solid rgba(255, 255, 255, 0.1);
-                border-radius: 20px;
-                padding: 40px;
-                margin: 30px 0;
-                position: relative;
-                overflow: hidden;
-            ">
-                <div style="
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    right: 0;
-                    height: 2px;
-                    background: linear-gradient(90deg, #7877c6, #ff4b91, #23d5ab);
-                "></div>
-                
-                <div style="text-align: center; margin-bottom: 30px;">
-                    <h3 style="color: #fff; margin-bottom: 15px;">Try the eyemap.ai Dashboard</h3>
-                    <p style="color: #b0b0b0; margin-bottom: 20px;">
-                        <strong style="color: #ff4b91;">⚠️ Note:</strong> This is a mockup and work in progress - Not for clinical use
-                    </p>
-                </div>
-                
-                <div style="
-                    background: rgba(255, 255, 255, 0.03);
-                    border: 1px solid rgba(255, 255, 255, 0.1);
-                    border-radius: 15px;
-                    padding: 20px;
-                    margin-bottom: 30px;
-                    min-height: 400px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                ">
-                    <iframe 
-                        src="dashboard/dashboard.html" 
-                        style="
-                            width: 100%;
-                            height: 600px;
-                            border: none;
-                            border-radius: 10px;
-                            background: rgba(10, 10, 15, 0.5);
-                        "
-                        title="eyemap.ai Dashboard"
-                    ></iframe>
-                </div>
-                
-                <div style="text-align: center;">
-                    <a href="dashboard/dashboard.html" target="_blank" class="btn btn-primary" style="display: inline-block;">
-                        <span>Open Dashboard in New Tab</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- News Section -->
-        <div class="content" style="margin-top: 60px;">
-            <h2>Latest News</h2>
-            
-            <div class="news-item" style="
-                background: rgba(255, 255, 255, 0.02);
-                backdrop-filter: blur(20px);
-                border: 1px solid rgba(255, 255, 255, 0.1);
-                border-radius: 20px;
-                padding: 40px;
-                margin: 30px 0;
-                position: relative;
-                overflow: hidden;
-            ">
-                <div style="
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    right: 0;
-                    height: 2px;
-                    background: linear-gradient(90deg, #7877c6, #ff4b91, #23d5ab);
-                "></div>
-                
-                <div style="margin-bottom: 30px;">
-                    <h3 style="color: #fff; margin-bottom: 15px; font-size: 28px;">
-                        🏆 Won 3rd Prize at HealthON Hackathon
-                    </h3>
-                    <p style="color: #b0b0b0; margin-bottom: 20px; font-size: 16px;">
-                        We're thrilled to announce that eyemap.ai won <strong style="color: #ff4b91;">3rd place</strong> at the 
-                        <a href="https://healthonhackathon.ro/" target="_blank" style="color: #7877c6; text-decoration: none; border-bottom: 1px solid #7877c6;">
-                            HealthON Hackathon
-                        </a> on <strong>December 17th, 2025</strong>!
-                    </p>
-                    <p style="color: #b0b0b0; margin-bottom: 20px; font-size: 16px;">
-                        The hackathon brought together innovators, healthcare professionals, and technology experts to develop 
-                        solutions for Romania's healthcare system. Our AI-powered retinal screening platform impressed the jury, 
-                        including the Romanian Health Minister, <strong style="color: #fff;">Alexandru Rogobete</strong>.
-                    </p>
-                </div>
-
-                <div style="
-                    background: rgba(255, 255, 255, 0.03);
-                    border: 1px solid rgba(255, 255, 255, 0.1);
-                    border-radius: 15px;
-                    padding: 30px;
-                    margin: 30px 0;
-                ">
-                    <h4 style="color: #fff; margin-bottom: 20px; font-size: 20px;">Watch the Minister Try Our System</h4>
-                    <p style="color: #b0b0b0; margin-bottom: 20px; font-size: 14px;">
-                        Romanian Health Minister <strong style="color: #fff;">Alexandru Rogobete</strong> spontaneously got up 
-                        from the jury seat to try our eyemap.ai system during the hackathon presentation.
-                    </p>
-
-                    <div style="
-                        display: flex;
-                        justify-content: center;
-                        margin: 20px 0;
-                    ">
-                        <div style="
-                            width: 100%;
-                            max-width: 540px;
-                            margin: 0 auto;
-                        ">
-                            <img 
-                                src="dashboard/ministru_1024.jfif.jpg" 
-                                alt="Romanian Health Minister trying eyemap.ai system"
-                                style="
-                                    width: 100%;
-                                    height: auto;
-                                    border-radius: 10px;
-                                    display: block;
-                                    margin-bottom: 15px;
-                                "
-                            />
-                            <a 
-                                href="https://youtu.be/qWO-MaHmE5k" 
-                                target="_blank" 
-                                class="btn btn-primary"
-                                style="
-                                    display: inline-block;
-                                    text-decoration: none;
-                                    padding: 12px 30px;
-                                    border-radius: 25px;
-                                    background: linear-gradient(135deg, #7877c6, #ff4b91);
-                                    color: white;
-                                    font-weight: 600;
-                                    transition: all 0.3s ease;
-                                    width: 100%;
-                                    text-align: center;
-                                "
-                                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 10px 30px rgba(120, 119, 198, 0.4)';"
-                                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';"
-                            >
-                                ▶️ Watch Video on YouTube
-                            </a>
-                        </div>
-                    </div>
-
-                    
-
-                <div style="
-                    background: rgba(255, 255, 255, 0.03);
-                    border: 1px solid rgba(255, 255, 255, 0.1);
-                    border-radius: 15px;
-                    padding: 20px;
-                    margin-top: 20px;
-                    text-align: center;
-                ">
-                    <p style="color: #b0b0b0; margin-bottom: 15px; font-size: 14px;">
-                        Check out the Hackathon Instagram reel 
-                    </p>
-                    <a 
-                        href="https://www.instagram.com/reel/DSaBD5QlHRj/?igsh=ZjA3dWFvdTlsNTk2" 
-                        target="_blank" 
-                        class="btn btn-primary"
-                        style="
-                            display: inline-block;
-                            text-decoration: none;
-                            padding: 12px 30px;
-                            border-radius: 25px;
-                            background: linear-gradient(135deg, #7877c6, #ff4b91);
-                            color: white;
-                            font-weight: 600;
-                            transition: all 0.3s ease;
-                        "
-                        onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 10px 30px rgba(120, 119, 198, 0.4)';"
-                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';"
-                    >
-                        📱 View Instagram Reel
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <div class="cta">
-            <h2>Join Us in Transforming Healthcare</h2>
-            <p style="font-size: 20px; margin: 20px 0; color: #b0b0b0;">Every pair of glasses sold is a missed opportunity to save a life.<br>Let's change that together.</p>
-            <div class="cta-buttons">
-                <a href="mailto:tudor@eyemap.ai" class="btn btn-primary"><span>Contact Tudor (CEO)</span></a>
-                <a href="mailto:alex@eyemap.ai" class="btn btn-secondary"><span>Contact Alex (CTO)</span></a>
-            </div>
-            <p style="margin-top: 50px; font-size: 14px; color: #666; text-transform: uppercase; letter-spacing: 3px;">See health before symptoms</p>
-        </div>
-
-        <!-- Style Switcher Controls -->
-        <div class="style-switcher">
-            <h3>Customize Your Experience</h3>
-            <div class="switcher-controls">
-                <div class="control-group">
-                    <label>Theme Style:</label>
-                    <button onclick="switchTheme('default')" class="theme-btn active" id="default-theme">Default</button>
-                    <button onclick="switchTheme('green')" class="theme-btn" id="green-theme">Green Theme</button>
-                </div>
-                <div class="control-group">
-                    <label>Font Size:</label>
-                    <button onclick="setFontSize('small')" class="font-btn" id="small-font">Small</button>
-                    <button onclick="setFontSize('medium')" class="font-btn active" id="medium-font">Medium</button>
-                    <button onclick="setFontSize('large')" class="font-btn" id="large-font">Large</button>
-                </div>
-                <div class="control-group">
-                    <label>Color Mode:</label>
-                    <button onclick="toggleDarkMode()" class="mode-btn" id="dark-mode-btn">High Contrast</button>
-                </div>
-            </div>
-        </div>
+<nav>
+  <a class="nav-brand" href="index.htm">
+    <div class="nav-logo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="3"/><path d="M2 12C4.5 7 8 4 12 4s7.5 3 10 8c-2.5 5-6 8-10 8S4.5 17 2 12z"/>
+      </svg>
     </div>
+    <span class="nav-wordmark">EyeMap<span>.ai</span> </span>
+  </a>
+  <div class="nav-links">
+    <a href="research.htm">Research</a>
+    <a href="models/index.htm">AI Models</a>
+    <a href="assistive.htm">Assistive Tech</a>
+    <a href="participants/index.htm">Participants</a>
+    <a href="pitch/index.htm" class="btn-pitch">Pitch Deck →</a>
+  </div>
+</nav>
 
-    <script>
-        // Theme switching functionality
-        function switchTheme(theme) {
-            // Remove existing theme classes
-            document.body.classList.remove('green-theme', 'dark-theme');
-            
-            // Update active button
-            document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(theme + '-theme').classList.add('active');
-            
-            if (theme === 'green') {
-                document.body.classList.add('green-theme');
-            }
-        }
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-text" style="opacity:0;animation:fadeUp 0.7s 0.1s forwards">
+    <p class="hero-eyebrow">Ophthalmic AI Research Lab</p>
+    <h1><em>Your eyes reveal your health</em></h1>
+    <p>EyeMap.ai applies deep learning to retinal imaging for early detection of AMD, diabetic retinopathy, glaucoma, and systemic conditions, turning a routine eye scan into a whole-body health screen.</p>
+    <div class="hero-actions">
+      <a class="btn-primary" href="research.htm">Our Research</a>
+      <a class="btn-secondary" href="participants/index.htm">Study Participants</a>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="hero-stat-grid">
+      <div class="stat-card">
+        <div class="num">3</div>
+        <div class="label">Diseases detected from a single fundus image</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">80%</div>
+        <div class="label"> Of vision loss is preventable with early detection</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">Non-invasive</div>
+        <div class="label">No drops, no contact</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">5 min</div>
+        <div class="label">From image capture to report</div>
+      </div>
+    </div>
+    <div class="affiliation-bar">
+      <div class="aff-dot"></div>
+      Interdisciplinary research at the intersection of ophthalmology, computer vision, and clinical medicine
+    </div>
+  </div>
+</div>
 
-        // Font size functionality
-        function setFontSize(size) {
-            document.body.classList.remove('font-small', 'font-medium', 'font-large');
-            document.body.classList.add('font-' + size);
-            
-            // Update active button
-            document.querySelectorAll('.font-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(size + '-font').classList.add('active');
-        }
+<hr class="rule">
 
-        // High contrast mode functionality
-        function toggleDarkMode() {
-            const isHighContrast = document.body.classList.toggle('dark-theme');
-            const btn = document.getElementById('dark-mode-btn');
-            btn.textContent = isHighContrast ? 'Normal Mode' : 'High Contrast';
-            
-            // Store preference
-            localStorage.setItem('highContrast', isHighContrast);
-        }
+<!-- SITE STRUCTURE / OVERVIEW -->
+<section>
+  <div class="section-inner">
+    <p class="section-label">Navigation</p>
+    <h2 class="section-title">What you'll find here</h2>
+    <p class="section-lead">This site is organised in layers — from high-level institute information to project-specific technical content and participant-facing documentation.</p>
+    <div class="structure-grid">
+      <a class="structure-card" href="research.htm">
+        <div class="card-icon">🔬</div>
+        <h3>General Research</h3>
+        <p>Research Lab overview, principal investigators, methodology, and our UK Biobank application context.</p>
+        <div class="card-arrow">View research →</div>
+      </a>
+      <a class="structure-card" href="models/index.htm">
+        <div class="card-icon">🧠</div>
+        <h3>AI Models</h3>
+        <p>Technical pages for each diagnostic model: AMD, Diabetic Retinopathy, and Glaucoma CDR estimation.</p>
+        <div class="card-arrow">Explore models →</div>
+      </a>
+      <a class="structure-card" href="assistive.htm">
+        <div class="card-icon">♿</div>
+        <h3>Assistive Technology</h3>
+        <p>Research on vision-assistive devices, including FingerReader 2.0 — a wearable reading aid for visually impaired individuals.</p>
+        <div class="card-arrow">Read paper →</div>
+      </a>
+      <a class="structure-card" href="participants/index.htm">
+        <div class="card-icon">📋</div>
+        <h3>Study Participants</h3>
+        <p>Information sheets, consent documentation, data rights, and contacts for individuals taking part in our studies.</p>
+        <div class="card-arrow">Participant info →</div>
+      </a>
+      <a class="structure-card" href="pitch/index.htm">
+        <div class="card-icon">📈</div>
+        <h3>Investor Pitch</h3>
+        <p>Commercial vision, market opportunity, business model, and fundraising details for prospective investors.</p>
+        <div class="card-arrow">View pitch →</div>
+      </a>
+    </div>
+  </div>
+</section>
 
-        // Load saved preference
-        function loadThemePreference() {
-            const savedHighContrast = localStorage.getItem('highContrast');
-            if (savedHighContrast === 'true') {
-                document.body.classList.add('dark-theme');
-                document.getElementById('dark-mode-btn').textContent = 'Normal Mode';
-            }
-        }
+<hr class="rule">
 
-        // Initialize default settings
-        document.addEventListener('DOMContentLoaded', function() {
-            setFontSize('medium');
-            loadThemePreference();
-        });
-    </script>
-    
-    <!-- Instagram Embed Script -->
-    <script async src="//www.instagram.com/embed.js"></script>
-</body>
-</html>
+<!-- RESEARCH AREAS -->
+<section>
+  <div class="section-inner">
+    <p class="section-label">Research</p>
+    <h2 class="section-title">Active research programmes</h2>
+    <p class="section-lead">Our computational ophthalmology work spans diagnostic AI, longitudinal biomarker tracking, and assistive device development.</p>
+    <div class="research-list">
+      <div class="research-item">
+        <div class="research-header">
+          <span class="research-title">Retinal Biomarkers for Systemic Disease Detection</span>
+          <span class="research-tag">Core Programme</span>
+        </div>
+        <div class="research-body">
+          <p>The retina offers a unique, non-invasive window into the systemic vasculature. Our models analyse fundus photographs to detect early signs of AMD, diabetic retinopathy, and glaucomatous changes — and to infer downstream risk for stroke and cardiovascular events.</p>
+          <a href="models/index.htm">View AI model documentation →</a>
+        </div>
+      </div>
+      <div class="research-item">
+        <div class="research-header">
+          <span class="research-title">Population-Scale Retinal Imaging Analysis</span>
+          <span class="research-tag">UK Biobank</span>
+        </div>
+        <div class="research-body">
+          <p>We are applying to access UK Biobank retinal imaging data to validate our diagnostic models across a large, diverse population. This collaboration will enable longitudinal analysis of retinal change and its relationship with incident disease.</p>
+          <a href="research.htm">Research overview →</a>
+        </div>
+      </div>
+      <div class="research-item">
+        <div class="research-header">
+          <span class="research-title">Assistive Technology for Visual Impairment</span>
+          <span class="research-tag">Human-Computer Interaction</span>
+        </div>
+        <div class="research-body">
+          <p>Parallel to diagnostic AI, we conduct research into devices that restore functional capability to individuals with visual impairment, including the peer-reviewed FingerReader 2.0 wearable reading system published in ACM IMWUT.</p>
+          <a href="assistive.htm">FingerReader 2.0 research page →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- UK BIOBANK BANNER -->
+<section>
+  <div class="section-inner">
+    <div class="ukbb-banner">
+      <div>
+        <h3>UK Biobank Application</h3>
+        <p>EyeMap.ai Labs is preparing a formal application for access to UK Biobank retinal imaging data. Our research programme is designed to meet UK Biobank's ethical and governance requirements, including open-science commitments and participant data protection obligations. Participant-facing documentation and data governance materials are available on this site.</p>
+      </div>
+      <a class="btn-white" href="participants/index.htm">Participant Information</a>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- TEAM -->
+<section>
+  <div class="section-inner">
+    <p class="section-label">People</p>
+    <h2 class="section-title">Research leadership</h2>
+    <p class="section-lead">EyeMap.ai is led by researchers with backgrounds spanning AI for healthcare, clinical wearables, computer vision, and enterprise scaling.</p>
+    <div class="team-grid">
+      <div class="team-card">
+        <div class="team-initials">A</div>
+        <div class="team-name">Alexandru Dancu, PhD</div>
+        <div class="team-role">Chief Technology Officer · Principal Investigator</div>
+        <div class="team-bio">Postdoctoral researcher in AI for healthcare. Specialised in clinical wearables, computer vision, and assistive technologies. Research background includes peer-reviewed work in human-computer interaction and ophthalmic AI.</div>
+        <a class="team-link" href="https://www.linkedin.com/in/alexandru-dancu/" target="_blank">LinkedIn profile →</a>
+      </div>
+      <div class="team-card">
+        <div class="team-initials">T</div>
+        <div class="team-name">Tudor Popescu, PhD</div>
+        <div class="team-role">Chief Executive Officer · Co-founder</div>
+        <div class="team-bio">Expert in scaling technology ventures. Previously scaled Tudor Tailor (fashion tech) and Teilor Diamonds across European markets. Leads commercialisation strategy, partnerships, and clinical deployment planning.</div>
+        <a class="team-link" href="https://www.linkedin.com/in/tudor-popescu-08ab606/" target="_blank">LinkedIn profile →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- NEWS -->
+<section>
+  <div class="section-inner">
+    <p class="section-label">Recognition</p>
+    <h2 class="section-title">Recent news</h2>
+    <div class="structure-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+      <div class="structure-card" style="pointer-events:none">
+        <div class="card-icon">🏆</div>
+        <h3>HealthON Hackathon — 3rd Prize</h3>
+        <p>December 2025. EyeMap.ai was awarded third place at the HealthON Hackathon, judged by the Romanian Health Minister Alexandru Rogobete, who tested the system live during the presentation.</p>
+      </div>
+      <div class="structure-card" style="pointer-events:none">
+        <div class="card-icon">📄</div>
+        <h3>ACM IMWUT Publication</h3>
+        <p>FingerReader 2.0, co-authored by our principal investigator, was published in the ACM on Interactive, Mobile, Wearable and Ubiquitous Technologies — a peer-reviewed venue for assistive technology research.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="nav-wordmark" style="font-family:'EB Garamond',serif;font-size:1.15rem;font-weight:600">EyeMap<span style="color:#c8913a">.ai</span> Labs</div>
+      <p>Ophthalmic AI research lab focused on early disease detection through retinal imaging and deep learning.</p>
+    </div>
+    <div>
+      <h4>Research</h4>
+      <ul>
+        <li><a href="research.htm">Overview</a></li>
+        <li><a href="models/index.htm">AI Models</a></li>
+        <li><a href="assistive.htm">Assistive Tech</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Participants</h4>
+      <ul>
+        <li><a href="participants/index.htm">Study Information</a></li>
+        <li><a href="participants/consent.htm">Consent</a></li>
+        <li><a href="participants/data-rights.htm">Data Rights</a></li>
+        <li><a href="participants/faq.htm">FAQ</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>EyeMap.ai</h4>
+      <ul>
+        <li><a href="pitch/index.htm">Investor Pitch</a></li>
+        <li><span>Contact: tudor [at] eyemap [dot] ai</span></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-copy">© 2025 EyeMap.ai Labs. Research conducted under applicable ethical frameworks. Not for clinical use without regulatory clearan
