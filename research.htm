@@ -50,6 +50,12 @@
   .model-card h3{font-family:var(--serif);font-size:1.1rem;margin-bottom:0.4rem;}
   .model-card p{font-size:0.84rem;color:var(--mid);line-height:1.6;}
   .model-card .link{margin-top:1rem;font-size:0.82rem;color:var(--accent);font-weight:500;}
+  .partner-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.25rem;}
+  .partner-card{background:var(--card-bg);border:1px solid var(--rule);border-radius:14px;padding:1.75rem;}
+  .partner-head{display:flex;align-items:center;justify-content:space-between;gap:0.75rem;margin-bottom:0.7rem;}
+  .partner-name{font-family:var(--serif);font-size:1.05rem;color:var(--ink);}
+  .status-badge{display:inline-block;padding:0.2rem 0.6rem;border-radius:20px;font-family:var(--mono);font-size:0.64rem;color:#8a2448;background:#fdeef5;border:1px solid #f6cade;white-space:nowrap;}
+  .partner-note{font-size:0.84rem;color:var(--mid);line-height:1.65;}
 
   footer{border-top:1px solid var(--rule);padding:2.5rem 2rem;background:var(--bg);}
   .footer-inner{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;}
@@ -126,7 +132,6 @@
             <li>GDPR-compliant data processing</li>
             <li>Institutional ethics approval (pending)</li>
             <li>UK Biobank governance compliance</li>
-            <li>Open-science data return commitment</li>
             <li>Participant rights documentation</li>
           </ul>
         </div>
@@ -134,6 +139,7 @@
     </div>
   </div>
 </section>
+
 
 <hr class="rule">
 
@@ -163,6 +169,61 @@
     </div>
   </div>
 </section>
+
+<hr class="rule">
+
+<section>
+  <div class="inner">
+    <p class="section-label">Clinical Partnerships</p>
+    <h2 class="section-title">Prospective partner clinics</h2>
+    <p class="lead" style="max-width:760px;">Partnership discussions are underway with multiple clinics to support prospective clinical validation of retinal AI screening workflows and dataset expansion.</p>
+    <div class="partner-grid">
+      <div class="partner-card">
+        <div class="partner-head">
+          <div class="partner-name">Retina Clinic, Bucharest</div>
+          <span class="status-badge">In Discussion</span>
+        </div>
+        <p class="partner-note">Working with Dr. Florian Balta to validate retinal pathology detection models in a specialized ophthalmology setting.</p>
+      </div>
+      <div class="partner-card">
+        <div class="partner-head">
+          <div class="partner-name">Spitalul Universitar de Urgență București</div>
+          <span class="status-badge">In Discussion</span>
+        </div>
+        <p class="partner-note">Prospective collaboration to evaluate stroke-related screening workflows in emergency-care contexts and diverse patient populations.</p>
+      </div>
+      <div class="partner-card">
+        <div class="partner-head">
+          <div class="partner-name">Vitreum</div>
+          <span class="status-badge">In Discussion</span>
+        </div>
+        <p class="partner-note">Partnership discussions ongoing to expand clinical validation coverage and access to additional patient cohorts.</p>
+      </div>
+      <div class="partner-card">
+        <div class="partner-head">
+          <div class="partner-name">Arcadia</div>
+          <span class="status-badge">In Discussion</span>
+        </div>
+        <p class="partner-note">Partnership discussions ongoing to expand clinical validation coverage and access to additional patient cohorts.</p>
+      </div>
+      <div class="partner-card">
+        <div class="partner-head">
+          <div class="partner-name">Clinic Dr. Holhoș</div>
+          <span class="status-badge">In Discussion</span>
+        </div>
+        <p class="partner-note">Partnership discussions ongoing to expand clinical validation coverage and access to additional patient cohorts.</p>
+      </div>
+      <div class="partner-card">
+        <div class="partner-head">
+          <div class="partner-name">Clinic Dr. Mihnea Munteanu</div>
+          <span class="status-badge">In Discussion</span>
+        </div>
+        <p class="partner-note">Partnership discussions ongoing to expand clinical validation coverage and access to additional patient cohorts.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 
 <footer>
   <div class="footer-inner">
