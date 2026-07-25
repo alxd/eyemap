@@ -2,18 +2,18 @@
 export const AVAILABLE_MODELS = [
   {
     id: "medgemma",
-    label: "MedGemma",
-    description: "Analiză multimodală (confidențe + narativ) via Ollama",
+    label: "MG",
+    description: "Analiză multimodală (confidențe și narativ)",
   },
   {
     id: "eyemap-retinopathy",
     label: "EyeMap Retinopatie diabetică",
-    description: "Model specializat EyeMap pentru retinopatie diabetică",
+    description: "Model specializat pentru retinopatie diabetică",
   },
   {
     id: "eyemap-amd",
     label: "EyeMap DMAE (AMD)",
-    description: "Model specializat EyeMap pentru degenerare maculară",
+    description: "Model specializat pentru degenerare maculară legată de vârstă",
   },
   {
     id: "medsiglip",
@@ -22,8 +22,8 @@ export const AVAILABLE_MODELS = [
   },
   {
     id: "eyemap-top",
-    label: "EyeMap Top (GPT)",
-    description: "Raport structurat clinic via OpenAI (GPT-5.5)",
+    label: "EyeMap Top",
+    description: "Raport clinic structurat (screening detaliat)",
   },
 ] as const;
 

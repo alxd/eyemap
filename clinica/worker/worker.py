@@ -24,6 +24,21 @@ from typing import Any
 
 import requests
 
+# Load worker.env from the same directory if present (so OPENAI_API_KEY is picked up)
+_WORKER_DIR = Path(__file__).resolve().parent
+_ENV_FILE = _WORKER_DIR / "worker.env"
+if _ENV_FILE.is_file():
+    with _ENV_FILE.open() as _fh:
+        for _line in _fh:
+            _line = _line.strip()
+            if not _line or _line.startswith("#") or "=" not in _line:
+                continue
+            _k, _v = _line.split("=", 1)
+            _k, _v = _k.strip(), _v.strip().strip('"').strip("'")
+            # Do not override already-exported shell env
+            if _k and _k not in os.environ:
+                os.environ[_k] = _v
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(message)s",
@@ -34,6 +49,7 @@ log = logging.getLogger("eyemap-worker")
 CLINICA_API_BASE = os.environ.get("CLINICA_API_BASE", "http://127.0.0.1:3000").rstrip("/")
 WORKER_SHARED_SECRET = os.environ.get("WORKER_SHARED_SECRET", "")
 OLLAMA_HOST = os.environ.get("OLLAMA_HOST", "http://127.0.0.1:11434").rstrip("/")
+# MG = MedGemma 1.5 4B vision (name not shown in dashboard)
 OLLAMA_MODEL = os.environ.get("OLLAMA_MODEL", "medgemma-1.5-4b-vision:latest")
 POLL_INTERVAL_SEC = float(os.environ.get("POLL_INTERVAL_SEC", "3"))
 MAX_IDLE_BACKOFF_SEC = float(os.environ.get("MAX_IDLE_BACKOFF_SEC", "30"))
@@ -45,9 +61,37 @@ COMPARE_LLMS_DIR = os.environ.get(
     "/media/alex/9c367132-3c4d-42d6-9642-bc832fff61ab/compare_llms",
 )
 
-OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "")
+# Accept common aliases (OPEN_API_KEY typo / OPENAI_KEY)
+OPENAI_API_KEY = (
+    os.environ.get("OPENAI_API_KEY")
+    or os.environ.get("OPEN_API_KEY")
+    or os.environ.get("OPENAI_KEY")
+    or ""
+)
 OPENAI_MODEL = os.environ.get("OPENAI_MODEL", "gpt-5.5")
 OPENAI_BASE_URL = os.environ.get("OPENAI_BASE_URL", "https://api.openai.com/v1").rstrip("/")
+
+# MedSigLIP weights (dato_ssd) — same as compare_llms expects via MEDSIGLIP_WEIGHTS
+_DEFAULT_MEDSIGLIP = "/media/alex/dato_ssd/ollama_models/MedSigLIP.safetensors"
+if not os.path.isfile(_DEFAULT_MEDSIGLIP):
+    _DEFAULT_MEDSIGLIP = (
+        "/media/alex/9c367132-3c4d-42d6-9642-bc832fff61ab/ollama_models/MedSigLIP.safetensors"
+    )
+MEDSIGLIP_WEIGHTS = os.environ.get("MEDSIGLIP_WEIGHTS", _DEFAULT_MEDSIGLIP)
+os.environ.setdefault("MEDSIGLIP_WEIGHTS", MEDSIGLIP_WEIGHTS)
+
+# EyeMap specialist weights root (override if old Windows path is missing)
+if os.environ.get("EYEMAP_MODELS_DIR"):
+    pass  # user-provided
+else:
+    for candidate in (
+        "/media/alex/dato_ssd/eyemap_models",
+        "/media/alex/9c367132-3c4d-42d6-9642-bc832fff61ab/eyemap_models",
+        os.path.expanduser("~/eyemap_models"),
+    ):
+        if os.path.isdir(candidate):
+            os.environ["EYEMAP_MODELS_DIR"] = candidate
+            break
 
 CLASSES = ["normal", "diabetic_retinopathy", "amd", "glaucoma"]
 DEFAULT_MODELS = ["medgemma"]
@@ -232,17 +276,17 @@ def run_medgemma(image_path: Path) -> dict[str, Any]:
         "properties": {c: {"type": "number"} for c in CLASSES},
         "required": CLASSES,
     }
-    log.info("MedGemma confidence scoring (%s)", OLLAMA_MODEL)
+    log.info("MG confidence scoring")
     raw_scores = ollama_generate(CONFIDENCE_PROMPT, image_b64, format_schema=schema)
     confidences = parse_confidences(raw_scores)
-    log.info("MedGemma narrative (num_predict=%s)", NUM_PREDICT)
+    log.info("MG narrative (num_predict=%s)", NUM_PREDICT)
     narrative = ollama_generate(
         NARRATIVE_PROMPT, image_b64, num_predict=NUM_PREDICT
     ).strip()
     return {
         "confidences": confidences,
         "narrative": narrative,
-        "model": OLLAMA_MODEL,
+        "model": "MG",
     }
 
 
@@ -255,6 +299,18 @@ def run_eyemap_specialist(image_path: Path, model_id: str) -> dict[str, Any]:
     _ensure_compare_llms_path()
     import eyemap_bridge  # type: ignore
     import config as cl_config  # type: ignore
+
+    weights = (
+        cl_config.EYEMAP_RETINOPATHY_WEIGHTS
+        if model_id == cl_config.EYEMAP_RETINOPATHY_MODEL_NAME
+        else cl_config.EYEMAP_AMD_WEIGHTS
+    )
+    if not os.path.isfile(weights):
+        raise RuntimeError(
+            f"{model_id}: weights not found at {weights}. "
+            "Set EYEMAP_MODELS_DIR (or EYEMAP_AMD_WEIGHTS / EYEMAP_RETINOPATHY_WEIGHTS) "
+            "in worker.env to the folder that contains amd/ and retinopathy/."
+        )
 
     classes = (
         ["diabetic_retinopathy", "normal"]
@@ -276,7 +332,6 @@ def run_eyemap_specialist(image_path: Path, model_id: str) -> dict[str, Any]:
         raise RuntimeError(f"{model_id}: empty scores")
 
     meta = eyemap_bridge.EYEMAP_MODELS[model_id]
-    # classes[0] is the disease column in our 2-class lists
     if isinstance(vec, list):
         disease_p = float(vec[0])
         raw = [float(x) for x in vec]
@@ -292,10 +347,25 @@ def run_eyemap_specialist(image_path: Path, model_id: str) -> dict[str, Any]:
 
 
 def run_medsiglip(image_path: Path) -> dict[str, Any]:
+    """MedSigLIP via compare_llms bridge. Uses EyeCLIP *venv* only (not EyeCLIP model).
+
+    Weights: MEDSIGLIP_WEIGHTS (default dato_ssd/ollama_models/MedSigLIP.safetensors).
+    Runs on CPU by default so Ollama can keep the GPU (avoids CUDA OOM).
+    """
     _ensure_compare_llms_path()
+    if not os.path.isfile(MEDSIGLIP_WEIGHTS):
+        raise RuntimeError(
+            f"MedSigLIP weights missing: {MEDSIGLIP_WEIGHTS}. "
+            "Set MEDSIGLIP_WEIGHTS in worker.env"
+        )
+    os.environ["MEDSIGLIP_WEIGHTS"] = MEDSIGLIP_WEIGHTS
+
+    import config as cl_config  # type: ignore
     import medsiglip_bridge  # type: ignore
 
-    # Folder-style class names MedSigLIP prompts understand
+    # config may already be imported by another runner — force the correct path
+    cl_config.MEDSIGLIP_WEIGHTS = MEDSIGLIP_WEIGHTS
+
     class_names = ["Diabetes", "AMD", "Glaucoma", "Normal"]
     key_map = {
         "Diabetes": "diabetic_retinopathy",
@@ -303,11 +373,22 @@ def run_medsiglip(image_path: Path) -> dict[str, Any]:
         "Glaucoma": "glaucoma",
         "Normal": "normal",
     }
-    scores = medsiglip_bridge.score_images(
-        [str(image_path)],
-        classes=class_names,
-        crop_enabled=False,
-    )
+
+    # Force CPU for the subprocess workers (inherited env)
+    prev_cuda = os.environ.get("CUDA_VISIBLE_DEVICES")
+    os.environ["CUDA_VISIBLE_DEVICES"] = ""
+    try:
+        scores = medsiglip_bridge.score_images(
+            [str(image_path)],
+            classes=class_names,
+            crop_enabled=False,
+        )
+    finally:
+        if prev_cuda is None:
+            os.environ.pop("CUDA_VISIBLE_DEVICES", None)
+        else:
+            os.environ["CUDA_VISIBLE_DEVICES"] = prev_cuda
+
     vec = None
     for v in scores.values():
         vec = v
@@ -323,7 +404,10 @@ def run_medsiglip(image_path: Path) -> dict[str, Any]:
 
 def run_eyemap_top(image_path: Path) -> dict[str, Any]:
     if not OPENAI_API_KEY:
-        raise RuntimeError("OPENAI_API_KEY is not set in worker.env")
+        raise RuntimeError(
+            "OPENAI_API_KEY is not set in worker.env "
+            "(also accepted: OPEN_API_KEY / OPENAI_KEY)"
+        )
 
     # Prefer Responses / Chat Completions with vision
     b64 = _encode_image(image_path)
@@ -404,7 +488,7 @@ def run_eyemap_top(image_path: Path) -> dict[str, Any]:
         out["confidence"] = float(out["confidence"])
     except (TypeError, ValueError):
         out["confidence"] = 0.0
-    out["model"] = OPENAI_MODEL
+    # Do not expose underlying LLM name in the dashboard payload
     return out
 
 
@@ -435,7 +519,14 @@ def run_inference(image_path: Path, models: list[str]) -> dict[str, Any]:
             if model_id == "medgemma":
                 result["confidences"] = out.get("confidences", {})
                 result["narrative"] = out.get("narrative", "")
-                result["model"] = out.get("model", OLLAMA_MODEL)
+                # Keep technical model name out of the dashboard-facing payload
+                result["model"] = "MG"
+                if isinstance(result.get("medgemma"), dict):
+                    result["medgemma"] = {
+                        "confidences": out.get("confidences", {}),
+                        "narrative": out.get("narrative", ""),
+                        "model": "MG",
+                    }
         except Exception as exc:
             log.exception("Model %s failed", model_id)
             result["errors"][model_id] = str(exc)[:1500]

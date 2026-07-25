@@ -226,7 +226,7 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
           {medgemma && (
             <section className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4">
               <h2 className="mb-3 text-sm uppercase tracking-wider text-[var(--muted)]">
-                MedGemma — scoruri
+                MG — scoruri
               </h2>
               <ConfidenceBars scores={medgemma.confidences || {}} />
               {medgemma.narrative && (
@@ -234,9 +234,6 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
                   <h3 className="mb-2 text-sm text-[var(--muted)]">Narativ screening</h3>
                   <p className="whitespace-pre-wrap text-sm leading-relaxed text-[#d8d8e8]">
                     {medgemma.narrative}
-                  </p>
-                  <p className="mt-2 text-xs text-[var(--muted)]">
-                    Model: {medgemma.model}
                   </p>
                 </div>
               )}
@@ -285,7 +282,7 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
           {result["eyemap-top"] && (
             <section className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4">
               <h2 className="mb-3 text-sm uppercase tracking-wider text-[var(--muted)]">
-                EyeMap Top (GPT) — raport structurat
+                EyeMap Top — raport structurat
               </h2>
               <FieldTable
                 fields={[
@@ -310,11 +307,6 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
                   ["visual_prognosis", result["eyemap-top"].visual_prognosis],
                 ]}
               />
-              {result["eyemap-top"].model && (
-                <p className="mt-3 text-xs text-[var(--muted)]">
-                  Model: {result["eyemap-top"].model}
-                </p>
-              )}
             </section>
           )}
 
@@ -338,9 +330,6 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
           {result.completed_at && (
             <p className="text-xs text-[var(--muted)]">
               Finalizat: {new Date(result.completed_at).toLocaleString("ro-RO")}
-              {result.models_run?.length
-                ? ` · Modele: ${result.models_run.join(", ")}`
-                : ""}
             </p>
           )}
         </div>
