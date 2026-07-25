@@ -4,11 +4,14 @@ services:
     container_name: eyemap-minio
     command: server /data --console-address ":9001"
     ports:
-      - "9000:9000"
-      - "9001:9001"
+      # Host 9100/9101 — Portainer already uses host 9000
+      - "9100:9000"
+      - "9101:9001"
     environment:
       MINIO_ROOT_USER: ${MINIO_ROOT_USER:-eyemap}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-changeme-minio-secret}
+      # Browser uploads from Vercel origins (presigned PUT/GET)
+      MINIO_API_CORS_ALLOW_ORIGIN: "*"
     volumes:
       - minio_data:/data
     restart: unless-stopped

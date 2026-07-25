@@ -15,7 +15,7 @@ Browser ──HTTPS──► Vercel (Next.js + Auth + APIs)
 
 Python worker (this machine)
    ├── POST /api/worker/claim   (Postgres SKIP LOCKED queue)
-   ├── GET  image via localhost:9000
+   ├── GET  image via localhost:9100
    ├── Ollama MedGemma inference
    └── POST /api/worker/callback
 ```
@@ -57,8 +57,8 @@ cd clinica/infra
 docker compose -f docker-compose.minio.yml up -d
 ```
 
-- API: `http://127.0.0.1:9000`
-- Console: `http://127.0.0.1:9001`
+- API: `http://127.0.0.1:9100` (host port; avoids Portainer on 9000)
+- Console: `http://127.0.0.1:9101`
 - Bucket: `fundus` (created by `minio-init`)
 
 Use the same access key/secret in Vercel env (`MINIO_ACCESS_KEY` / `MINIO_SECRET_KEY`).
@@ -69,7 +69,7 @@ Browsers and Vercel cannot reach Tailscale IPs like `100.96.127.29`. Expose MinI
 
 ```bash
 # Requires Tailscale Funnel enabled for your tailnet
-tailscale funnel --bg 9000
+tailscale funnel --bg 9100
 tailscale funnel status
 ```
 
@@ -79,10 +79,10 @@ Set on Vercel:
 - `MINIO_PUBLIC_PORT=443`
 - `MINIO_PUBLIC_USE_SSL=true`
 - `MINIO_INTERNAL_ENDPOINT=127.0.0.1` (worker downloads locally)
-- `MINIO_INTERNAL_PORT=9000`
+- `MINIO_INTERNAL_PORT=9100`
 - `MINIO_INTERNAL_USE_SSL=false`
 
-> Funnel serves HTTPS on 443 and forwards to local port 9000. Presigned URLs are signed against the public endpoint so the browser can PUT/GET images directly (bytes never pass through Vercel or the queue).
+> Funnel serves HTTPS on 443 and forwards to local port 9100. Presigned URLs are signed against the public endpoint so the browser can PUT/GET images directly (bytes never pass through Vercel or the queue).
 
 ## 3. GPU worker (MedGemma / Ollama)
 

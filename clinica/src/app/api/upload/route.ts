@@ -41,59 +41,66 @@ export async function POST(req: NextRequest) {
   const clinicId = session.user.clinicId;
   const doctorId = session.user.id;
 
-  let patientId = data.patientId;
+  try {
+    let patientId = data.patientId;
 
-  if (patientId) {
-    const [existing] = await db
-      .select()
-      .from(patients)
-      .where(eq(patients.id, patientId))
-      .limit(1);
-    if (!existing || existing.clinicId !== clinicId) {
-      return badRequest("Patient not found in your clinic");
+    if (patientId) {
+      const [existing] = await db
+        .select()
+        .from(patients)
+        .where(eq(patients.id, patientId))
+        .limit(1);
+      if (!existing || existing.clinicId !== clinicId) {
+        return badRequest("Patient not found in your clinic");
+      }
+    } else {
+      const [created] = await db
+        .insert(patients)
+        .values({
+          clinicId,
+          externalRef: data.externalRef || null,
+          birthYear: data.birthYear ?? null,
+          sex: data.sex || "unknown",
+          notes: data.notes || null,
+        })
+        .returning();
+      patientId = created.id;
     }
-  } else {
-    const [created] = await db
-      .insert(patients)
+
+    const [caseRow] = await db
+      .insert(cases)
       .values({
+        patientId,
+        doctorId,
         clinicId,
-        externalRef: data.externalRef || null,
-        birthYear: data.birthYear ?? null,
-        sex: data.sex || "unknown",
-        notes: data.notes || null,
+        eye: data.eye,
+        status: "pending_upload",
       })
       .returning();
-    patientId = created.id;
+
+    const imageKey = buildCaseImageKey(clinicId, caseRow.id, data.filename);
+
+    await db
+      .update(cases)
+      .set({ imageKey, updatedAt: new Date() })
+      .where(eq(cases.id, caseRow.id));
+
+    const uploadUrl = await createPresignedPutUrl(imageKey);
+
+    return NextResponse.json(
+      {
+        caseId: caseRow.id,
+        patientId,
+        imageKey,
+        uploadUrl,
+        contentType: data.contentType,
+      },
+      { status: 201 },
+    );
+  } catch (err) {
+    console.error("POST /api/upload failed:", err);
+    const message =
+      err instanceof Error ? err.message : "Failed to create case";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
-
-  const [caseRow] = await db
-    .insert(cases)
-    .values({
-      patientId,
-      doctorId,
-      clinicId,
-      eye: data.eye,
-      status: "pending_upload",
-    })
-    .returning();
-
-  const imageKey = buildCaseImageKey(clinicId, caseRow.id, data.filename);
-
-  await db
-    .update(cases)
-    .set({ imageKey, updatedAt: new Date() })
-    .where(eq(cases.id, caseRow.id));
-
-  const uploadUrl = await createPresignedPutUrl(imageKey);
-
-  return NextResponse.json(
-    {
-      caseId: caseRow.id,
-      patientId,
-      imageKey,
-      uploadUrl,
-      contentType: data.contentType,
-    },
-    { status: 201 },
-  );
 }
