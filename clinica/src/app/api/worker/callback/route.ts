@@ -14,14 +14,7 @@ import {
 const bodySchema = z.object({
   task_id: z.string().uuid(),
   status: z.enum(["done", "failed"]),
-  result: z
-    .object({
-      confidences: z.record(z.string(), z.number()),
-      narrative: z.string(),
-      model: z.string(),
-      completed_at: z.string().optional(),
-    })
-    .optional(),
+  result: z.record(z.string(), z.unknown()).optional(),
   error: z.string().optional().nullable(),
 });
 
@@ -76,10 +69,10 @@ export async function POST(req: NextRequest) {
     .set({
       status: "done",
       result: {
-        confidences: result?.confidences ?? {},
-        narrative: result?.narrative ?? "",
-        model: result?.model ?? "unknown",
-        completed_at: result?.completed_at ?? new Date().toISOString(),
+        ...(result || {}),
+        completed_at:
+          (result?.completed_at as string | undefined) ??
+          new Date().toISOString(),
       },
       error: null,
       claimedAt: null,

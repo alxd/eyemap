@@ -6,16 +6,16 @@ export default function CasesPage() {
     <div>
       <div className="mb-6 flex items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold text-white">Cases</h1>
+          <h1 className="text-2xl font-semibold text-white">Cazuri</h1>
           <p className="mt-1 text-sm text-[var(--muted)]">
-            Live status updates while cases are queued or processing.
+            Statusul se actualizează automat cât timp cazurile sunt în coadă sau în procesare.
           </p>
         </div>
         <Link
           href="/cases/new"
           className="rounded-lg bg-[var(--primary)] px-4 py-2 text-sm font-medium text-white hover:bg-[var(--primary-hover)]"
         >
-          New upload
+          Încărcare nouă
         </Link>
       </div>
       <CasesTable />

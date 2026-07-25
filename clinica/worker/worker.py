@@ -1,13 +1,13 @@
-"""EyeMap GPU worker — polls Vercel claim API, runs MedGemma via Ollama, callbacks.
+"""EyeMap GPU worker — multi-model inference for Clinica.
 
-Environment variables (see worker.env.example):
-  CLINICA_API_BASE       e.g. https://clinica.eyemap.ai
-  WORKER_SHARED_SECRET   must match Vercel env
-  OLLAMA_HOST            default http://127.0.0.1:11434
-  OLLAMA_MODEL           default medgemma-27b-vision:latest
-  POLL_INTERVAL_SEC      default 3
-  MAX_IDLE_BACKOFF_SEC   default 30
-  NUM_PREDICT            max narrative tokens (default 512)
+Polls Vercel claim API, runs selected models, posts combined callback.
+
+Models:
+  medgemma            — Ollama vision (confidences + narrative)
+  eyemap-retinopathy  — compare_llms EyeMap DR specialist
+  eyemap-amd          — compare_llms EyeMap AMD specialist
+  medsiglip           — compare_llms MedSigLIP zero-shot
+  eyemap-top          — OpenAI GPT vision structured report
 """
 
 from __future__ import annotations
@@ -34,13 +34,23 @@ log = logging.getLogger("eyemap-worker")
 CLINICA_API_BASE = os.environ.get("CLINICA_API_BASE", "http://127.0.0.1:3000").rstrip("/")
 WORKER_SHARED_SECRET = os.environ.get("WORKER_SHARED_SECRET", "")
 OLLAMA_HOST = os.environ.get("OLLAMA_HOST", "http://127.0.0.1:11434").rstrip("/")
-OLLAMA_MODEL = os.environ.get("OLLAMA_MODEL", "medgemma-27b-vision:latest")
+OLLAMA_MODEL = os.environ.get("OLLAMA_MODEL", "medgemma-1.5-4b-vision:latest")
 POLL_INTERVAL_SEC = float(os.environ.get("POLL_INTERVAL_SEC", "3"))
 MAX_IDLE_BACKOFF_SEC = float(os.environ.get("MAX_IDLE_BACKOFF_SEC", "30"))
 NUM_PREDICT = int(os.environ.get("NUM_PREDICT", "512"))
 OLLAMA_TIMEOUT = int(os.environ.get("OLLAMA_TIMEOUT", "600"))
 
+COMPARE_LLMS_DIR = os.environ.get(
+    "COMPARE_LLMS_DIR",
+    "/media/alex/9c367132-3c4d-42d6-9642-bc832fff61ab/compare_llms",
+)
+
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "")
+OPENAI_MODEL = os.environ.get("OPENAI_MODEL", "gpt-5.5")
+OPENAI_BASE_URL = os.environ.get("OPENAI_BASE_URL", "https://api.openai.com/v1").rstrip("/")
+
 CLASSES = ["normal", "diabetic_retinopathy", "amd", "glaucoma"]
+DEFAULT_MODELS = ["medgemma"]
 
 CONFIDENCE_PROMPT = (
     "You are an expert ophthalmologist examining a colour fundus photograph of the retina. "
@@ -58,6 +68,47 @@ NARRATIVE_PROMPT = (
     "End with a clear screening impression and recommended follow-up urgency. "
     "Do not invent patient identifiers. This is a screening aid, not a final diagnosis."
 )
+
+EYEMAP_TOP_PROMPT = (
+    "You are an expert ophthalmologist reviewing a colour fundus photograph. "
+    "Return ONLY a JSON object with these exact keys (string values unless noted):\n"
+    "- confidence (number 0-1)\n"
+    "- image_quality\n"
+    "- optic_disc\n"
+    "- retinal_vessels\n"
+    "- macula\n"
+    "- drusen\n"
+    "- geographic_atrophy\n"
+    "- hemorrhage\n"
+    "- fluid\n"
+    "- most_likely_diagnosis\n"
+    "- pathology\n"
+    "- stage\n"
+    "- fibrosis\n"
+    "- cnv_scar\n"
+    "- active_exudation\n"
+    "- visual_prognosis\n"
+    "Be concise and clinical. Do not invent patient identifiers."
+)
+
+EYEMAP_TOP_KEYS = [
+    "confidence",
+    "image_quality",
+    "optic_disc",
+    "retinal_vessels",
+    "macula",
+    "drusen",
+    "geographic_atrophy",
+    "hemorrhage",
+    "fluid",
+    "most_likely_diagnosis",
+    "pathology",
+    "stage",
+    "fibrosis",
+    "cnv_scar",
+    "active_exudation",
+    "visual_prognosis",
+]
 
 
 def _headers() -> dict[str, str]:
@@ -116,9 +167,7 @@ def ollama_generate(
         "prompt": prompt,
         "images": [image_b64],
         "stream": False,
-        "options": {
-            "temperature": 0,
-        },
+        "options": {"temperature": 0},
         "keep_alive": "30m",
     }
     if format_schema is not None:
@@ -153,7 +202,6 @@ def parse_confidences(raw: str) -> dict[str, float]:
         return {c: 1.0 / len(CLASSES) for c in CLASSES}
 
     lower = {str(k).strip().lower().replace(" ", "_"): v for k, v in data.items()}
-    # Normalize aliases
     aliases = {
         "dr": "diabetic_retinopathy",
         "diabetic retinopathy": "diabetic_retinopathy",
@@ -177,45 +225,241 @@ def parse_confidences(raw: str) -> dict[str, float]:
     return {c: v / total for c, v in scores.items()}
 
 
-def run_inference(image_path: Path) -> dict[str, Any]:
+def run_medgemma(image_path: Path) -> dict[str, Any]:
     image_b64 = _encode_image(image_path)
     schema = {
         "type": "object",
         "properties": {c: {"type": "number"} for c in CLASSES},
         "required": CLASSES,
     }
-
-    log.info("Running confidence scoring with %s", OLLAMA_MODEL)
+    log.info("MedGemma confidence scoring (%s)", OLLAMA_MODEL)
     raw_scores = ollama_generate(CONFIDENCE_PROMPT, image_b64, format_schema=schema)
     confidences = parse_confidences(raw_scores)
-
-    log.info("Running narrative summary (num_predict=%s)", NUM_PREDICT)
+    log.info("MedGemma narrative (num_predict=%s)", NUM_PREDICT)
     narrative = ollama_generate(
-        NARRATIVE_PROMPT,
-        image_b64,
-        num_predict=NUM_PREDICT,
+        NARRATIVE_PROMPT, image_b64, num_predict=NUM_PREDICT
     ).strip()
-
     return {
         "confidences": confidences,
         "narrative": narrative,
         "model": OLLAMA_MODEL,
+    }
+
+
+def _ensure_compare_llms_path() -> None:
+    if COMPARE_LLMS_DIR not in sys.path:
+        sys.path.insert(0, COMPARE_LLMS_DIR)
+
+
+def run_eyemap_specialist(image_path: Path, model_id: str) -> dict[str, Any]:
+    _ensure_compare_llms_path()
+    import eyemap_bridge  # type: ignore
+    import config as cl_config  # type: ignore
+
+    classes = (
+        ["diabetic_retinopathy", "normal"]
+        if model_id == cl_config.EYEMAP_RETINOPATHY_MODEL_NAME
+        else ["amd", "normal"]
+    )
+    scores = eyemap_bridge.score_images(
+        [str(image_path)],
+        classes=classes,
+        model_id=model_id,
+        crop_enabled=False,
+    )
+    vec = scores.get(str(image_path)) or scores.get(image_path.as_posix())
+    if not vec:
+        for v in scores.values():
+            vec = v
+            break
+    if not vec:
+        raise RuntimeError(f"{model_id}: empty scores")
+
+    meta = eyemap_bridge.EYEMAP_MODELS[model_id]
+    # classes[0] is the disease column in our 2-class lists
+    if isinstance(vec, list):
+        disease_p = float(vec[0])
+        raw = [float(x) for x in vec]
+    else:
+        disease_p = float(vec)
+        raw = [disease_p]
+
+    return {
+        "disease_probability": float(min(max(disease_p, 0.0), 1.0)),
+        "raw_scores": raw,
+        "label": meta.get("label", model_id),
+    }
+
+
+def run_medsiglip(image_path: Path) -> dict[str, Any]:
+    _ensure_compare_llms_path()
+    import medsiglip_bridge  # type: ignore
+
+    # Folder-style class names MedSigLIP prompts understand
+    class_names = ["Diabetes", "AMD", "Glaucoma", "Normal"]
+    key_map = {
+        "Diabetes": "diabetic_retinopathy",
+        "AMD": "amd",
+        "Glaucoma": "glaucoma",
+        "Normal": "normal",
+    }
+    scores = medsiglip_bridge.score_images(
+        [str(image_path)],
+        classes=class_names,
+        crop_enabled=False,
+    )
+    vec = None
+    for v in scores.values():
+        vec = v
+        break
+    if not vec or len(vec) != len(class_names):
+        raise RuntimeError("medsiglip: unexpected score vector")
+
+    confidences = {
+        key_map[name]: float(vec[i]) for i, name in enumerate(class_names)
+    }
+    return {"confidences": confidences}
+
+
+def run_eyemap_top(image_path: Path) -> dict[str, Any]:
+    if not OPENAI_API_KEY:
+        raise RuntimeError("OPENAI_API_KEY is not set in worker.env")
+
+    # Prefer Responses / Chat Completions with vision
+    b64 = _encode_image(image_path)
+    suffix = image_path.suffix.lower().lstrip(".") or "jpeg"
+    if suffix == "jpg":
+        suffix = "jpeg"
+    data_url = f"data:image/{suffix};base64,{b64}"
+
+    schema_props = {
+        "confidence": {"type": "number"},
+        **{k: {"type": "string"} for k in EYEMAP_TOP_KEYS if k != "confidence"},
+    }
+
+    payload = {
+        "model": OPENAI_MODEL,
+        "temperature": 0,
+        "max_completion_tokens": 1200,
+        "response_format": {
+            "type": "json_schema",
+            "json_schema": {
+                "name": "eyemap_top_report",
+                "strict": True,
+                "schema": {
+                    "type": "object",
+                    "properties": schema_props,
+                    "required": EYEMAP_TOP_KEYS,
+                    "additionalProperties": False,
+                },
+            },
+        },
+        "messages": [
+            {
+                "role": "user",
+                "content": [
+                    {"type": "text", "text": EYEMAP_TOP_PROMPT},
+                    {"type": "image_url", "image_url": {"url": data_url}},
+                ],
+            }
+        ],
+    }
+
+    resp = requests.post(
+        f"{OPENAI_BASE_URL}/chat/completions",
+        headers={
+            "Authorization": f"Bearer {OPENAI_API_KEY}",
+            "Content-Type": "application/json",
+        },
+        json=payload,
+        timeout=300,
+    )
+    if resp.status_code >= 400:
+        # Fallback without strict json_schema (some models)
+        payload.pop("response_format", None)
+        payload["messages"][0]["content"][0]["text"] = (
+            EYEMAP_TOP_PROMPT + "\nRespond with raw JSON only."
+        )
+        resp = requests.post(
+            f"{OPENAI_BASE_URL}/chat/completions",
+            headers={
+                "Authorization": f"Bearer {OPENAI_API_KEY}",
+                "Content-Type": "application/json",
+            },
+            json=payload,
+            timeout=300,
+        )
+    resp.raise_for_status()
+    content = resp.json()["choices"][0]["message"]["content"] or "{}"
+    try:
+        data = json.loads(content)
+    except ValueError:
+        import re
+
+        match = re.search(r"\{.*\}", content, re.DOTALL)
+        data = json.loads(match.group(0)) if match else {}
+
+    out = {k: data.get(k, "") for k in EYEMAP_TOP_KEYS}
+    try:
+        out["confidence"] = float(out["confidence"])
+    except (TypeError, ValueError):
+        out["confidence"] = 0.0
+    out["model"] = OPENAI_MODEL
+    return out
+
+
+RUNNERS = {
+    "medgemma": run_medgemma,
+    "eyemap-retinopathy": lambda p: run_eyemap_specialist(p, "eyemap-retinopathy"),
+    "eyemap-amd": lambda p: run_eyemap_specialist(p, "eyemap-amd"),
+    "medsiglip": run_medsiglip,
+    "eyemap-top": run_eyemap_top,
+}
+
+
+def run_inference(image_path: Path, models: list[str]) -> dict[str, Any]:
+    selected = [m for m in models if m in RUNNERS] or list(DEFAULT_MODELS)
+    result: dict[str, Any] = {
+        "models_run": [],
+        "errors": {},
         "completed_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
     }
+
+    for model_id in selected:
+        log.info("Running model: %s", model_id)
+        try:
+            out = RUNNERS[model_id](image_path)
+            result[model_id] = out
+            result["models_run"].append(model_id)
+            # Legacy top-level fields for older UI
+            if model_id == "medgemma":
+                result["confidences"] = out.get("confidences", {})
+                result["narrative"] = out.get("narrative", "")
+                result["model"] = out.get("model", OLLAMA_MODEL)
+        except Exception as exc:
+            log.exception("Model %s failed", model_id)
+            result["errors"][model_id] = str(exc)[:1500]
+
+    if not result["models_run"] and result["errors"]:
+        raise RuntimeError(
+            "All models failed: " + "; ".join(f"{k}: {v}" for k, v in result["errors"].items())
+        )
+    return result
 
 
 def process_task(task: dict[str, Any]) -> None:
     task_id = task["task_id"]
     image_url = task["image_url"]
-    log.info("Claimed task %s", task_id)
+    models = task.get("models") or DEFAULT_MODELS
+    log.info("Claimed task %s models=%s", task_id, models)
 
     with tempfile.TemporaryDirectory(prefix="eyemap-") as tmp:
         dest = Path(tmp) / "fundus.jpg"
         try:
             download_image(image_url, dest)
-            result = run_inference(dest)
+            result = run_inference(dest, models)
             callback(task_id, "done", result=result)
-            log.info("Task %s completed", task_id)
+            log.info("Task %s completed (%s)", task_id, result.get("models_run"))
         except Exception as exc:
             log.exception("Task %s failed: %s", task_id, exc)
             try:
@@ -230,7 +474,13 @@ def main() -> None:
         sys.exit(1)
 
     log.info("EyeMap GPU worker starting")
-    log.info("API=%s model=%s ollama=%s", CLINICA_API_BASE, OLLAMA_MODEL, OLLAMA_HOST)
+    log.info(
+        "API=%s ollama_model=%s compare_llms=%s openai_model=%s",
+        CLINICA_API_BASE,
+        OLLAMA_MODEL,
+        COMPARE_LLMS_DIR,
+        OPENAI_MODEL,
+    )
 
     idle_backoff = POLL_INTERVAL_SEC
     while True:

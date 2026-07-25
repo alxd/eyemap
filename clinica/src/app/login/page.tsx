@@ -1,9 +1,8 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useState, Suspense } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense } from "react";
 
 function LoginForm() {
   const router = useRouter();
@@ -29,7 +28,7 @@ function LoginForm() {
     setLoading(false);
 
     if (result?.error) {
-      setError("Invalid email or password");
+      setError("Email sau parolă invalidă");
       return;
     }
 
@@ -46,9 +45,9 @@ function LoginForm() {
         <p className="text-sm uppercase tracking-[0.2em] text-[var(--primary)]">
           EyeMap
         </p>
-        <h1 className="mt-2 text-3xl font-semibold text-white">Clinica Login</h1>
+        <h1 className="mt-2 text-3xl font-semibold text-white">Autentificare Clinica</h1>
         <p className="mt-2 text-sm text-[var(--muted)]">
-          Sign in to upload fundus images and review MedGemma screening reports.
+          Conectați-vă pentru a încărca imagini de fund de ochi și a consulta rapoartele de screening.
         </p>
       </div>
 
@@ -60,13 +59,13 @@ function LoginForm() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="w-full rounded-lg border border-[var(--border)] bg-[var(--input-bg)] px-3 py-2.5 outline-none ring-[var(--primary)] focus:ring-2"
-          placeholder="doctor@clinic.ro"
+          placeholder="medic@clinica.ro"
           autoComplete="username"
         />
       </label>
 
       <label className="mb-6 block text-sm">
-        <span className="mb-1.5 block text-[var(--muted)]">Password</span>
+        <span className="mb-1.5 block text-[var(--muted)]">Parolă</span>
         <input
           type="password"
           required
@@ -88,7 +87,7 @@ function LoginForm() {
         disabled={loading}
         className="w-full rounded-lg bg-[var(--primary)] px-4 py-2.5 font-medium text-white transition hover:bg-[var(--primary-hover)] disabled:opacity-60"
       >
-        {loading ? "Signing in…" : "Sign in"}
+        {loading ? "Se conectează…" : "Conectare"}
       </button>
     </form>
   );
@@ -97,7 +96,7 @@ function LoginForm() {
 export default function LoginPage() {
   return (
     <main className="flex min-h-screen items-center justify-center bg-[radial-gradient(ellipse_at_top,_rgba(120,119,198,0.18),_transparent_55%)] px-4">
-      <Suspense fallback={<div className="text-[var(--muted)]">Loading…</div>}>
+      <Suspense fallback={<div className="text-[var(--muted)]">Se încarcă…</div>}>
         <LoginForm />
       </Suspense>
     </main>

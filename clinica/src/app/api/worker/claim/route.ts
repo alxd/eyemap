@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { sql } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { db } from "@/db";
+import { cases, clinics } from "@/db/schema";
 import {
   MAX_ATTEMPTS,
   STUCK_PROCESSING_MS,
@@ -8,6 +9,7 @@ import {
   verifyWorkerSecret,
 } from "@/lib/api";
 import { createInternalGetUrl, createPresignedGetUrl } from "@/lib/minio";
+import { normalizeModelIds } from "@/lib/models";
 
 /**
  * Atomic claim of the oldest queued case.
@@ -20,7 +22,6 @@ export async function POST(req: NextRequest) {
 
   const stuckCutoff = new Date(Date.now() - STUCK_PROCESSING_MS).toISOString();
 
-  // Re-queue or fail stuck processing jobs
   await db.execute(sql`
     UPDATE cases
     SET
@@ -36,30 +37,28 @@ export async function POST(req: NextRequest) {
       updated_at = NOW()
     WHERE status = 'processing'
       AND claimed_at IS NOT NULL
-      AND claimed_at < ${stuckCutoff}
+      AND claimed_at < ${stuckCutoff}::timestamptz
   `);
 
-  // Prefer internal (localhost) URL when the worker is on the same machine.
-  // Fall back to public Funnel URL if internal signing is not configured.
   const useInternal =
     (req.headers.get("x-worker-prefer-internal") || "true") === "true";
 
   const claimed = await db.execute(sql`
     UPDATE cases
     SET
-      status = 'processing',
+      status = 'processing'::case_status,
       claimed_at = NOW(),
       attempts = attempts + 1,
       updated_at = NOW()
     WHERE id = (
       SELECT id FROM cases
-      WHERE status = 'queued'
+      WHERE status = 'queued'::case_status
         AND image_key IS NOT NULL
       ORDER BY created_at ASC
       FOR UPDATE SKIP LOCKED
       LIMIT 1
     )
-    RETURNING id, image_key, attempts, clinic_id, patient_id, eye
+    RETURNING id, image_key, attempts, clinic_id, patient_id, eye, selected_models
   `);
 
   const rows = claimed as unknown as Array<{
@@ -69,6 +68,7 @@ export async function POST(req: NextRequest) {
     clinic_id: string;
     patient_id: string;
     eye: string;
+    selected_models: string[] | null;
   }>;
 
   if (!rows.length) {
@@ -76,6 +76,17 @@ export async function POST(req: NextRequest) {
   }
 
   const task = rows[0];
+
+  let models = normalizeModelIds(task.selected_models);
+  if (!task.selected_models?.length) {
+    const [clinic] = await db
+      .select()
+      .from(clinics)
+      .where(eq(clinics.id, task.clinic_id))
+      .limit(1);
+    models = normalizeModelIds(clinic?.settings?.enabledModels);
+  }
+
   let imageUrl: string;
   try {
     imageUrl = useInternal
@@ -94,6 +105,7 @@ export async function POST(req: NextRequest) {
       clinic_id: task.clinic_id,
       patient_id: task.patient_id,
       eye: task.eye,
+      models,
       timestamp: Math.floor(Date.now() / 1000),
     },
   });

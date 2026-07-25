@@ -5,11 +5,7 @@ export type CaseListItem = {
   imageKey: string | null;
   attempts: number;
   error: string | null;
-  result: {
-    confidences?: Record<string, number>;
-    narrative?: string;
-    model?: string;
-  } | null;
+  result: Record<string, unknown> | null;
   createdAt: string;
   updatedAt: string;
   patientId: string;
@@ -20,11 +16,11 @@ export type CaseListItem = {
 };
 
 export const STATUS_LABELS: Record<CaseListItem["status"], string> = {
-  pending_upload: "Awaiting upload",
-  queued: "In queue",
-  processing: "Processing",
-  done: "Done",
-  failed: "Failed",
+  pending_upload: "Așteaptă încărcarea",
+  queued: "În coadă",
+  processing: "În procesare",
+  done: "Finalizat",
+  failed: "Eșuat",
 };
 
 export function StatusBadge({ status }: { status: CaseListItem["status"] }) {

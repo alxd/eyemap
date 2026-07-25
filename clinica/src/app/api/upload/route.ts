@@ -2,13 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/db";
-import { cases, patients } from "@/db/schema";
+import { cases, clinics, patients } from "@/db/schema";
 import {
   badRequest,
   requireSession,
   unauthorized,
 } from "@/lib/api";
 import { buildCaseImageKey, createPresignedPutUrl } from "@/lib/minio";
+import { normalizeModelIds } from "@/lib/models";
 
 const bodySchema = z.object({
   patientId: z.string().uuid().optional(),
@@ -29,7 +30,7 @@ export async function POST(req: NextRequest) {
   try {
     json = await req.json();
   } catch {
-    return badRequest("Invalid JSON body");
+    return badRequest("Corp JSON invalid");
   }
 
   const parsed = bodySchema.safeParse(json);
@@ -42,6 +43,13 @@ export async function POST(req: NextRequest) {
   const doctorId = session.user.id;
 
   try {
+    const [clinic] = await db
+      .select()
+      .from(clinics)
+      .where(eq(clinics.id, clinicId))
+      .limit(1);
+    const selectedModels = normalizeModelIds(clinic?.settings?.enabledModels);
+
     let patientId = data.patientId;
 
     if (patientId) {
@@ -51,7 +59,7 @@ export async function POST(req: NextRequest) {
         .where(eq(patients.id, patientId))
         .limit(1);
       if (!existing || existing.clinicId !== clinicId) {
-        return badRequest("Patient not found in your clinic");
+        return badRequest("Pacientul nu a fost găsit în clinica dvs.");
       }
     } else {
       const [created] = await db
@@ -75,6 +83,7 @@ export async function POST(req: NextRequest) {
         clinicId,
         eye: data.eye,
         status: "pending_upload",
+        selectedModels,
       })
       .returning();
 
@@ -94,13 +103,14 @@ export async function POST(req: NextRequest) {
         imageKey,
         uploadUrl,
         contentType: data.contentType,
+        selectedModels,
       },
       { status: 201 },
     );
   } catch (err) {
     console.error("POST /api/upload failed:", err);
     const message =
-      err instanceof Error ? err.message : "Failed to create case";
+      err instanceof Error ? err.message : "Nu s-a putut crea cazul";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

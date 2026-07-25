@@ -35,13 +35,13 @@ export function UploadForm() {
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     if (!file) {
-      setError("Select a fundus image");
+      setError("Selectați o imagine de fund de ochi");
       return;
     }
 
     setSubmitting(true);
     setError(null);
-    setProgress("Creating case…");
+    setProgress("Se creează cazul…");
 
     try {
       const metaRes = await fetch("/api/upload", {
@@ -62,11 +62,11 @@ export function UploadForm() {
 
       if (!metaRes.ok) {
         const data = await metaRes.json().catch(() => ({}));
-        throw new Error(data.error || "Failed to create case");
+        throw new Error(data.error || "Nu s-a putut crea cazul");
       }
 
       const { caseId, uploadUrl, contentType } = await metaRes.json();
-      setProgress("Uploading image to object storage…");
+      setProgress("Se încarcă imaginea în stocare…");
 
       const putRes = await fetch(uploadUrl, {
         method: "PUT",
@@ -75,10 +75,10 @@ export function UploadForm() {
       });
 
       if (!putRes.ok) {
-        throw new Error(`Image upload failed (${putRes.status})`);
+        throw new Error(`Încărcarea imaginii a eșuat (${putRes.status})`);
       }
 
-      setProgress("Queuing for GPU inference…");
+      setProgress("Se pune în coadă pentru inferență GPU…");
       const confirmRes = await fetch("/api/upload/confirm", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -87,14 +87,14 @@ export function UploadForm() {
 
       if (!confirmRes.ok) {
         const data = await confirmRes.json().catch(() => ({}));
-        throw new Error(data.error || "Failed to queue case");
+        throw new Error(data.error || "Nu s-a putut pune cazul în coadă");
       }
 
-      setProgress("Queued — redirecting…");
+      setProgress("În coadă — redirecționare…");
       router.push(`/cases/${caseId}`);
       router.refresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Upload failed");
+      setError(err instanceof Error ? err.message : "Încărcare eșuată");
       setProgress(null);
       setSubmitting(false);
     }
@@ -113,7 +113,7 @@ export function UploadForm() {
             mode === "new" ? "bg-[var(--primary)] text-white" : "text-[var(--muted)]"
           }`}
         >
-          New patient
+          Pacient nou
         </button>
         <button
           type="button"
@@ -124,7 +124,7 @@ export function UploadForm() {
               : "text-[var(--muted)]"
           }`}
         >
-          Existing patient
+          Pacient existent
         </button>
       </div>
 
@@ -132,17 +132,17 @@ export function UploadForm() {
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="block text-sm sm:col-span-2">
             <span className="mb-1.5 block text-[var(--muted)]">
-              Patient reference / MRN
+              Referință pacient / Nr. fișă
             </span>
             <input
               value={externalRef}
               onChange={(e) => setExternalRef(e.target.value)}
               className="w-full rounded-lg border border-[var(--border)] bg-[var(--input-bg)] px-3 py-2 outline-none focus:ring-2 focus:ring-[var(--primary)]"
-              placeholder="Optional clinic ID"
+              placeholder="Opțional"
             />
           </label>
           <label className="block text-sm">
-            <span className="mb-1.5 block text-[var(--muted)]">Birth year</span>
+            <span className="mb-1.5 block text-[var(--muted)]">An naștere</span>
             <input
               type="number"
               value={birthYear}
@@ -158,14 +158,14 @@ export function UploadForm() {
               onChange={(e) => setSex(e.target.value)}
               className="w-full rounded-lg border border-[var(--border)] bg-[var(--input-bg)] px-3 py-2 outline-none focus:ring-2 focus:ring-[var(--primary)]"
             >
-              <option value="unknown">Unknown</option>
-              <option value="female">Female</option>
-              <option value="male">Male</option>
-              <option value="other">Other</option>
+              <option value="unknown">Necunoscut</option>
+              <option value="female">Feminin</option>
+              <option value="male">Masculin</option>
+              <option value="other">Altul</option>
             </select>
           </label>
           <label className="block text-sm sm:col-span-2">
-            <span className="mb-1.5 block text-[var(--muted)]">Notes</span>
+            <span className="mb-1.5 block text-[var(--muted)]">Note</span>
             <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
@@ -176,14 +176,14 @@ export function UploadForm() {
         </div>
       ) : (
         <label className="block text-sm">
-          <span className="mb-1.5 block text-[var(--muted)]">Patient</span>
+          <span className="mb-1.5 block text-[var(--muted)]">Pacient</span>
           <select
             required
             value={patientId}
             onChange={(e) => setPatientId(e.target.value)}
             className="w-full rounded-lg border border-[var(--border)] bg-[var(--input-bg)] px-3 py-2 outline-none focus:ring-2 focus:ring-[var(--primary)]"
           >
-            <option value="">Select patient…</option>
+            <option value="">Selectați pacientul…</option>
             {patients.map((p) => (
               <option key={p.id} value={p.id}>
                 {p.externalRef || p.id.slice(0, 8)} · {p.sex}
@@ -196,20 +196,20 @@ export function UploadForm() {
 
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="block text-sm">
-          <span className="mb-1.5 block text-[var(--muted)]">Eye</span>
+          <span className="mb-1.5 block text-[var(--muted)]">Ochi</span>
           <select
             value={eye}
             onChange={(e) => setEye(e.target.value)}
             className="w-full rounded-lg border border-[var(--border)] bg-[var(--input-bg)] px-3 py-2 outline-none focus:ring-2 focus:ring-[var(--primary)]"
           >
-            <option value="unknown">Unknown</option>
-            <option value="L">Left (OS)</option>
-            <option value="R">Right (OD)</option>
-            <option value="both">Both</option>
+            <option value="unknown">Necunoscut</option>
+            <option value="L">Stâng (OS)</option>
+            <option value="R">Drept (OD)</option>
+            <option value="both">Ambii</option>
           </select>
         </label>
         <label className="block text-sm">
-          <span className="mb-1.5 block text-[var(--muted)]">Fundus image</span>
+          <span className="mb-1.5 block text-[var(--muted)]">Imagine fund de ochi</span>
           <input
             type="file"
             accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
@@ -234,7 +234,7 @@ export function UploadForm() {
         disabled={submitting}
         className="rounded-lg bg-[var(--primary)] px-5 py-2.5 font-medium text-white hover:bg-[var(--primary-hover)] disabled:opacity-60"
       >
-        {submitting ? "Uploading…" : "Upload & queue analysis"}
+        {submitting ? "Se încarcă…" : "Încarcă și analizează"}
       </button>
     </form>
   );

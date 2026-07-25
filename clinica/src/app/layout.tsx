@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "EyeMap Clinica",
-  description: "Fundus screening dashboard for ophthalmology clinics",
+  description: "Platformă de screening al fundului de ochi pentru clinici oftalmologice",
 };
 
 export default function RootLayout({

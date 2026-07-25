@@ -22,7 +22,13 @@ Python worker (this machine)
 
 Dashboard polls case status every ~4s while jobs are queued/processing (no WebSockets on Vercel serverless).
 
-## 1. Local development
+## Schema migrations (Neon)
+
+If `npm run db:push` cannot reach Neon from your network, run in Neon SQL Editor:
+
+[`scripts/migrate-models.sql`](scripts/migrate-models.sql)
+
+Adds `clinics.settings` and `cases.selected_models` for multi-model screening.
 
 ```bash
 cd clinica

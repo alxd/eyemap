@@ -12,6 +12,13 @@ type Patient = {
   createdAt: string;
 };
 
+const SEX_RO: Record<string, string> = {
+  male: "masculin",
+  female: "feminin",
+  other: "altul",
+  unknown: "necunoscut",
+};
+
 export default function PatientsPage() {
   const [patients, setPatients] = useState<Patient[]>([]);
   const [loading, setLoading] = useState(true);
@@ -27,32 +34,32 @@ export default function PatientsPage() {
     <div>
       <div className="mb-6 flex items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold text-white">Patients</h1>
+          <h1 className="text-2xl font-semibold text-white">Pacienți</h1>
           <p className="mt-1 text-sm text-[var(--muted)]">
-            Clinic-scoped patient metadata (no raw images stored in the database).
+            Metadate ale pacienților din clinică (imaginile brute nu sunt în baza de date).
           </p>
         </div>
         <Link
           href="/cases/new"
           className="rounded-lg bg-[var(--primary)] px-4 py-2 text-sm font-medium text-white"
         >
-          New case
+          Caz nou
         </Link>
       </div>
 
       {loading ? (
-        <p className="text-[var(--muted)]">Loading…</p>
+        <p className="text-[var(--muted)]">Se încarcă…</p>
       ) : !patients.length ? (
-        <p className="text-[var(--muted)]">No patients yet.</p>
+        <p className="text-[var(--muted)]">Nu există pacienți încă.</p>
       ) : (
         <div className="overflow-hidden rounded-2xl border border-[var(--border)]">
           <table className="w-full text-left text-sm">
             <thead className="bg-white/5 text-[var(--muted)]">
               <tr>
-                <th className="px-4 py-3 font-medium">Reference</th>
+                <th className="px-4 py-3 font-medium">Referință</th>
                 <th className="px-4 py-3 font-medium">Sex</th>
-                <th className="px-4 py-3 font-medium">Birth year</th>
-                <th className="px-4 py-3 font-medium">Created</th>
+                <th className="px-4 py-3 font-medium">An naștere</th>
+                <th className="px-4 py-3 font-medium">Creat</th>
               </tr>
             </thead>
             <tbody>
@@ -64,10 +71,10 @@ export default function PatientsPage() {
                       <div className="text-xs text-[var(--muted)]">{p.notes}</div>
                     )}
                   </td>
-                  <td className="px-4 py-3 capitalize">{p.sex}</td>
+                  <td className="px-4 py-3">{SEX_RO[p.sex] || p.sex}</td>
                   <td className="px-4 py-3">{p.birthYear || "—"}</td>
                   <td className="px-4 py-3 text-[var(--muted)]">
-                    {new Date(p.createdAt).toLocaleString()}
+                    {new Date(p.createdAt).toLocaleString("ro-RO")}
                   </td>
                 </tr>
               ))}

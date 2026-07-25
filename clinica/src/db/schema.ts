@@ -25,6 +25,10 @@ export const clinics = pgTable("clinics", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: varchar("name", { length: 255 }).notNull(),
   city: varchar("city", { length: 255 }),
+  /** { enabledModels: ModelId[] } */
+  settings: jsonb("settings").$type<{ enabledModels?: string[] }>().default({
+    enabledModels: ["medgemma"],
+  }),
   createdAt: timestamp("created_at", { withTimezone: true })
     .defaultNow()
     .notNull(),
@@ -72,6 +76,8 @@ export const cases = pgTable("cases", {
   imageKey: text("image_key"),
   eye: eyeEnum("eye").notNull().default("unknown"),
   status: caseStatusEnum("status").notNull().default("pending_upload"),
+  /** Models selected for this case at upload time */
+  selectedModels: jsonb("selected_models").$type<string[]>(),
   attempts: integer("attempts").notNull().default(0),
   claimedAt: timestamp("claimed_at", { withTimezone: true }),
   result: jsonb("result"),
@@ -126,8 +132,48 @@ export type User = typeof users.$inferSelect;
 export type Patient = typeof patients.$inferSelect;
 export type Case = typeof cases.$inferSelect;
 export type CaseResult = {
-  confidences: Record<string, number>;
-  narrative: string;
-  model: string;
-  completed_at: string;
+  completed_at?: string;
+  models_run?: string[];
+  /** Legacy / MedGemma top-level fields */
+  confidences?: Record<string, number>;
+  narrative?: string;
+  model?: string;
+  medgemma?: {
+    confidences: Record<string, number>;
+    narrative: string;
+    model: string;
+  };
+  "eyemap-retinopathy"?: {
+    disease_probability: number;
+    raw_scores?: number[];
+    label?: string;
+  };
+  "eyemap-amd"?: {
+    disease_probability: number;
+    raw_scores?: number[];
+    label?: string;
+  };
+  medsiglip?: {
+    confidences: Record<string, number>;
+  };
+  "eyemap-top"?: {
+    confidence: number | string;
+    image_quality: string;
+    optic_disc: string;
+    retinal_vessels: string;
+    macula: string;
+    drusen: string;
+    geographic_atrophy: string;
+    hemorrhage: string;
+    fluid: string;
+    most_likely_diagnosis: string;
+    pathology: string;
+    stage: string;
+    fibrosis: string;
+    cnv_scar: string;
+    active_exudation: string;
+    visual_prognosis: string;
+    model?: string;
+  };
+  errors?: Record<string, string>;
 };

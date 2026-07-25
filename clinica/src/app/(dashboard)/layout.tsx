@@ -20,15 +20,18 @@ export default async function DashboardLayout({
             <Link href="/cases" className="font-semibold tracking-wide">
               <span className="text-[var(--primary)]">EyeMap</span> Clinica
             </Link>
-            <nav className="flex gap-4 text-sm text-[var(--muted)]">
+            <nav className="flex flex-wrap gap-4 text-sm text-[var(--muted)]">
               <Link href="/cases" className="hover:text-white">
-                Cases
+                Cazuri
               </Link>
               <Link href="/cases/new" className="hover:text-white">
-                New upload
+                Încărcare nouă
               </Link>
               <Link href="/patients" className="hover:text-white">
-                Patients
+                Pacienți
+              </Link>
+              <Link href="/settings" className="hover:text-white">
+                Setări
               </Link>
             </nav>
           </div>
@@ -47,7 +50,7 @@ export default async function DashboardLayout({
                 type="submit"
                 className="rounded-lg border border-[var(--border)] px-3 py-1.5 text-[var(--muted)] hover:border-white/30 hover:text-white"
               >
-                Sign out
+                Deconectare
               </button>
             </form>
           </div>
