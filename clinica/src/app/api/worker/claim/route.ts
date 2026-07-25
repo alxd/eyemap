@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
   const secret = req.headers.get("x-worker-secret");
   if (!verifyWorkerSecret(secret)) return unauthorized("Invalid worker secret");
 
-  const stuckCutoff = new Date(Date.now() - STUCK_PROCESSING_MS);
+  const stuckCutoff = new Date(Date.now() - STUCK_PROCESSING_MS).toISOString();
 
   // Re-queue or fail stuck processing jobs
   await db.execute(sql`
