@@ -1,0 +1,17 @@
+[Unit]
+Description=EyeMap Clinica GPU inference worker
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/eyemap/clinica/worker
+EnvironmentFile=%h/eyemap/clinica/worker/worker.env
+ExecStart=%h/eyemap/clinica/worker/.venv/bin/python %h/eyemap/clinica/worker/worker.py
+Restart=always
+RestartSec=5
+# Single concurrent inference (do not raise without more VRAM)
+Nice=5
+
+[Install]
+WantedBy=default.target
