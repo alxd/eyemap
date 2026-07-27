@@ -284,9 +284,52 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
               <h2 className="mb-3 text-sm uppercase tracking-wider text-[var(--muted)]">
                 EyeMap Top — raport structurat
               </h2>
+              <div className="mb-4 rounded-xl border border-[var(--primary)]/30 bg-[var(--primary)]/5 p-4">
+                <div className="flex flex-wrap items-start justify-between gap-2">
+                  <div>
+                    <p className="text-xs uppercase tracking-wider text-[var(--muted)]">
+                      Patologie
+                    </p>
+                    <p className="mt-1 text-base font-medium text-white">
+                      {result["eyemap-top"].pathology || "—"}
+                    </p>
+                  </div>
+                  <div className="rounded-lg bg-black/30 px-3 py-2 text-right">
+                    <p className="text-xs uppercase tracking-wider text-[var(--muted)]">
+                      Încredere
+                    </p>
+                    <p className="text-lg font-semibold text-[var(--primary)]">
+                      {typeof result["eyemap-top"].confidence === "number"
+                        ? `${(result["eyemap-top"].confidence * 100).toFixed(0)}%`
+                        : "—"}
+                    </p>
+                  </div>
+                </div>
+                <dl className="mt-4 grid gap-3 sm:grid-cols-2 text-sm">
+                  <div>
+                    <dt className="text-xs uppercase tracking-wider text-[var(--muted)]">
+                      Stadiu
+                    </dt>
+                    <dd className="mt-1 text-[#d8d8e8]">
+                      {result["eyemap-top"].stage || "—"}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-xs uppercase tracking-wider text-[var(--muted)]">
+                      Prognostic vizual
+                    </dt>
+                    <dd className="mt-1 text-[#d8d8e8]">
+                      {result["eyemap-top"].visual_prognosis || "—"}
+                    </dd>
+                  </div>
+                </dl>
+              </div>
               <FieldTable
                 fields={[
-                  ["confidence", result["eyemap-top"].confidence],
+                  [
+                    "most_likely_diagnosis",
+                    result["eyemap-top"].most_likely_diagnosis,
+                  ],
                   ["image_quality", result["eyemap-top"].image_quality],
                   ["optic_disc", result["eyemap-top"].optic_disc],
                   ["retinal_vessels", result["eyemap-top"].retinal_vessels],
@@ -295,16 +338,9 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
                   ["geographic_atrophy", result["eyemap-top"].geographic_atrophy],
                   ["hemorrhage", result["eyemap-top"].hemorrhage],
                   ["fluid", result["eyemap-top"].fluid],
-                  [
-                    "most_likely_diagnosis",
-                    result["eyemap-top"].most_likely_diagnosis,
-                  ],
-                  ["pathology", result["eyemap-top"].pathology],
-                  ["stage", result["eyemap-top"].stage],
                   ["fibrosis", result["eyemap-top"].fibrosis],
                   ["cnv_scar", result["eyemap-top"].cnv_scar],
                   ["active_exudation", result["eyemap-top"].active_exudation],
-                  ["visual_prognosis", result["eyemap-top"].visual_prognosis],
                 ]}
               />
             </section>

@@ -113,9 +113,33 @@ NARRATIVE_PROMPT = (
     "Do not invent patient identifiers. This is a screening aid, not a final diagnosis."
 )
 
+EYEMAP_TOP_SYSTEM = (
+    "You are an expert ophthalmologist. You give comprehensive fundus diagnoses "
+    "the same way you would in a clinical chat consultation: open differential, "
+    "weigh the most likely disease first, then fill a structured report.\n\n"
+    "Critical differential — do NOT default to diabetic retinopathy:\n"
+    "- A large central white/yellow irregular macular lesion with hard exudates, "
+    "subretinal/fibrovascular tissue, disciform scarring, RPE remodeling, and "
+    "relatively preserved peripheral vessels without widespread microaneurysms, "
+    "venous beading, or neovascularization elsewhere → prefer advanced neovascular "
+    "(wet) AMD with fibrotic/disciform scar (late AMD), not diabetic macular edema.\n"
+    "- Diabetic retinopathy usually shows more diffuse microvascular signs "
+    "(microaneurysms, dot/blot hemorrhages, venous beading, IRMA, possible NVE/NVD) "
+    "beyond a single macular scar.\n"
+    "- Hard lipid exudates alone do NOT equal diabetic retinopathy; in a disciform "
+    "macular complex they often come from chronic CNV leakage.\n"
+    "- If uncertain between wet AMD and DR, state the leading diagnosis and briefly "
+    "note the main alternative — but most_likely_diagnosis, pathology, stage, and "
+    "visual_prognosis MUST describe the SAME leading disease.\n\n"
+    "Output language: Romanian (concise clinical Romanian) for all string fields.\n"
+    "confidence is a number 0–1 for the leading diagnosis.\n"
+    "For absent/non-applicable items use „Absent” or „Nu se aplică”.\n"
+    "This is a screening aid, not a final diagnosis. Do not invent patient IDs."
+)
+
 EYEMAP_TOP_PROMPT = (
-    "You are an expert ophthalmologist reviewing a colour fundus photograph. "
-    "Return ONLY a JSON object with these exact keys (string values unless noted):\n"
+    "Examine this colour fundus photograph and provide a comprehensive ophthalmic "
+    "assessment, then return ONLY a JSON object with these exact keys:\n"
     "- confidence (number 0-1)\n"
     "- image_quality\n"
     "- optic_disc\n"
@@ -125,14 +149,15 @@ EYEMAP_TOP_PROMPT = (
     "- geographic_atrophy\n"
     "- hemorrhage\n"
     "- fluid\n"
-    "- most_likely_diagnosis\n"
-    "- pathology\n"
-    "- stage\n"
+    "- most_likely_diagnosis  (leading diagnosis after open differential)\n"
+    "- pathology  (lesions/mechanism of THAT same diagnosis)\n"
+    "- stage  (stage/grade of THAT same diagnosis, e.g. late neovascular AMD with "
+    "disciform scar; or NPDR/PDR with/without DME — only if DR is truly leading)\n"
     "- fibrosis\n"
     "- cnv_scar\n"
     "- active_exudation\n"
-    "- visual_prognosis\n"
-    "Be concise and clinical. Do not invent patient identifiers."
+    "- visual_prognosis\n\n"
+    "Write all string values in Romanian. Keep fields consistent with one disease."
 )
 
 EYEMAP_TOP_KEYS = [
@@ -421,10 +446,15 @@ def run_eyemap_top(image_path: Path) -> dict[str, Any]:
         **{k: {"type": "string"} for k in EYEMAP_TOP_KEYS if k != "confidence"},
     }
 
-    payload = {
+    # Match chat-style: system persona + user request with image
+    max_tokens = int(os.environ.get("OPENAI_MAX_COMPLETION_TOKENS", "2400"))
+    user_content: list[dict[str, Any]] = [
+        {"type": "text", "text": EYEMAP_TOP_PROMPT},
+        {"type": "image_url", "image_url": {"url": data_url, "detail": "high"}},
+    ]
+    payload: dict[str, Any] = {
         "model": OPENAI_MODEL,
-        "temperature": 0,
-        "max_completion_tokens": 1200,
+        "max_completion_tokens": max_tokens,
         "response_format": {
             "type": "json_schema",
             "json_schema": {
@@ -439,41 +469,47 @@ def run_eyemap_top(image_path: Path) -> dict[str, Any]:
             },
         },
         "messages": [
-            {
-                "role": "user",
-                "content": [
-                    {"type": "text", "text": EYEMAP_TOP_PROMPT},
-                    {"type": "image_url", "image_url": {"url": data_url}},
-                ],
-            }
+            {"role": "system", "content": EYEMAP_TOP_SYSTEM},
+            {"role": "user", "content": user_content},
         ],
+    }
+    temp_raw = os.environ.get("OPENAI_TEMPERATURE")
+    if temp_raw is not None and temp_raw != "":
+        payload["temperature"] = float(temp_raw)
+
+    headers = {
+        "Authorization": f"Bearer {OPENAI_API_KEY}",
+        "Content-Type": "application/json",
     }
 
     resp = requests.post(
         f"{OPENAI_BASE_URL}/chat/completions",
-        headers={
-            "Authorization": f"Bearer {OPENAI_API_KEY}",
-            "Content-Type": "application/json",
-        },
+        headers=headers,
         json=payload,
         timeout=300,
     )
     if resp.status_code >= 400:
+        err_body = (resp.text or "")[:800]
+        log.warning(
+            "eyemap-top OpenAI %s: %s — retrying without json_schema",
+            resp.status_code,
+            err_body,
+        )
         # Fallback without strict json_schema (some models)
         payload.pop("response_format", None)
-        payload["messages"][0]["content"][0]["text"] = (
-            EYEMAP_TOP_PROMPT + "\nRespond with raw JSON only."
+        payload["messages"][1]["content"][0]["text"] = (
+            EYEMAP_TOP_PROMPT + "\nRăspunde doar cu JSON brut."
         )
         resp = requests.post(
             f"{OPENAI_BASE_URL}/chat/completions",
-            headers={
-                "Authorization": f"Bearer {OPENAI_API_KEY}",
-                "Content-Type": "application/json",
-            },
+            headers=headers,
             json=payload,
             timeout=300,
         )
-    resp.raise_for_status()
+    if resp.status_code >= 400:
+        raise RuntimeError(
+            f"OpenAI {resp.status_code}: {(resp.text or '')[:1500]}"
+        )
     content = resp.json()["choices"][0]["message"]["content"] or "{}"
     try:
         data = json.loads(content)
